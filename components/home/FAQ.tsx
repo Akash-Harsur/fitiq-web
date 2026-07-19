@@ -1,3 +1,7 @@
+"use client";
+
+import { useState } from "react";
+
 const faqs = [
   {
     question: "Who is FitIQ for?",
@@ -31,6 +35,16 @@ const faqs = [
 ];
 
 export default function FAQ() {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+  const handleToggle = (index: number) => {
+    if (openIndex === index) {
+      setOpenIndex(null);
+    } else {
+      setOpenIndex(index);
+    }
+  };
+
   return (
     <section id="faq" className="bg-white py-32">
       <div className="mx-auto max-w-4xl px-6">
@@ -43,18 +57,27 @@ export default function FAQ() {
         </p>
 
         <div className="mt-16 space-y-6">
-          {faqs.map((faq) => (
+          {faqs.map((faq, index) => (
             <div
               key={faq.question}
-              className="rounded-2xl border border-gray-200 p-6 shadow-sm transition hover:shadow-md"
+              onClick={() => handleToggle(index)}
+              className="cursor-pointer rounded-2xl border border-gray-200 p-6 shadow-sm transition hover:shadow-md"
             >
-              <h3 className="text-xl font-semibold">
-                {faq.question}
-              </h3>
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl font-semibold">
+                  {faq.question}
+                </h3>
 
-              <p className="mt-3 text-gray-600">
-                {faq.answer}
-              </p>
+                <span className="text-2xl font-bold">
+                  {openIndex === index ? "−" : "+"}
+                </span>
+              </div>
+
+              {openIndex === index && (
+                <p className="mt-4 text-gray-600">
+                  {faq.answer}
+                </p>
+              )}
             </div>
           ))}
         </div>

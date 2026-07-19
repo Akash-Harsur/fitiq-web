@@ -1,67 +1,169 @@
 export default function Pricing() {
   return (
-    <section id="pricing" className="bg-gray-50 py-32">
+    <section id="pricing" className="bg-gray-50 py-24">
+      <div className="mx-auto max-w-6xl px-8">
 
-      <div className="mx-auto max-w-7xl px-6">
+        {/* Heading */}
 
-        <h2 className="text-center text-5xl font-black text-black">
-          One Simple Plan
-        </h2>
+        <div className="text-center">
+          <h2 className="text-5xl font-black">
+            Choose Your Plan
+          </h2>
 
-        <p className="mt-5 text-center text-xl text-gray-600">
-          No confusion. No hidden charges.
-        </p>
-
-        <div className="mx-auto mt-20 max-w-xl rounded-[40px] border border-gray-200 bg-white p-12 shadow-xl transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
-
-          <div className="mb-6 flex justify-center">
-            <span className="rounded-full bg-black px-5 py-2 text-sm font-semibold text-white">
-              MOST POPULAR
-            </span>
-          </div>
-
-          <h3 className="text-center text-3xl font-bold">
-            FitIQ Membership
-          </h3>
-
-          <div className="mt-8 text-center">
-
-            <span className="text-7xl font-black">
-              ₹499
-            </span>
-
-            <span className="ml-2 text-xl text-gray-500">
-              /month
-            </span>
-
-          </div>
-
-          <div className="mt-12 space-y-5 text-lg">
-
-            <p>✔ Unlimited Workout Programs</p>
-
-            <p>✔ Progress Tracking</p>
-
-            <p>✔ Nutrition Guidance</p>
-
-            <p>✔ New Programs Every Month</p>
-
-            <p>✔ Cancel Anytime</p>
-
-          </div>
-
-          <button className="mt-12 w-full rounded-full bg-black py-5 text-lg font-semibold text-white transition-all duration-300 hover:scale-[1.02] hover:bg-gray-800">
-            Start Membership
-          </button>
-
-          <p className="mt-6 text-center text-sm text-gray-500">
-            Secure payments • Cancel anytime • No hidden charges
+          <p className="mt-4 text-lg text-gray-600">
+            Start your fitness journey with a 7-Day Free Trial.
           </p>
+        </div>
+
+        {/* Pricing Cards */}
+
+        <div className="mt-14 grid grid-cols-1 gap-6 lg:grid-cols-3">
+
+          {/* Basic */}
+
+          <div className="flex flex-col rounded-3xl border border-gray-200 bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:border-black hover:shadow-xl">
+
+            <span className="text-sm font-semibold uppercase tracking-widest text-gray-500">
+              Best for Beginners
+            </span>
+
+            <h3 className="mt-3 text-3xl font-bold">
+              Basic
+            </h3>
+
+            <p className="mt-2 text-gray-500">
+              Everything you need to start training.
+            </p>
+
+            <div className="mt-6 flex items-end">
+              <span className="text-5xl font-black">₹99</span>
+              <span className="mb-1 ml-2 text-gray-500">/month</span>
+            </div>
+
+            <button className="mt-6 w-full rounded-full border border-black py-3 font-semibold transition hover:bg-black hover:text-white">
+              Start Free Trial
+            </button>
+
+            <div className="my-7 border-t border-gray-200"></div>
+
+            <ul className="flex-1 space-y-4 text-[15px] text-gray-700">
+              <li>7-Day Free Trial</li>
+              <li>2 Workout Programs</li>
+              <li>Home & Gym Workouts</li>
+              <li>Progress Tracking</li>
+              <li>BMI Calculator</li>
+              <li>Community Access</li>
+              <li>Monthly Program Updates</li>
+            </ul>
+
+          </div>
+
+          {/* PRO */}
+
+          <div className="relative flex flex-col rounded-3xl bg-black p-8 text-white shadow-2xl transition-all duration-300 hover:-translate-y-2">
+
+            <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-white px-4 py-1.5 text-xs font-bold tracking-wider text-black">
+              MOST POPULAR
+            </div>
+
+            <span className="text-sm font-semibold uppercase tracking-widest text-gray-400">
+              Best Value
+            </span>
+
+            <h3 className="mt-3 text-3xl font-bold">
+              Pro
+            </h3>
+
+            <p className="mt-2 text-gray-300">
+              Designed for consistent progress.
+            </p>
+
+            <div className="mt-6 flex items-end">
+              <span className="text-5xl font-black">₹499</span>
+              <span className="mb-1 ml-2 text-gray-400">/month</span>
+            </div>
+
+            <button className="mt-6 w-full rounded-full bg-white py-3 font-semibold text-black transition hover:bg-gray-200">
+              Start Free Trial
+            </button>
+
+            <div className="my-7 border-t border-gray-700"></div>
+
+            <ul className="flex-1 space-y-4 text-[15px] text-gray-200">
+              <li>Everything in Basic</li>
+              <li>Unlimited Workout Programs</li>
+              <li>Nutrition Guidance</li>
+              <li>Macro Calculator</li>
+              <li>Progress Photos</li>
+              <li>Workout History</li>
+              <li>Strength Programs</li>
+              <li>Body Recomposition Plans</li>
+              <li>Priority Support</li>
+            </ul>
+
+          </div>
+
+          {/* Premium */}
+
+          <div className="flex flex-col rounded-3xl border border-gray-200 bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:border-black hover:shadow-xl">
+
+            <span className="text-sm font-semibold uppercase tracking-widest text-gray-500">
+              Ultimate Experience
+            </span>
+
+            <h3 className="mt-3 text-3xl font-bold">
+              Premium
+            </h3>
+
+            <p className="mt-2 text-gray-500">
+              Personalized fitness without limits.
+            </p>
+
+            <div className="mt-6 flex items-end">
+              <span className="text-5xl font-black">₹999</span>
+              <span className="mb-1 ml-2 text-gray-500">/month</span>
+            </div>
+
+            <button className="mt-6 w-full rounded-full border border-black py-3 font-semibold transition hover:bg-black hover:text-white">
+              Start Free Trial
+            </button>
+
+            <div className="my-7 border-t border-gray-200"></div>
+
+            <ul className="flex-1 space-y-4 text-[15px] text-gray-700">
+              <li>Everything in Pro</li>
+              <li>Personalized Workout Plans</li>
+              <li>Personalized Nutrition Plans</li>
+              <li>Advanced Analytics</li>
+              <li>Custom Workout Builder</li>
+              <li>Priority Support</li>
+              <li>Early Access Features</li>
+              <li>AI Coach <span className="text-xs text-gray-500">(Coming Soon)</span></li>
+            </ul>
+
+          </div>
+
+        </div>
+
+        {/* Footer */}
+
+        <div className="mt-12 border-t border-gray-200 pt-8">
+
+          <div className="flex flex-col items-center justify-center gap-2 text-sm text-gray-500 md:flex-row md:gap-8">
+
+            <span>7-Day Free Trial</span>
+
+            <span>Cancel Anytime</span>
+
+            <span>Secure Payments</span>
+
+            <span>No Hidden Charges</span>
+
+          </div>
 
         </div>
 
       </div>
-
     </section>
   );
 }

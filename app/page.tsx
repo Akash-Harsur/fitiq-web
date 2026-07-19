@@ -3,6 +3,7 @@ import Features from "@/components/home/Features";
 import Programs from "@/components/home/Programs";
 import Pricing from "@/components/home/Pricing";
 import FAQ from "@/components/home/FAQ";
+import Footer from "@/components/layout/Footer";
 
 export default function Home() {
   return (
@@ -11,7 +12,8 @@ export default function Home() {
       <Features />
       <Programs />  
       <Pricing />
-      <FAQ />      
+      <FAQ />
+      <Footer />      
     </>
   );
 }
