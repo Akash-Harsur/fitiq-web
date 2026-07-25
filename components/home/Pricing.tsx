@@ -1,3 +1,4 @@
+import Link from "next/link";
 export default function Pricing() {
   return (
     <section id="pricing" className="bg-gray-50 py-24">
@@ -40,9 +41,12 @@ export default function Pricing() {
               <span className="mb-1 ml-2 text-gray-500">/month</span>
             </div>
 
-            <button className="mt-6 w-full rounded-full border border-black py-3 font-semibold transition hover:bg-black hover:text-white">
+            <Link
+              href="/auth"
+              className="mt-6 flex w-full items-center justify-center rounded-full border border-black py-3 font-semibold transition hover:bg-black hover:text-white"
+            >
               Start Free Trial
-            </button>
+            </Link>
 
             <div className="my-7 border-t border-gray-200"></div>
 
@@ -83,9 +87,12 @@ export default function Pricing() {
               <span className="mb-1 ml-2 text-gray-400">/month</span>
             </div>
 
-            <button className="mt-6 w-full rounded-full bg-white py-3 font-semibold text-black transition hover:bg-gray-200">
+            <Link
+              href="/auth"
+              className="mt-6 flex w-full items-center justify-center rounded-full bg-white py-3 font-semibold text-black transition hover:bg-gray-200"
+            >
               Start Free Trial
-            </button>
+            </Link>
 
             <div className="my-7 border-t border-gray-700"></div>
 
@@ -124,9 +131,12 @@ export default function Pricing() {
               <span className="mb-1 ml-2 text-gray-500">/month</span>
             </div>
 
-            <button className="mt-6 w-full rounded-full border border-black py-3 font-semibold transition hover:bg-black hover:text-white">
+            <Link
+              href="/auth"
+              className="mt-6 flex w-full items-center justify-center rounded-full border border-black py-3 font-semibold transition hover:bg-black hover:text-white"
+            >
               Start Free Trial
-            </button>
+            </Link>
 
             <div className="my-7 border-t border-gray-200"></div>
 

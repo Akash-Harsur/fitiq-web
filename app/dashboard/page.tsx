@@ -1,17 +1,90 @@
+"use client";
+
+import Image from "next/image";
+import { useEffect, useState } from "react";
+
+import Sidebar from "@/components/dashboard/Sidebar";
+import { auth } from "@/lib/firebase";
+import { getGreeting } from "@/lib/greeting";
+
 export default function DashboardPage() {
+  const [greeting, setGreeting] = useState({
+    title: "Welcome 👋",
+    subtitle: "Ready to crush today's workout?",
+  });
+
+  useEffect(() => {
+    const user = auth.currentUser;
+
+    if (user?.displayName) {
+      const firstName = user.displayName.split(" ")[0];
+      setGreeting(getGreeting(firstName));
+    }
+  }, []);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100">
-      <div className="rounded-3xl bg-white p-12 shadow-lg text-center">
+    <div className="flex min-h-screen bg-gray-100">
+      <Sidebar />
 
-        <h1 className="text-4xl font-bold">
-          🎉 Welcome to FitIQ
-        </h1>
+      <main className="flex-1 p-10">
+        <div className="rounded-3xl bg-white p-10 shadow-lg">
 
-        <p className="mt-4 text-gray-600">
-          Login Successful!
-        </p>
+          <div className="flex items-center justify-between">
 
-      </div>
+            <div>
+              <h1 className="text-4xl font-bold">
+                {greeting.title}
+              </h1>
+
+              <p className="mt-2 text-gray-500">
+                {greeting.subtitle}
+              </p>
+            </div>
+
+            <Image
+              src="/image/logo.jpeg"
+              alt="FitIQ Logo"
+              width={140}
+              height={45}
+            />
+          </div>
+
+          <div className="mt-12 grid grid-cols-3 gap-6">
+
+            <div className="rounded-2xl border bg-gray-50 p-6">
+              <h3 className="text-lg font-semibold">
+                Today's Workout
+              </h3>
+
+              <p className="mt-3 text-gray-500">
+                Upper Body Strength
+              </p>
+            </div>
+
+            <div className="rounded-2xl border bg-gray-50 p-6">
+              <h3 className="text-lg font-semibold">
+                Calories
+              </h3>
+
+              <p className="mt-3 text-gray-500">
+                2450 kcal
+              </p>
+            </div>
+
+            <div className="rounded-2xl border bg-gray-50 p-6">
+              <h3 className="text-lg font-semibold">
+                Current Plan
+              </h3>
+
+              <p className="mt-3 text-gray-500">
+                Free Trial
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+      </main>
     </div>
   );
 }

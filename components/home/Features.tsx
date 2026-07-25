@@ -6,7 +6,7 @@ import {
 
 export default function Features() {
   return (
-    <section className="bg-gray-50 py-24">
+    <section className="bg-gray-50 py-20">
       <div className="mx-auto max-w-6xl px-8">
 
         {/* Heading */}
@@ -26,7 +26,7 @@ export default function Features() {
 
         {/* Cards */}
 
-        <div className="mt-16 grid gap-6 md:grid-cols-3">
+        <div className="mt-12 grid gap-6 md:grid-cols-3">
 
           {/* Card */}
 
