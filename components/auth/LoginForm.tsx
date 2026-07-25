@@ -5,8 +5,9 @@ import { useState } from "react";
 import {
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
+  signInWithPopup,
 } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import {auth, googleProvider,} from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
@@ -92,7 +93,24 @@ export default function LoginForm() {
       }
     }
   };
+  const handleGoogleLogin = async () => {
+    setError("");
 
+    try {
+      setLoading(true);
+
+      await signInWithPopup(
+        auth,
+        googleProvider
+      );
+
+      router.push("/dashboard");
+    } catch (error: any) {
+      setError("Google Sign-In failed.");
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <form onSubmit={handleLogin} className="mt-8">
       {/* Email */}
@@ -218,6 +236,7 @@ export default function LoginForm() {
       <button
         type="button"
         disabled={loading}
+        onClick={handleGoogleLogin}
         className="flex w-full items-center justify-center gap-3 rounded-xl border border-gray-300 py-3 font-semibold transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-70"
       >
         <img
