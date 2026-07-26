@@ -17,8 +17,16 @@ export default function ProtectedRoute({
   const { user, loading } = useAuth();
 
   useEffect(() => {
-    if (!loading && !user) {
+    if (loading) return;
+
+    if (!user) {
       router.replace("/auth");
+      return;
+    }
+
+    if (!user.emailVerified) {
+      router.replace("/auth/verify-email");
+      return;
     }
   }, [loading, user, router]);
 
@@ -31,6 +39,10 @@ export default function ProtectedRoute({
   }
 
   if (!user) {
+    return null;
+  }
+
+  if (!user.emailVerified) {
     return null;
   }
 

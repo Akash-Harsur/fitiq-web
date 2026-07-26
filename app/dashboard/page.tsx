@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import OnboardingGuard from "@/components/auth/OnboardingGuard";
 
 import { useAuth } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
@@ -26,6 +27,7 @@ export default function DashboardPage() {
 
   return (
     <ProtectedRoute>
+    <OnboardingGuard>
       <div className="flex min-h-screen bg-gray-100">
         <Sidebar />
 
@@ -84,6 +86,7 @@ export default function DashboardPage() {
           </div>
         </main>
       </div>
-    </ProtectedRoute>
+    </OnboardingGuard>
+  </ProtectedRoute>
   );
 }

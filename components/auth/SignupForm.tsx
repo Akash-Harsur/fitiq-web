@@ -8,6 +8,8 @@ import { auth } from "@/lib/firebase";
 import {
   createUserWithEmailAndPassword,
   updateProfile,
+  sendEmailVerification,
+  signOut,
 } from "firebase/auth";
 
 export default function SignupForm() {
@@ -60,6 +62,10 @@ export default function SignupForm() {
         displayName: `${firstName} ${lastName}`,
       });
 
+      await sendEmailVerification(userCredential.user);
+
+      await signOut(auth);
+
       setFirstName("");
       setLastName("");
       setEmail("");
@@ -67,7 +73,7 @@ export default function SignupForm() {
       setConfirmPassword("");
       setError("");
 
-      router.push("/dashboard");
+      router.push("/auth/verify-email");
 
 
 

@@ -2,12 +2,14 @@
 
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
+import { doc, getDoc } from "firebase/firestore";
 import {
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
   signInWithPopup,
+  signOut,
 } from "firebase/auth";
-import {auth, googleProvider,} from "@/lib/firebase";
+import {auth, googleProvider, db} from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
@@ -19,6 +21,19 @@ export default function LoginForm() {
   const [password, setPassword] = useState("");
 
   const router = useRouter();
+
+  const redirectAfterLogin = async (uid: string) => {
+  const userDoc = await getDoc(doc(db, "users", uid));
+
+  if (
+    !userDoc.exists() ||
+    !userDoc.data().onboardingCompleted
+  ) {
+    router.push("/onboarding");
+  } else {
+    router.push("/dashboard");
+  }
+};
 
   const handleLogin = async (
     e: React.FormEvent<HTMLFormElement>
@@ -34,16 +49,27 @@ export default function LoginForm() {
     try {
       setLoading(true);
 
-      await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+      const userCredential =
+        await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+
+      if (!userCredential.user.emailVerified) {
+        await signOut(auth);
+
+        setError(
+          "Please verify your email before signing in. Please check your inbox."
+        );
+
+        return;
+      }
 
       setEmail("");
       setPassword("");
+      await redirectAfterLogin(userCredential.user.uid);
 
-      router.push("/dashboard");
     } catch (error: any) {
       switch (error.code) {
         case "auth/user-not-found":
@@ -99,12 +125,12 @@ export default function LoginForm() {
     try {
       setLoading(true);
 
-      await signInWithPopup(
+      const result = await signInWithPopup(
         auth,
         googleProvider
       );
 
-      router.push("/dashboard");
+      await redirectAfterLogin(result.user.uid);
     } catch (error: any) {
       setError("Google Sign-In failed.");
     } finally {
