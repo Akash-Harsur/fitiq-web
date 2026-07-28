@@ -1,92 +1,79 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useState } from "react";
+
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import OnboardingGuard from "@/components/auth/OnboardingGuard";
 
-import { useAuth } from "@/contexts/AuthContext";
-import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import Sidebar from "@/components/dashboard/Sidebar";
+import HeroCard from "@/components/dashboard/HeroCard";
+import WorkoutCard from "@/components/dashboard/WorkoutCard";
+import ExerciseList from "@/components/dashboard/ExerciseList";
+import StatsCards from "@/components/dashboard/StatsCards";
+import ProgressCard from "@/components/dashboard/ProgressCard";
+
+import { useAuth } from "@/contexts/AuthContext";
+import { useUserProfile } from "@/hooks/useUserProfile";
 
 import { getGreeting } from "@/lib/greeting";
+import { generatePushWorkout } from "@/lib/workouts/generator";
 
 export default function DashboardPage() {
+  const { user } = useAuth();
+  const { profile, loading } = useUserProfile();
+
   const [greeting, setGreeting] = useState({
     title: "Welcome 👋",
     subtitle: "Ready to crush today's workout?",
   });
 
-  const { user } = useAuth();
+  const [workout] = useState(generatePushWorkout());
 
   useEffect(() => {
-    if (user?.displayName) {
-      const firstName = user.displayName.split(" ")[0];
+    const name = profile?.fullName || user?.displayName;
+
+    if (name) {
+      const firstName = name.split(" ")[0];
       setGreeting(getGreeting(firstName));
     }
-  }, [user]);
+  }, [profile, user]);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center text-xl font-semibold">
+        Loading...
+      </div>
+    );
+  }
 
   return (
     <ProtectedRoute>
-    <OnboardingGuard>
-      <div className="flex min-h-screen bg-gray-100">
-        <Sidebar />
+      <OnboardingGuard>
+        <div className="flex min-h-screen bg-gray-100">
+          <Sidebar />
 
-        <main className="flex-1 p-10">
-          <div className="rounded-3xl bg-white p-10 shadow-lg">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-4xl font-bold">
-                  {greeting.title}
-                </h1>
+          <main className="flex-1 space-y-8 p-8">
 
-                <p className="mt-2 text-gray-500">
-                  {greeting.subtitle}
-                </p>
-              </div>
+            <HeroCard
+              title={greeting.title}
+              subtitle={greeting.subtitle}
+            />
 
-              <Image
-                src="/image/logo.jpeg"
-                alt="FitIQ Logo"
-                width={140}
-                height={45}
-              />
-            </div>
+            <WorkoutCard workout={workout} />
 
-            <div className="mt-12 grid grid-cols-3 gap-6">
-              <div className="rounded-2xl border bg-gray-50 p-6">
-                <h3 className="text-lg font-semibold">
-                  Today's Workout
-                </h3>
+            <ExerciseList workout={workout} />
 
-                <p className="mt-3 text-gray-500">
-                  Upper Body Strength
-                </p>
-              </div>
+            <StatsCards
+              goal={profile?.goal ?? "-"}
+              weight={profile?.weight ?? 0}
+              trainingDays={profile?.trainingDays ?? 0}
+            />
 
-              <div className="rounded-2xl border bg-gray-50 p-6">
-                <h3 className="text-lg font-semibold">
-                  Calories
-                </h3>
+            <ProgressCard />
 
-                <p className="mt-3 text-gray-500">
-                  2450 kcal
-                </p>
-              </div>
-
-              <div className="rounded-2xl border bg-gray-50 p-6">
-                <h3 className="text-lg font-semibold">
-                  Current Plan
-                </h3>
-
-                <p className="mt-3 text-gray-500">
-                  Free Trial
-                </p>
-              </div>
-            </div>
-          </div>
-        </main>
-      </div>
-    </OnboardingGuard>
-  </ProtectedRoute>
+          </main>
+        </div>
+      </OnboardingGuard>
+    </ProtectedRoute>
   );
 }
