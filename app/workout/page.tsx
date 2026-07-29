@@ -1,32 +1,21 @@
-import WorkoutHeader from "@/components/workout/WorkoutHeader";
-import ExerciseImage from "@/components/workout/ExerciseImage";
-import MuscleInfo from "@/components/workout/MuscleInfo";
+import WorkoutExerciseCard from "@/components/workout/WorkoutExerciseCard";
+import { upperBodyWorkout } from "@/data/workouts/upperBody";
 
 export default function WorkoutPage() {
   return (
-    <main className="min-h-screen bg-black px-6 py-8">
+    <main className="min-h-screen bg-white px-6 py-8">
+      <h1 className="mb-8 text-5xl font-bold">
+        Upper Body
+      </h1>
 
-      <div className="mx-auto max-w-5xl">
-
-        <WorkoutHeader
-          workoutName="Bench Press"
-          currentExercise={1}
-          totalExercises={6}
-          workoutType="Push Day"
-        />
-
-        <ExerciseImage
-          image="/images/exercises/chest/bench-press.webp"
-          exerciseName="Bench Press"
-        />
-
-        <MuscleInfo
-          primary="Chest"
-          secondary="Front Delts • Triceps"
-        />
-
+      <div className="space-y-5">
+        {upperBodyWorkout.map((exercise) => (
+          <WorkoutExerciseCard
+            key={exercise.id}
+            exercise={exercise}
+          />
+        ))}
       </div>
-
     </main>
   );
 }
