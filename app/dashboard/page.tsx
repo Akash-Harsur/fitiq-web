@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import OnboardingGuard from "@/components/auth/OnboardingGuard";
+import { useRouter } from "next/navigation";
+import { useWorkout } from "@/contexts/WorkoutContext";
 
 import Sidebar from "@/components/dashboard/Sidebar";
 import HeroCard from "@/components/dashboard/HeroCard";
@@ -28,6 +30,9 @@ export default function DashboardPage() {
   });
 
   const [workout] = useState(generatePushWorkout());
+  const router = useRouter();
+
+  const { startWorkout } = useWorkout();
 
   useEffect(() => {
     const name = profile?.fullName || user?.displayName;

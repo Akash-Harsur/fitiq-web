@@ -2,8 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { signOut } from "firebase/auth";
+
 import {
   Home,
   Dumbbell,
@@ -12,6 +14,7 @@ import {
   User,
   Settings,
   LogOut,
+  Menu,
 } from "lucide-react";
 
 import { auth } from "@/lib/firebase";
@@ -52,8 +55,30 @@ const menuItems = [
 
 export default function Sidebar() {
   const router = useRouter();
+  const pathname = usePathname();
 
   const { user } = useAuth();
+
+  const [collapsed, setCollapsed] = useState(false);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("sidebar");
+
+    if (saved === "collapsed") {
+      setCollapsed(true);
+    }
+  }, []);
+
+  const toggleSidebar = () => {
+    const next = !collapsed;
+
+    setCollapsed(next);
+
+    localStorage.setItem(
+      "sidebar",
+      next ? "collapsed" : "expanded"
+    );
+  };
 
   const handleLogout = async () => {
     try {
@@ -64,88 +89,211 @@ export default function Sidebar() {
       console.error("Logout failed:", error);
     }
   };
+  const initials =
+    user?.displayName
+      ?.split(" ")
+      .map((word) => word[0])
+      .join("")
+      .substring(0, 2)
+      .toUpperCase() || "U";
 
   return (
-    <aside className="flex h-screen w-72 flex-col border-r bg-white px-6 py-8">
-      {/* Logo */}
-      <Link
-        href="/dashboard"
-        className="flex items-center justify-center"
-      >
-        <Image
-          src="/image/logo.jpeg"
-          alt="FitIQ Logo"
-          width={160}
-          height={50}
-          className="cursor-pointer rounded-xl"
-          priority
-        />
-      </Link>
+    <aside
+      className={`sticky top-0 flex h-screen flex-col border-r border-zinc-200 bg-white transition-all duration-300 ease-in-out ${collapsed ? "w-20" : "w-72"
+        }`}
+    >
+
+
+      {/* Header */}
+
+      <div className="sticky top-0 z-20 border-b border-zinc-200 bg-white px-5 py-5">
+
+        <div
+          className={`flex items-center ${collapsed ? "justify-center" : "justify-between"
+            }`}
+        >
+
+          {/* FitIQ Logo */}
+
+          {!collapsed && (
+            <Link href="/dashboard">
+              <Image
+                src="/image/logo.jpeg"
+                alt="FitIQ"
+                width={150}
+                height={42}
+                className="cursor-pointer"
+                priority
+              />
+            </Link>
+          )}
+
+          {/* Burger Menu */}
+
+          <button
+            onClick={toggleSidebar}
+            className="rounded-xl p-2 transition-all duration-300 hover:bg-zinc-100 active:scale-95"
+          >
+            <Menu size={24} />
+          </button>
+
+        </div>
+
+      </div>
+
 
       {/* User */}
-      <div className="mt-8 flex items-center gap-3 rounded-2xl bg-gray-50 p-4">
-        {user?.photoURL ? (
-          <Image
-            src={user.photoURL}
-            alt="Profile"
-            width={50}
-            height={50}
-            className="rounded-full"
-          />
-        ) : (
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-black text-lg font-bold text-white">
-            {user?.displayName?.charAt(0).toUpperCase() ??
-              user?.email?.charAt(0).toUpperCase() ??
-              "U"}
-          </div>
-        )}
 
-        <div className="overflow-hidden">
-          <h3 className="truncate font-semibold">
-            {user?.displayName || "FitIQ User"}
-          </h3>
+      <div className="px-4 py-5">
 
-          <p className="truncate text-sm text-gray-500">
-            {user?.email}
-          </p>
+        <div
+          className={`rounded-3xl border border-zinc-200 bg-zinc-50 transition-all duration-300 hover:shadow-lg hover:scale-[1.01]
+
+          ${collapsed
+              ? "flex justify-center p-2"
+              : "flex items-center gap-4 p-4"
+            }`}
+        >
+
+          {user?.photoURL ? (
+
+            <Image
+              src={user.photoURL}
+              alt="Profile"
+              width={56}
+              height={56}
+              className="rounded-full ring-2 ring-zinc-200"
+            />
+
+          ) : (
+
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-black text-base font-bold tracking-wide text-white ring-2 ring-zinc-200">
+
+              {initials}
+
+            </div>
+
+          )}
+
+          {!collapsed && (
+
+            <div className="min-w-0 flex-1">
+
+              <h3 className="truncate text-lg font-semibold text-zinc-900">
+
+                {user?.displayName || "FitIQ User"}
+
+              </h3>
+
+              <p className="truncate text-sm text-zinc-500">
+
+                {user?.email}
+
+              </p>
+
+            </div>
+
+          )}
+
         </div>
+
       </div>
 
       {/* Navigation */}
-      <nav className="mt-10 flex-1">
-        <ul className="space-y-3">
+
+      <nav className="flex-1 overflow-y-auto px-4 py-4">
+
+        <ul className="space-y-2">
+
           {menuItems.map((item) => {
+
             const Icon = item.icon;
 
+            const active = pathname === item.href;
+
             return (
+
               <li key={item.title}>
+
                 <Link
                   href={item.href}
-                  className="flex items-center gap-3 rounded-xl px-4 py-3 transition hover:bg-gray-100"
-                >
-                  <Icon size={20} />
+                  className={`group flex items-center rounded-xl transition-all duration-300 ease-in-out
 
-                  <span className="font-medium">
-                    {item.title}
-                  </span>
+                  ${collapsed
+                      ? "mx-auto h-12 w-12 justify-center"
+                      : "gap-4 px-4 py-3"
+                    }
+
+                  ${active
+                      ? "bg-black text-white shadow-lg"
+                      : "text-zinc-700 hover:bg-zinc-100 hover:text-black"
+                    }`}
+                >
+
+                  <Icon
+                    size={22}
+                    className={`shrink-0 transition-transform duration-300
+
+                    ${!active &&
+                      "group-hover:scale-110"
+                      }`}
+                  />
+
+                  {!collapsed && (
+
+                    <span className="font-semibold">
+
+                      {item.title}
+
+                    </span>
+
+                  )}
+
                 </Link>
+
               </li>
+
             );
+
           })}
+
         </ul>
+
       </nav>
 
       {/* Logout */}
-      <button
-        onClick={handleLogout}
-        className="flex items-center gap-3 rounded-xl px-4 py-3 text-red-500 transition hover:bg-red-50"
-      >
-        <LogOut size={20} />
 
-        <span className="font-medium">
-          Logout
-        </span>
-      </button>
+      <div className="border-t border-zinc-200 p-4">
+
+        <button
+          onClick={handleLogout}
+          className={`group flex w-full items-center rounded-xl text-red-500 transition-all duration-300 ease-in-out hover:bg-red-50
+
+          ${collapsed
+              ? "mx-auto h-12 w-12 justify-center"
+              : "gap-4 px-4 py-3"
+            }`}
+        >
+
+          <LogOut
+            size={22}
+            className="transition-transform duration-300 group-hover:scale-110"
+          />
+
+          {!collapsed && (
+
+            <span className="font-semibold">
+
+              Logout
+
+            </span>
+
+          )}
+
+        </button>
+
+      </div>
+
     </aside>
   );
 }

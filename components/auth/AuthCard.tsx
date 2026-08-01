@@ -12,7 +12,6 @@ export default function AuthCard() {
 
   return (
     <div className="w-full max-w-md rounded-3xl border border-gray-200 bg-white p-10 shadow-sm">
-
       {/* Logo */}
       <div className="flex justify-center">
         <Image
@@ -37,7 +36,6 @@ export default function AuthCard() {
       <div className="mt-8">
         {isLogin ? <LoginForm /> : <SignupForm />}
       </div>
-
     </div>
   );
 }

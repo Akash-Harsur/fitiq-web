@@ -9,7 +9,8 @@ import {
   signInWithPopup,
   signOut,
 } from "firebase/auth";
-import {auth, googleProvider, db} from "@/lib/firebase";
+
+import { auth, googleProvider, db } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
@@ -23,17 +24,17 @@ export default function LoginForm() {
   const router = useRouter();
 
   const redirectAfterLogin = async (uid: string) => {
-  const userDoc = await getDoc(doc(db, "users", uid));
+    const userDoc = await getDoc(doc(db, "users", uid));
 
-  if (
-    !userDoc.exists() ||
-    !userDoc.data().onboardingCompleted
-  ) {
-    router.push("/onboarding");
-  } else {
-    router.push("/dashboard");
-  }
-};
+    if (
+      !userDoc.exists() ||
+      !userDoc.data().onboardingCompleted
+    ) {
+      router.push("/onboarding");
+    } else {
+      router.push("/dashboard");
+    }
+  };
 
   const handleLogin = async (
     e: React.FormEvent<HTMLFormElement>
@@ -68,8 +69,8 @@ export default function LoginForm() {
 
       setEmail("");
       setPassword("");
-      await redirectAfterLogin(userCredential.user.uid);
 
+      await redirectAfterLogin(userCredential.user.uid);
     } catch (error: any) {
       switch (error.code) {
         case "auth/user-not-found":
@@ -103,7 +104,10 @@ export default function LoginForm() {
 
     try {
       await sendPasswordResetEmail(auth, email);
-      setError("If an account exists for this email, we've sent a password reset link. Please check your Inbox and Spam/Junk folder if you don't see it within a few minutes.");
+
+      setError(
+        "If an account exists for this email, we've sent a password reset link. Please check your Inbox and Spam/Junk folder if you don't see it within a few minutes."
+      );
     } catch (error: any) {
       switch (error.code) {
         case "auth/user-not-found":
@@ -119,6 +123,7 @@ export default function LoginForm() {
       }
     }
   };
+
   const handleGoogleLogin = async () => {
     setError("");
 
@@ -137,6 +142,7 @@ export default function LoginForm() {
       setLoading(false);
     }
   };
+
   return (
     <form onSubmit={handleLogin} className="mt-8">
       {/* Email */}
@@ -207,6 +213,7 @@ export default function LoginForm() {
           Forgot Password?
         </button>
       </div>
+
       {/* Sign In */}
 
       <button
