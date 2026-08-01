@@ -4,18 +4,16 @@ import { useEffect, useState } from "react";
 
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import OnboardingGuard from "@/components/auth/OnboardingGuard";
-import { useRouter } from "next/navigation";
+
+import { useAuth } from "@/contexts/AuthContext";
 import { useWorkout } from "@/contexts/WorkoutContext";
+import { useUserProfile } from "@/hooks/useUserProfile";
 
 import Sidebar from "@/components/dashboard/Sidebar";
 import HeroCard from "@/components/dashboard/HeroCard";
-import WorkoutCard from "@/components/dashboard/WorkoutCard";
-import ExerciseList from "@/components/dashboard/ExerciseList";
 import StatsCards from "@/components/dashboard/StatsCards";
 import ProgressCard from "@/components/dashboard/ProgressCard";
-
-import { useAuth } from "@/contexts/AuthContext";
-import { useUserProfile } from "@/hooks/useUserProfile";
+import WorkoutCard from "@/components/dashboard/WorkoutCard";
 
 import { getGreeting } from "@/lib/greeting";
 import { generatePushWorkout } from "@/lib/workouts/generator";
@@ -24,23 +22,16 @@ export default function DashboardPage() {
   const { user } = useAuth();
   const { profile, loading } = useUserProfile();
 
+  const { startWorkout } = useWorkout();
+
   const [greeting, setGreeting] = useState({
-    title: "Welcome 👋",
-    subtitle: "Ready to crush today's workout?",
+    title: "Welcome",
   });
 
   const [workout] = useState(generatePushWorkout());
-  const router = useRouter();
-
-  const { startWorkout } = useWorkout();
 
   useEffect(() => {
-    const name = profile?.fullName || user?.displayName;
-
-    if (name) {
-      const firstName = name.split(" ")[0];
-      setGreeting(getGreeting(firstName));
-    }
+    setGreeting(getGreeting());
   }, [profile, user]);
 
   if (loading) {
@@ -54,27 +45,38 @@ export default function DashboardPage() {
   return (
     <ProtectedRoute>
       <OnboardingGuard>
-        <div className="flex min-h-screen bg-gray-100">
+        <div className="flex min-h-screen bg-zinc-100">
           <Sidebar />
 
-          <main className="flex-1 space-y-8 p-8">
+          <main className="flex-1 space-y-6 p-6">
+
+            {/* Hero */}
 
             <HeroCard
-              title={greeting.title}
-              subtitle={greeting.subtitle}
+              greeting={greeting.title}
+              name={
+                profile?.fullName?.split(" ")[0] ||
+                user?.displayName?.split(" ")[0] ||
+                "Athlete"
+              }
             />
 
-            <WorkoutCard workout={workout} />
-
-            <ExerciseList workout={workout} />
+            {/* Stats */}
 
             <StatsCards
               goal={profile?.goal ?? "-"}
               weight={profile?.weight ?? 0}
-              trainingDays={profile?.trainingDays ?? 0}
+              level={profile?.experience ?? "-"}
+              workoutSplit={profile?.selectedProgram ?? "-"}
             />
 
+            {/* Workout Timeline */}
+
             <ProgressCard />
+
+            {/* Today's Workout */}
+
+            <WorkoutCard workout={workout} />
 
           </main>
         </div>
