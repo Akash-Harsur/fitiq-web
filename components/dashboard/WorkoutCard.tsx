@@ -22,23 +22,23 @@ export default function WorkoutCard({
   }
 
   return (
-    <div className="rounded-3xl bg-white px-12 py-6 shadow-sm">
+    <div className="rounded-3xl border border-zinc-200 bg-white px-10 py-5 shadow-sm">
 
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-16">
 
         {/* Left */}
 
-        <div>
+        <div className="flex-1">
 
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-zinc-400">
-            Today's Workout
+          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-zinc-400">
+            TODAY'S WORKOUT
           </p>
 
-          <h2 className="mt-3 text-5xl font-bold tracking-tight text-zinc-900">
+          <h2 className="mt-4 text-3xl font-bold tracking-tight text-zinc-900">
             {workout.name}
           </h2>
 
-          <p className="mt-4 text-xl font-medium text-zinc-500">
+          <p className="mt-4 text-1g text-zinc-500">
             {workout.exercises.length} Exercises •{" "}
             {workout.estimatedDuration} mins
           </p>
@@ -49,7 +49,7 @@ export default function WorkoutCard({
 
         <button
           onClick={handleStartWorkout}
-          className="rounded-2xl bg-black px-10 py-5 text-xl font-semibold tracking-tight text-white transition-all duration-300 hover:bg-zinc-800 hover:shadow-lg active:scale-95"
+          className="flex h-20 w-64 items-center justify-center rounded-3xl bg-black text-xl font-semibold text-white transition-all duration-300 hover:bg-zinc-800 hover:shadow-lg"
         >
           Start Workout
         </button>
