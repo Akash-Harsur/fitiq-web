@@ -48,7 +48,7 @@ export default function DashboardPage() {
         <div className="flex min-h-screen bg-zinc-100">
           <Sidebar />
 
-          <main className="flex-1 space-y-6 p-6">
+          <main className="flex-1 space-y-4 bg-white p-3 md:space-y-6 md:bg-zinc-100 md:p-6">
 
             {/* Hero */}
 

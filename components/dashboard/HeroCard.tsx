@@ -13,26 +13,37 @@ export default function HeroCard({
   const quote = getDailyQuote();
 
   return (
-    <div className="rounded-3xl bg-white px-8 py-5">
+    <div className="rounded-3xl bg-white px-4 py-4 md:px-8 md:py-5 shadow-sm">
 
-      <div className="flex flex-col-reverse gap-6 lg:flex-row lg:items-center lg:justify-between">
+      <div className="flex flex-col items-center gap-6 lg:flex-row lg:items-center lg:justify-between">
+
+        {/* Mobile Logo */}
+        <div className="flex justify-center lg:hidden">
+          <Image
+            src="/image/logo.jpeg"
+            alt="FitIQ Logo"
+            width={220}
+            height={80}
+            priority
+            className="h-auto w-40 object-contain"
+          />
+        </div>
 
         {/* Left */}
-
         <div className="flex-1 text-center lg:text-left">
 
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-zinc-900">
+          <h1 className="text-2xl font-bold tracking-tight text-zinc-900 md:text-4xl lg:text-5xl">
             {greeting},{" "}
             <span>{name}</span>
           </h1>
 
           <div className="mt-5">
 
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-zinc-400">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-zinc-400 md:text-xs">
               Quote of the Day
             </p>
 
-            <p className="mt-3 max-w-xl text-base md:text-lg italic leading-8 text-zinc-600">
+            <p className="mt-2 text-sm italic text-zinc-600 md:text-lg">
               "{quote}"
             </p>
 
@@ -40,17 +51,16 @@ export default function HeroCard({
 
         </div>
 
-        {/* Right */}
-
-        <div className="flex w-full justify-center lg:w-80 lg:justify-end">
+        {/* Desktop Logo */}
+        <div className="hidden w-72 shrink-0 justify-center lg:flex">
 
           <Image
             src="/image/logo.jpeg"
             alt="FitIQ Logo"
-            width={380}
-            height={150}
+            width={320}
+            height={100}
             priority
-            className="h-auto w-48 md:w-56 lg:w-80 object-contain"
+            className="h-auto w-72 object-contain"
           />
 
         </div>
