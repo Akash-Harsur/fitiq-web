@@ -39,9 +39,27 @@ export default function WorkoutExerciseCard({ exercise }: Props) {
             >
                 <div className="flex items-center gap-3">
 
-                    <h2 className="text-xl font-semibold text-zinc-900">
-                        {exercise.name}
-                    </h2>
+                    <div>
+
+                        <h2 className="text-2xl font-bold tracking-tight text-zinc-900">
+                            {exercise.name}
+                        </h2>
+
+                        <div className="mt-2 flex flex-wrap items-center gap-2">
+
+                            <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-medium text-zinc-600">
+                                4 Sets
+                            </span>
+
+                            {exercise.rest && (
+                                <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-medium text-zinc-600">
+                                    Rest {exercise.rest}
+                                </span>
+                            )}
+
+                        </div>
+
+                    </div>
 
                     {completedExercise && (
 

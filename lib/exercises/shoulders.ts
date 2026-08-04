@@ -1,179 +1,256 @@
 import { Exercise } from "./types";
 
-export const shouldersExercises: Exercise[] = [
+export const shoulderExercises: Exercise[] = [
+
+  // ==========================
+  // Shoulder Press
+  // ==========================
+
   {
-    id: "barbell-overhead-press",
+    id: "barbell_overhead_press",
     name: "Barbell Overhead Press",
     muscle: "shoulders",
     category: "compound",
+    movement: "shoulder-press",
     equipment: "barbell",
+    difficulty: "intermediate",
+    priority: "primary",
   },
+
   {
-    id: "seated-barbell-overhead-press",
-    name: "Seated Barbell Overhead Press",
+    id: "seated_barbell_press",
+    name: "Seated Barbell Press",
     muscle: "shoulders",
     category: "compound",
+    movement: "shoulder-press",
     equipment: "barbell",
+    difficulty: "intermediate",
+    priority: "secondary",
   },
+
   {
-    id: "behind-neck-press",
-    name: "Behind Neck Press",
+    id: "standing_dumbbell_press",
+    name: "Standing Dumbbell Press",
     muscle: "shoulders",
     category: "compound",
-    equipment: "barbell",
+    movement: "shoulder-press",
+    equipment: "dumbbell",
+    difficulty: "intermediate",
+    priority: "primary",
   },
+
   {
-    id: "arnold-press",
+    id: "seated_dumbbell_press",
+    name: "Seated Dumbbell Press",
+    muscle: "shoulders",
+    category: "compound",
+    movement: "shoulder-press",
+    equipment: "dumbbell",
+    difficulty: "beginner",
+    priority: "primary",
+  },
+
+  {
+    id: "arnold_press",
     name: "Arnold Press",
     muscle: "shoulders",
     category: "compound",
+    movement: "shoulder-press",
     equipment: "dumbbell",
+    difficulty: "intermediate",
+    priority: "secondary",
   },
+
+  // ==========================
+  // Front Delt
+  // ==========================
+
   {
-    id: "seated-dumbbell-press",
-    name: "Seated Dumbbell Shoulder Press",
-    muscle: "shoulders",
-    category: "compound",
-    equipment: "dumbbell",
-  },
-  {
-    id: "standing-dumbbell-press",
-    name: "Standing Dumbbell Shoulder Press",
-    muscle: "shoulders",
-    category: "compound",
-    equipment: "dumbbell",
-  },
-  {
-    id: "machine-shoulder-press",
-    name: "Machine Shoulder Press",
-    muscle: "shoulders",
-    category: "compound",
-    equipment: "machine",
-  },
-  {
-    id: "smith-shoulder-press",
-    name: "Smith Machine Shoulder Press",
-    muscle: "shoulders",
-    category: "compound",
-    equipment: "machine",
-  },
-  {
-    id: "dumbbell-lateral-raise",
-    name: "Dumbbell Lateral Raise",
+    id: "front_raise_dumbbell",
+    name: "Front Raise (Dumbbell)",
     muscle: "shoulders",
     category: "isolation",
+    movement: "front-delt",
     equipment: "dumbbell",
+    difficulty: "beginner",
+    priority: "secondary",
   },
+
   {
-    id: "seated-lateral-raise",
-    name: "Seated Dumbbell Lateral Raise",
+    id: "alternating_front_raise",
+    name: "Alternating Front Raise",
     muscle: "shoulders",
     category: "isolation",
+    movement: "front-delt",
     equipment: "dumbbell",
+    difficulty: "beginner",
+    priority: "secondary",
   },
+
   {
-    id: "leaning-lateral-raise",
-    name: "Leaning Dumbbell Lateral Raise",
-    muscle: "shoulders",
-    category: "isolation",
-    equipment: "dumbbell",
-  },
-  {
-    id: "single-arm-cable-lateral-raise",
-    name: "Single Arm Cable Lateral Raise",
-    muscle: "shoulders",
-    category: "isolation",
-    equipment: "cable",
-  },
-  {
-    id: "dual-cable-lateral-raise",
-    name: "Dual Cable Lateral Raise",
-    muscle: "shoulders",
-    category: "isolation",
-    equipment: "cable",
-  },
-  {
-    id: "cable-front-raise",
-    name: "Cable Front Raise",
-    muscle: "shoulders",
-    category: "isolation",
-    equipment: "cable",
-  },
-  {
-    id: "dumbbell-front-raise",
-    name: "Dumbbell Front Raise",
-    muscle: "shoulders",
-    category: "isolation",
-    equipment: "dumbbell",
-  },
-  {
-    id: "barbell-front-raise",
+    id: "barbell_front_raise",
     name: "Barbell Front Raise",
     muscle: "shoulders",
     category: "isolation",
+    movement: "front-delt",
     equipment: "barbell",
+    difficulty: "intermediate",
+    priority: "secondary",
   },
+
   {
-    id: "plate-front-raise",
-    name: "Plate Front Raise",
+    id: "cable_front_raise",
+    name: "Cable Front Raise",
     muscle: "shoulders",
     category: "isolation",
-    equipment: "other",
+    movement: "front-delt",
+    equipment: "cable",
+    difficulty: "beginner",
+    priority: "secondary",
   },
+
+  // ==========================
+  // Side Delt
+  // ==========================
+
   {
-    id: "reverse-dumbbell-fly",
+    id: "dumbbell_lateral_raise",
+    name: "Dumbbell Lateral Raise",
+    muscle: "shoulders",
+    category: "isolation",
+    movement: "side-delt",
+    equipment: "dumbbell",
+    difficulty: "beginner",
+    priority: "primary",
+  },
+
+  {
+    id: "seated_lateral_raise",
+    name: "Seated Lateral Raise",
+    muscle: "shoulders",
+    category: "isolation",
+    movement: "side-delt",
+    equipment: "dumbbell",
+    difficulty: "beginner",
+    priority: "secondary",
+  },
+
+  {
+    id: "cable_lateral_raise",
+    name: "Cable Lateral Raise",
+    muscle: "shoulders",
+    category: "isolation",
+    movement: "side-delt",
+    equipment: "cable",
+    difficulty: "beginner",
+    priority: "primary",
+  },
+
+  {
+    id: "single_arm_cable_lateral_raise",
+    name: "Single Arm Cable Lateral Raise",
+    muscle: "shoulders",
+    category: "isolation",
+    movement: "side-delt",
+    equipment: "cable",
+    difficulty: "beginner",
+    priority: "secondary",
+  },
+
+  // ==========================
+  // Rear Delt
+  // ==========================
+
+  {
+    id: "rear_delt_fly",
+    name: "Rear Delt Fly",
+    muscle: "shoulders",
+    category: "isolation",
+    movement: "rear-delt",
+    equipment: "dumbbell",
+    difficulty: "beginner",
+    priority: "primary",
+  },
+
+  {
+    id: "reverse_dumbbell_fly",
     name: "Reverse Dumbbell Fly",
     muscle: "shoulders",
     category: "isolation",
+    movement: "rear-delt",
     equipment: "dumbbell",
+    difficulty: "beginner",
+    priority: "secondary",
   },
+
   {
-    id: "reverse-pec-deck",
+    id: "reverse_pec_deck",
     name: "Reverse Pec Deck",
     muscle: "shoulders",
     category: "isolation",
+    movement: "rear-delt",
     equipment: "machine",
+    difficulty: "beginner",
+    priority: "primary",
   },
+
   {
-    id: "face-pull",
+    id: "face_pull",
     name: "Face Pull",
     muscle: "shoulders",
     category: "isolation",
+    movement: "rear-delt",
     equipment: "cable",
+    difficulty: "beginner",
+    priority: "primary",
   },
+
   {
-    id: "cable-rear-delt-fly",
+    id: "cable_rear_delt_fly",
     name: "Cable Rear Delt Fly",
     muscle: "shoulders",
     category: "isolation",
+    movement: "rear-delt",
     equipment: "cable",
+    difficulty: "beginner",
+    priority: "secondary",
   },
+
+  // ==========================
+  // Traps
+  // ==========================
+
   {
-    id: "upright-row-barbell",
-    name: "Barbell Upright Row",
+    id: "upright_row_barbell",
+    name: "Upright Row (Barbell)",
     muscle: "shoulders",
     category: "compound",
+    movement: "other",
     equipment: "barbell",
+    difficulty: "intermediate",
+    priority: "secondary",
   },
+
   {
-    id: "upright-row-ez-bar",
-    name: "EZ Bar Upright Row",
+    id: "upright_row_ez_bar",
+    name: "Upright Row (EZ Bar)",
     muscle: "shoulders",
     category: "compound",
+    movement: "other",
     equipment: "ez-bar",
+    difficulty: "intermediate",
+    priority: "secondary",
   },
+
   {
-    id: "upright-row-cable",
-    name: "Cable Upright Row",
+    id: "upright_row_cable",
+    name: "Upright Row (Cable)",
     muscle: "shoulders",
     category: "compound",
+    movement: "other",
     equipment: "cable",
+    difficulty: "beginner",
+    priority: "secondary",
   },
-  {
-    id: "landmine-press",
-    name: "Landmine Press",
-    muscle: "shoulders",
-    category: "compound",
-    equipment: "landmine",
-  },
+
 ];

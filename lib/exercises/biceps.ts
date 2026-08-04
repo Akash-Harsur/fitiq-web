@@ -1,158 +1,212 @@
 import { Exercise } from "./types";
 
 export const bicepsExercises: Exercise[] = [
+
+  // ==========================
+  // Standard Curl
+  // ==========================
+
   {
-    id: "barbell-curl",
+    id: "standing_dumbbell_curl",
+    name: "Standing Dumbbell Curl",
+    muscle: "biceps",
+    category: "isolation",
+    movement: "curl",
+    equipment: "dumbbell",
+    difficulty: "beginner",
+    priority: "primary",
+  },
+
+  {
+    id: "alternating_dumbbell_curl",
+    name: "Alternating Dumbbell Curl",
+    muscle: "biceps",
+    category: "isolation",
+    movement: "curl",
+    equipment: "dumbbell",
+    difficulty: "beginner",
+    priority: "secondary",
+  },
+
+  {
+    id: "barbell_curl",
     name: "Barbell Curl",
     muscle: "biceps",
     category: "compound",
+    movement: "curl",
     equipment: "barbell",
+    difficulty: "intermediate",
+    priority: "primary",
   },
+
   {
-    id: "ez-bar-curl",
+    id: "ez_bar_curl",
     name: "EZ Bar Curl",
     muscle: "biceps",
     category: "compound",
+    movement: "curl",
     equipment: "ez-bar",
+    difficulty: "beginner",
+    priority: "primary",
   },
+
   {
-    id: "standing-dumbbell-curl",
-    name: "Standing Dumbbell Curl",
+    id: "wide_grip_ez_curl",
+    name: "Wide Grip EZ Curl",
     muscle: "biceps",
     category: "compound",
-    equipment: "dumbbell",
+    movement: "curl",
+    equipment: "ez-bar",
+    difficulty: "beginner",
+    priority: "secondary",
   },
+
   {
-    id: "alternating-dumbbell-curl",
-    name: "Alternating Dumbbell Curl",
+    id: "close_grip_ez_curl",
+    name: "Close Grip EZ Curl",
     muscle: "biceps",
     category: "compound",
-    equipment: "dumbbell",
+    movement: "curl",
+    equipment: "ez-bar",
+    difficulty: "beginner",
+    priority: "secondary",
   },
+
   {
-    id: "incline-dumbbell-curl",
-    name: "Incline Dumbbell Curl",
+    id: "drag_barbell_curl",
+    name: "Drag Barbell Curl",
     muscle: "biceps",
-    category: "isolation",
-    equipment: "dumbbell",
+    category: "compound",
+    movement: "curl",
+    equipment: "barbell",
+    difficulty: "intermediate",
+    priority: "secondary",
   },
+
+  // ==========================
+  // Hammer
+  // ==========================
+
   {
-    id: "seated-dumbbell-curl",
-    name: "Seated Dumbbell Curl",
-    muscle: "biceps",
-    category: "isolation",
-    equipment: "dumbbell",
-  },
-  {
-    id: "hammer-curl",
+    id: "hammer_curl",
     name: "Hammer Curl",
     muscle: "biceps",
-    category: "compound",
+    category: "isolation",
+    movement: "hammer-curl",
     equipment: "dumbbell",
+    difficulty: "beginner",
+    priority: "primary",
   },
+
   {
-    id: "cross-body-hammer-curl",
-    name: "Cross Body Hammer Curl",
-    muscle: "biceps",
-    category: "compound",
-    equipment: "dumbbell",
-  },
-  {
-    id: "preacher-barbell-curl",
-    name: "Preacher Barbell Curl",
-    muscle: "biceps",
-    category: "isolation",
-    equipment: "barbell",
-  },
-  {
-    id: "preacher-ez-bar-curl",
-    name: "Preacher EZ Bar Curl",
-    muscle: "biceps",
-    category: "isolation",
-    equipment: "ez-bar",
-  },
-  {
-    id: "preacher-dumbbell-curl",
-    name: "Preacher Dumbbell Curl",
-    muscle: "biceps",
-    category: "isolation",
-    equipment: "dumbbell",
-  },
-  {
-    id: "machine-preacher-curl",
-    name: "Machine Preacher Curl",
-    muscle: "biceps",
-    category: "isolation",
-    equipment: "machine",
-  },
-  {
-    id: "cable-curl",
-    name: "Cable Curl",
-    muscle: "biceps",
-    category: "isolation",
-    equipment: "cable",
-  },
-  {
-    id: "rope-hammer-curl",
+    id: "rope_hammer_curl",
     name: "Rope Hammer Curl",
     muscle: "biceps",
     category: "isolation",
+    movement: "hammer-curl",
     equipment: "cable",
+    difficulty: "beginner",
+    priority: "secondary",
   },
+
+  // ==========================
+  // Preacher
+  // ==========================
+
   {
-    id: "bayesian-cable-curl",
-    name: "Bayesian Cable Curl",
+    id: "preacher_barbell_curl",
+    name: "Preacher Barbell Curl",
     muscle: "biceps",
     category: "isolation",
-    equipment: "cable",
-  },
-  {
-    id: "high-cable-curl",
-    name: "High Cable Curl",
-    muscle: "biceps",
-    category: "isolation",
-    equipment: "cable",
-  },
-  {
-    id: "reverse-ez-bar-curl",
-    name: "Reverse EZ Bar Curl",
-    muscle: "biceps",
-    category: "compound",
-    equipment: "ez-bar",
-  },
-  {
-    id: "reverse-barbell-curl",
-    name: "Reverse Barbell Curl",
-    muscle: "biceps",
-    category: "compound",
+    movement: "preacher-curl",
     equipment: "barbell",
+    difficulty: "intermediate",
+    priority: "primary",
   },
+
   {
-    id: "zottman-curl",
-    name: "Zottman Curl",
+    id: "preacher_ez_curl",
+    name: "Preacher EZ Curl",
     muscle: "biceps",
-    category: "compound",
-    equipment: "dumbbell",
+    category: "isolation",
+    movement: "preacher-curl",
+    equipment: "ez-bar",
+    difficulty: "beginner",
+    priority: "secondary",
   },
+
   {
-    id: "concentration-curl",
+    id: "preacher_curl_machine",
+    name: "Preacher Curl Machine",
+    muscle: "biceps",
+    category: "isolation",
+    movement: "preacher-curl",
+    equipment: "machine",
+    difficulty: "beginner",
+    priority: "secondary",
+  },
+
+  // ==========================
+  // Peak
+  // ==========================
+
+  {
+    id: "concentration_curl",
     name: "Concentration Curl",
     muscle: "biceps",
     category: "isolation",
+    movement: "preacher-curl",
     equipment: "dumbbell",
+    difficulty: "beginner",
+    priority: "secondary",
   },
+
   {
-    id: "spider-curl",
-    name: "Spider Curl",
+    id: "seated_dumbbell_curl",
+    name: "Seated Dumbbell Curl",
     muscle: "biceps",
     category: "isolation",
-    equipment: "ez-bar",
+    movement: "curl",
+    equipment: "dumbbell",
+    difficulty: "beginner",
+    priority: "secondary",
   },
+
+  // ==========================
+  // Cable
+  // ==========================
+
   {
-    id: "drag-curl",
-    name: "Drag Curl",
+    id: "cable_curl",
+    name: "Cable Curl",
     muscle: "biceps",
-    category: "compound",
-    equipment: "barbell",
+    category: "isolation",
+    movement: "curl",
+    equipment: "cable",
+    difficulty: "beginner",
+    priority: "primary",
   },
+
+  {
+    id: "high_cable_curl",
+    name: "High Cable Curl",
+    muscle: "biceps",
+    category: "isolation",
+    movement: "curl",
+    equipment: "cable",
+    difficulty: "beginner",
+    priority: "secondary",
+  },
+
+  {
+    id: "single_arm_cable_curl",
+    name: "Single Arm Cable Curl",
+    muscle: "biceps",
+    category: "isolation",
+    movement: "curl",
+    equipment: "cable",
+    difficulty: "beginner",
+    priority: "secondary",
+  },
+
 ];

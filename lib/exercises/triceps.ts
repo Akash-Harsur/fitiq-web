@@ -1,144 +1,179 @@
 import { Exercise } from "./types";
 
 export const tricepsExercises: Exercise[] = [
+
+  // ==========================
+  // Pushdown
+  // ==========================
+
   {
-    id: "close-grip-bench-press",
-    name: "Close Grip Bench Press",
-    muscle: "triceps",
-    category: "compound",
-    equipment: "barbell",
-  },
-  {
-    id: "jm-press",
-    name: "JM Press",
-    muscle: "triceps",
-    category: "compound",
-    equipment: "barbell",
-  },
-  {
-    id: "barbell-skull-crusher",
-    name: "Barbell Skull Crusher",
-    muscle: "triceps",
-    category: "isolation",
-    equipment: "barbell",
-  },
-  {
-    id: "ez-bar-skull-crusher",
-    name: "EZ Bar Skull Crusher",
-    muscle: "triceps",
-    category: "isolation",
-    equipment: "ez-bar",
-  },
-  {
-    id: "lying-ez-bar-extension",
-    name: "Lying EZ Bar Triceps Extension",
-    muscle: "triceps",
-    category: "isolation",
-    equipment: "ez-bar",
-  },
-  {
-    id: "seated-overhead-ez-extension",
-    name: "Seated Overhead EZ Bar Extension",
-    muscle: "triceps",
-    category: "isolation",
-    equipment: "ez-bar",
-  },
-  {
-    id: "one-arm-dumbbell-extension",
-    name: "One Arm Dumbbell Overhead Extension",
-    muscle: "triceps",
-    category: "isolation",
-    equipment: "dumbbell",
-  },
-  {
-    id: "two-arm-dumbbell-extension",
-    name: "Two Arm Dumbbell Overhead Extension",
-    muscle: "triceps",
-    category: "isolation",
-    equipment: "dumbbell",
-  },
-  {
-    id: "seated-dumbbell-extension",
-    name: "Seated Dumbbell Triceps Extension",
-    muscle: "triceps",
-    category: "isolation",
-    equipment: "dumbbell",
-  },
-  {
-    id: "rope-pushdown",
+    id: "rope_pushdown",
     name: "Rope Pushdown",
     muscle: "triceps",
     category: "isolation",
+    movement: "pushdown",
     equipment: "cable",
+    difficulty: "beginner",
+    priority: "primary",
   },
+
   {
-    id: "straight-bar-pushdown",
+    id: "straight_bar_pushdown",
     name: "Straight Bar Pushdown",
     muscle: "triceps",
     category: "isolation",
+    movement: "pushdown",
     equipment: "cable",
+    difficulty: "beginner",
+    priority: "primary",
   },
+
   {
-    id: "v-bar-pushdown",
-    name: "V-Bar Pushdown",
-    muscle: "triceps",
-    category: "isolation",
-    equipment: "cable",
-  },
-  {
-    id: "reverse-grip-pushdown",
+    id: "reverse_grip_pushdown",
     name: "Reverse Grip Pushdown",
     muscle: "triceps",
     category: "isolation",
+    movement: "pushdown",
     equipment: "cable",
+    difficulty: "beginner",
+    priority: "secondary",
   },
+
   {
-    id: "single-arm-cable-pushdown",
-    name: "Single Arm Cable Pushdown",
+    id: "single_arm_pushdown",
+    name: "Single Arm Pushdown",
     muscle: "triceps",
     category: "isolation",
+    movement: "pushdown",
     equipment: "cable",
+    difficulty: "beginner",
+    priority: "secondary",
   },
+
+  // ==========================
+  // Overhead
+  // ==========================
+
   {
-    id: "overhead-rope-extension",
+    id: "overhead_rope_extension",
     name: "Overhead Rope Extension",
     muscle: "triceps",
     category: "isolation",
+    movement: "overhead-extension",
     equipment: "cable",
+    difficulty: "beginner",
+    priority: "primary",
   },
+
   {
-    id: "single-arm-overhead-cable-extension",
-    name: "Single Arm Overhead Cable Extension",
+    id: "overhead_dumbbell_extension",
+    name: "Overhead Dumbbell Extension",
     muscle: "triceps",
     category: "isolation",
-    equipment: "cable",
+    movement: "overhead-extension",
+    equipment: "dumbbell",
+    difficulty: "beginner",
+    priority: "primary",
   },
+
   {
-    id: "cross-body-cable-extension",
-    name: "Cross Body Cable Extension",
+    id: "single_arm_overhead_extension",
+    name: "Single Arm Overhead Extension",
     muscle: "triceps",
     category: "isolation",
-    equipment: "cable",
+    movement: "overhead-extension",
+    equipment: "dumbbell",
+    difficulty: "beginner",
+    priority: "secondary",
   },
+
   {
-    id: "machine-triceps-extension",
-    name: "Machine Triceps Extension",
+    id: "seated_overhead_extension",
+    name: "Seated Overhead Extension",
     muscle: "triceps",
     category: "isolation",
-    equipment: "machine",
+    movement: "overhead-extension",
+    equipment: "dumbbell",
+    difficulty: "beginner",
+    priority: "secondary",
   },
+
+  // ==========================
+  // Skull Crusher
+  // ==========================
+
   {
-    id: "bench-dips",
-    name: "Bench Dips",
+    id: "ez_bar_skull_crusher",
+    name: "EZ Bar Skull Crusher",
     muscle: "triceps",
     category: "compound",
-    equipment: "bodyweight",
+    movement: "skull-crusher",
+    equipment: "ez-bar",
+    difficulty: "intermediate",
+    priority: "primary",
   },
+
   {
-    id: "parallel-bar-dips",
-    name: "Parallel Bar Dips",
+    id: "barbell_skull_crusher",
+    name: "Barbell Skull Crusher",
     muscle: "triceps",
     category: "compound",
-    equipment: "bodyweight",
+    movement: "skull-crusher",
+    equipment: "barbell",
+    difficulty: "intermediate",
+    priority: "secondary",
   },
+
+  {
+    id: "cable_skull_crusher",
+    name: "Cable Skull Crusher",
+    muscle: "triceps",
+    category: "isolation",
+    movement: "skull-crusher",
+    equipment: "cable",
+    difficulty: "beginner",
+    priority: "secondary",
+  },
+
+  // ==========================
+  // Compound
+  // ==========================
+
+  {
+    id: "close_grip_bench_press",
+    name: "Close Grip Bench Press",
+    muscle: "triceps",
+    category: "compound",
+    movement: "pushdown",
+    equipment: "barbell",
+    difficulty: "intermediate",
+    priority: "primary",
+  },
+
+  // ==========================
+  // Kickback
+  // ==========================
+
+  {
+    id: "dumbbell_kickback",
+    name: "Dumbbell Kickback",
+    muscle: "triceps",
+    category: "isolation",
+    movement: "other",
+    equipment: "dumbbell",
+    difficulty: "beginner",
+    priority: "secondary",
+  },
+
+  {
+    id: "cable_kickback",
+    name: "Cable Kickback",
+    muscle: "triceps",
+    category: "isolation",
+    movement: "other",
+    equipment: "cable",
+    difficulty: "beginner",
+    priority: "secondary",
+  },
+
 ];

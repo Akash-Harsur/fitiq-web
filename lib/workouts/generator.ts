@@ -85,3 +85,33 @@ export function generateLegWorkout(): WorkoutDay {
     exercises,
   };
 }
+
+export function generateUpperWorkout(): WorkoutDay {
+  const exercises: Exercise[] = [];
+
+  exercises.push(...getExercises("chest", 2));
+  exercises.push(...getExercises("back", 2));
+  exercises.push(...getExercises("shoulders", 1));
+  exercises.push(...getExercises("biceps", 1));
+
+  return {
+    id: crypto.randomUUID(),
+    name: "Upper Body",
+    estimatedDuration: 60,
+    exercises,
+  };
+}
+
+export function generateLowerWorkout(): WorkoutDay {
+  const exercises: Exercise[] = [];
+
+  exercises.push(...getExercises("legs", 5));
+  exercises.push(...getExercises("core", 1));
+
+  return {
+    id: crypto.randomUUID(),
+    name: "Lower Body",
+    estimatedDuration: 60,
+    exercises,
+  };
+}

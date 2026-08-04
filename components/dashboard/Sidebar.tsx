@@ -99,8 +99,9 @@ export default function Sidebar() {
 
   return (
     <aside
-      className={`sticky top-0 flex h-screen flex-col border-r border-zinc-200 bg-white transition-all duration-300 ease-in-out ${collapsed ? "w-20" : "w-72"
-        }`}
+      className={`sticky top-0 flex h-screen flex-col border-r border-zinc-200 bg-white transition-all duration-300 ease-in-out ${
+  collapsed ? "w-20" : "w-72"
+}`}
     >
 
 
@@ -109,8 +110,9 @@ export default function Sidebar() {
       <div className="sticky top-0 z-20 border-b border-zinc-200 bg-white px-5 py-5">
 
         <div
-          className={`flex items-center ${collapsed ? "justify-center" : "justify-between"
-            }`}
+          className={`flex items-center ${
+  collapsed ? "justify-center" : "justify-between"
+}`}
         >
 
           {/* FitIQ Logo */}
@@ -148,11 +150,11 @@ export default function Sidebar() {
 
         <div
           className={`rounded-3xl border border-zinc-200 bg-zinc-50 transition-all duration-300 hover:shadow-lg hover:scale-[1.01]
-
-          ${collapsed
-              ? "flex justify-center p-2"
-              : "flex items-center gap-4 p-4"
-            }`}
+${
+  collapsed
+    ? "flex justify-center p-2"
+    : "flex items-center gap-4 p-4"
+}`}
         >
 
           {user?.photoURL ? (
@@ -218,25 +220,23 @@ export default function Sidebar() {
                 <Link
                   href={item.href}
                   className={`group flex items-center rounded-xl transition-all duration-300 ease-in-out
-
-                  ${collapsed
-                      ? "mx-auto h-12 w-12 justify-center"
-                      : "gap-4 px-4 py-3"
-                    }
-
-                  ${active
-                      ? "bg-black text-white shadow-lg"
-                      : "text-zinc-700 hover:bg-zinc-100 hover:text-black"
-                    }`}
+${
+  collapsed
+    ? "mx-auto h-12 w-12 justify-center"
+    : "gap-4 px-4 py-3"
+}
+${
+  active
+    ? "bg-black text-white shadow-lg"
+    : "text-zinc-700 hover:bg-zinc-100 hover:text-black"
+}`}
                 >
 
                   <Icon
                     size={22}
-                    className={`shrink-0 transition-transform duration-300
-
-                    ${!active &&
-                      "group-hover:scale-110"
-                      }`}
+                    className={`shrink-0 transition-transform duration-300 ${
+  !active ? "group-hover:scale-110" : ""
+}`}
                   />
 
                   {!collapsed && (
@@ -268,11 +268,11 @@ export default function Sidebar() {
         <button
           onClick={handleLogout}
           className={`group flex w-full items-center rounded-xl text-red-500 transition-all duration-300 ease-in-out hover:bg-red-50
-
-          ${collapsed
-              ? "mx-auto h-12 w-12 justify-center"
-              : "gap-4 px-4 py-3"
-            }`}
+${
+  collapsed
+    ? "mx-auto h-12 w-12 justify-center"
+    : "gap-4 px-4 py-3"
+}`}
         >
 
           <LogOut

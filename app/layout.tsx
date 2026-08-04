@@ -20,6 +20,7 @@ export const metadata: Metadata = {
   description: "Your Personal Fitness Companion",
 };
 
+
 export default function RootLayout({
   children,
 }: Readonly<{

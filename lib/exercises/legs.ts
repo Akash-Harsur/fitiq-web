@@ -1,172 +1,249 @@
 import { Exercise } from "./types";
 
-export const legsExercises: Exercise[] = [
+export const legExercises: Exercise[] = [
+
+  // ==========================
+  // Squat Pattern
+  // ==========================
+
   {
-    id: "back-squat",
+    id: "back_squat",
     name: "Back Squat",
     muscle: "legs",
     category: "compound",
+    movement: "squat",
     equipment: "barbell",
+    difficulty: "intermediate",
+    priority: "primary",
   },
+
   {
-    id: "front-squat",
+    id: "front_squat",
     name: "Front Squat",
     muscle: "legs",
     category: "compound",
+    movement: "squat",
     equipment: "barbell",
+    difficulty: "advanced",
+    priority: "secondary",
   },
+
   {
-    id: "box-squat",
-    name: "Box Squat",
+    id: "goblet_squat",
+    name: "Goblet Squat",
     muscle: "legs",
     category: "compound",
-    equipment: "barbell",
+    movement: "squat",
+    equipment: "dumbbell",
+    difficulty: "beginner",
+    priority: "secondary",
   },
+
   {
-    id: "hack-squat",
+    id: "hack_squat",
     name: "Hack Squat",
     muscle: "legs",
     category: "compound",
+    movement: "squat",
     equipment: "machine",
+    difficulty: "beginner",
+    priority: "primary",
   },
+
   {
-    id: "smith-squat",
-    name: "Smith Machine Squat",
-    muscle: "legs",
-    category: "compound",
-    equipment: "machine",
-  },
-  {
-    id: "leg-press",
+    id: "leg_press",
     name: "Leg Press",
     muscle: "legs",
     category: "compound",
+    movement: "squat",
     equipment: "machine",
+    difficulty: "beginner",
+    priority: "primary",
   },
+
+  // ==========================
+  // Single Leg
+  // ==========================
+
   {
-    id: "walking-lunge",
-    name: "Walking Lunge",
-    muscle: "legs",
-    category: "compound",
-    equipment: "dumbbell",
-  },
-  {
-    id: "stationary-lunge",
-    name: "Stationary Lunge",
-    muscle: "legs",
-    category: "compound",
-    equipment: "dumbbell",
-  },
-  {
-    id: "bulgarian-split-squat",
+    id: "bulgarian_split_squat",
     name: "Bulgarian Split Squat",
     muscle: "legs",
     category: "compound",
+    movement: "lunge",
     equipment: "dumbbell",
+    difficulty: "intermediate",
+    priority: "primary",
   },
+
   {
-    id: "step-up",
-    name: "Step Up",
+    id: "walking_lunge",
+    name: "Walking Lunge",
     muscle: "legs",
     category: "compound",
+    movement: "lunge",
     equipment: "dumbbell",
+    difficulty: "beginner",
+    priority: "secondary",
   },
+
   {
-    id: "romanian-deadlift",
+    id: "reverse_lunge",
+    name: "Reverse Lunge",
+    muscle: "legs",
+    category: "compound",
+    movement: "lunge",
+    equipment: "dumbbell",
+    difficulty: "beginner",
+    priority: "secondary",
+  },
+
+  {
+    id: "step_up",
+    name: "Step-Up",
+    muscle: "legs",
+    category: "compound",
+    movement: "lunge",
+    equipment: "dumbbell",
+    difficulty: "beginner",
+    priority: "secondary",
+  },
+
+  // ==========================
+  // Hip Hinge
+  // ==========================
+
+  {
+    id: "romanian_deadlift",
     name: "Romanian Deadlift",
     muscle: "legs",
     category: "compound",
+    movement: "hip-hinge",
     equipment: "barbell",
+    difficulty: "intermediate",
+    priority: "primary",
   },
+
   {
-    id: "stiff-leg-deadlift",
+    id: "stiff_leg_deadlift",
     name: "Stiff Leg Deadlift",
     muscle: "legs",
     category: "compound",
+    movement: "hip-hinge",
     equipment: "barbell",
+    difficulty: "intermediate",
+    priority: "secondary",
   },
+
+  // ==========================
+  // Hamstrings
+  // ==========================
+
   {
-    id: "good-morning",
-    name: "Good Morning",
-    muscle: "legs",
-    category: "compound",
-    equipment: "barbell",
-  },
-  {
-    id: "hip-thrust",
-    name: "Barbell Hip Thrust",
-    muscle: "legs",
-    category: "compound",
-    equipment: "barbell",
-  },
-  {
-    id: "glute-bridge",
-    name: "Glute Bridge",
-    muscle: "legs",
-    category: "compound",
-    equipment: "bodyweight",
-  },
-  {
-    id: "leg-extension",
-    name: "Leg Extension",
-    muscle: "legs",
-    category: "isolation",
-    equipment: "machine",
-  },
-  {
-    id: "single-leg-extension",
-    name: "Single Leg Extension",
-    muscle: "legs",
-    category: "isolation",
-    equipment: "machine",
-  },
-  {
-    id: "lying-leg-curl",
-    name: "Lying Leg Curl",
-    muscle: "legs",
-    category: "isolation",
-    equipment: "machine",
-  },
-  {
-    id: "seated-leg-curl",
+    id: "seated_leg_curl",
     name: "Seated Leg Curl",
     muscle: "legs",
     category: "isolation",
+    movement: "leg-curl",
     equipment: "machine",
+    difficulty: "beginner",
+    priority: "primary",
   },
+
   {
-    id: "single-leg-curl",
-    name: "Single Leg Curl",
+    id: "lying_leg_curl",
+    name: "Lying Leg Curl",
     muscle: "legs",
     category: "isolation",
+    movement: "leg-curl",
     equipment: "machine",
+    difficulty: "beginner",
+    priority: "primary",
   },
+
+  // ==========================
+  // Glutes
+  // ==========================
+
   {
-    id: "standing-calf-raise",
+    id: "hip_thrust",
+    name: "Hip Thrust",
+    muscle: "legs",
+    category: "compound",
+    movement: "hip-hinge",
+    equipment: "barbell",
+    difficulty: "intermediate",
+    priority: "secondary",
+  },
+
+  {
+    id: "cable_kickback",
+    name: "Cable Kickback",
+    muscle: "legs",
+    category: "isolation",
+    movement: "other",
+    equipment: "cable",
+    difficulty: "beginner",
+    priority: "secondary",
+  },
+
+  // ==========================
+  // Calves
+  // ==========================
+
+  {
+    id: "standing_calf_raise",
     name: "Standing Calf Raise",
     muscle: "legs",
     category: "isolation",
+    movement: "calf",
     equipment: "machine",
+    difficulty: "beginner",
+    priority: "primary",
   },
+
   {
-    id: "seated-calf-raise",
+    id: "seated_calf_raise",
     name: "Seated Calf Raise",
     muscle: "legs",
     category: "isolation",
+    movement: "calf",
     equipment: "machine",
+    difficulty: "beginner",
+    priority: "secondary",
   },
+
   {
-    id: "donkey-calf-raise",
+    id: "donkey_calf_raise",
     name: "Donkey Calf Raise",
     muscle: "legs",
     category: "isolation",
+    movement: "calf",
     equipment: "machine",
+    difficulty: "beginner",
+    priority: "secondary",
   },
+
   {
-    id: "smith-calf-raise",
-    name: "Smith Machine Calf Raise",
+    id: "single_leg_calf_raise",
+    name: "Single Leg Calf Raise",
     muscle: "legs",
     category: "isolation",
-    equipment: "machine",
+    movement: "calf",
+    equipment: "bodyweight",
+    difficulty: "beginner",
+    priority: "secondary",
   },
+
+  {
+    id: "leg_press_calf_raise",
+    name: "Leg Press Calf Raise",
+    muscle: "legs",
+    category: "isolation",
+    movement: "calf",
+    equipment: "machine",
+    difficulty: "beginner",
+    priority: "secondary",
+  },
+
 ];
