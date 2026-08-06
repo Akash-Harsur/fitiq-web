@@ -1,4 +1,4 @@
-import { generatePushWorkout } from "./generator";
+import { generatePushWorkout } from "./ruleGenerator.ts";
 
 import { WorkoutDay } from "./types";
 

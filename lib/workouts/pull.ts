@@ -1,17 +1,14 @@
 import { generateWorkoutFromRule } from "./ruleGenerator";
-import { pushRule } from "../workout-rules/push";
+import { pullRule } from "../workout-rules/pull";
 import { WorkoutDay } from "./types";
 
-export function generatePushWorkout(): WorkoutDay {
-  const exercises = generateWorkoutFromRule(pushRule);
+export function generatePullWorkout(): WorkoutDay {
+  const exercises = generateWorkoutFromRule(pullRule);
 
   return {
     id: crypto.randomUUID(),
-
-    name: "Push Day",
-
+    name: "Pull Day",
     estimatedDuration: 60,
-
     exercises,
   };
 }

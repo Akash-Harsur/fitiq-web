@@ -1,12 +1,10 @@
 import { weekSchedule } from "./weekSchedule";
 
-import {
-  generatePushWorkout,
-  generatePullWorkout,
-  generateLegWorkout,
-  generateUpperWorkout,
-  generateLowerWorkout,
-} from "./generator";
+import { generatePushWorkout } from "./push";
+import { generatePullWorkout } from "./pull";
+import { generateLegWorkout } from "./legs";
+import { generateUpperWorkout } from "./upper";
+import { generateLowerWorkout } from "./lower";
 
 import { WorkoutDay } from "./types";
 
@@ -15,18 +13,36 @@ export function getTodaysWorkout(
     dayIndex: number
 ): WorkoutDay {
 
-    const schedule =
-        weekSchedule[
-        (selectedProgram as keyof typeof weekSchedule) ??
-        "push-pull-legs"
-        ];
+    const programMap: Record<string, keyof typeof weekSchedule> = {
+        "ppl": "push-pull-legs",
+        "beginner-ppl": "push-pull-legs",
+        "upper-lower-arms": "upper-lower",
+        "powerbuilding": "upper-lower",
+    };
 
+    const normalizedProgram =
+        programMap[selectedProgram] ??
+        (selectedProgram as keyof typeof weekSchedule);
+
+    const schedule =
+        weekSchedule[normalizedProgram] ??
+        weekSchedule["push-pull-legs"];
+
+    if (!schedule) {
+        console.error("Schedule not found:", selectedProgram);
+
+        return {
+            id: crypto.randomUUID(),
+            name: "Debug Workout",
+            estimatedDuration: 0,
+            exercises: [],
+        };
+    }
 
     const mondayBasedDayIndex = (dayIndex + 6) % 7;
     const today = schedule[mondayBasedDayIndex];
 
     switch (today) {
-
         case "push":
             return generatePushWorkout();
 
@@ -36,7 +52,6 @@ export function getTodaysWorkout(
         case "legs":
             return generateLegWorkout();
 
-        // Temporary Mapping
         case "upper":
             return generateUpperWorkout();
 

@@ -127,7 +127,21 @@ function StatCard({
 }
 
 function format(value: string) {
-  return value
-    .replace(/[-_]/g, " ")
-    .replace(/\b\w/g, (c) => c.toUpperCase());
+  const displayMap: Record<string, string> = {
+    "ppl": "Push Pull Legs",
+    "beginner-ppl": "Beginner Push Pull Legs",
+    "upper-lower": "Upper / Lower",
+    "upper-lower-arms": "Upper / Lower + Arms",
+    "bro-split": "Bro Split",
+    "arnold": "Arnold Split",
+    "full-body": "Full Body",
+    "powerbuilding": "Powerbuilding",
+  };
+
+  return (
+    displayMap[value] ??
+    value
+      .replace(/[-_]/g, " ")
+      .replace(/\b\w/g, (c) => c.toUpperCase())
+  );
 }
