@@ -1,9 +1,14 @@
-import { generatePushWorkout } from "./ruleGenerator.ts";
-
+import { generateWorkoutFromRule } from "./ruleGenerator";
+import { fullBodyRule } from "../workout-rules/fullBody";
 import { WorkoutDay } from "./types";
 
-export const fullBodyProgram: WorkoutDay[] = [
-  generatePushWorkout(),
-  generatePushWorkout(),
-  generatePushWorkout(),
-];
+export function generateFullBodyWorkout(): WorkoutDay {
+  const exercises = generateWorkoutFromRule(fullBodyRule);
+
+  return {
+    id: crypto.randomUUID(),
+    name: "Full Body Workout",
+    estimatedDuration: 60,
+    exercises,
+  };
+}

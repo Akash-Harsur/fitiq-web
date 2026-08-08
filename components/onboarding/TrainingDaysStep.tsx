@@ -7,8 +7,13 @@ import {
 import SectionTitle from "./SectionTitle";
 import SelectCard from "./SelectCard";
 
+type Experience =
+  | "beginner"
+  | "intermediate"
+  | "advanced";
+
 type TrainingDaysStepProps = {
-  experience: "beginner" | "intermediate" | "advanced";
+  experience: Experience;
   trainingDays: number | null;
   onChange: (field: string, value: number) => void;
 };
@@ -44,21 +49,40 @@ const trainingOptions = [
     title: "7 Days",
     description: "Advanced training frequency.",
   },
-  {
-    days: 8,
-    title: "8-Day Rotation",
-    description: "Specialized training rotation.",
-  },
 ];
+
+function getAvailableDays(experience: Experience) {
+  switch (experience) {
+    case "beginner":
+      return [2, 3, 4];
+
+    case "intermediate":
+      return [3, 4, 5, 6];
+
+    case "advanced":
+      return [4, 5, 6, 7];
+
+    default:
+      return [3, 4];
+  }
+}
 
 export default function TrainingDaysStep({
   experience,
   trainingDays,
   onChange,
 }: TrainingDaysStepProps) {
+  const availableDays =
+    getAvailableDays(experience);
+
+  const visibleTrainingOptions =
+    trainingOptions.filter((option) =>
+      availableDays.includes(option.days)
+    );
+
   const guideline =
     trainingDays !== null
-      ? trainingDayGuidelines[experience][trainingDays]
+      ? trainingDayGuidelines[experience]?.[trainingDays]
       : null;
 
   const statusColors = {
@@ -72,12 +96,12 @@ export default function TrainingDaysStep({
   return (
     <div>
       <SectionTitle
-        title="Training Availability"
-        subtitle="How many days can you consistently train?"
+        title="How many days can you train?"
+        subtitle="We'll recommend training programs based on your experience and availability."
       />
 
       <div className="grid gap-5 md:grid-cols-2">
-        {trainingOptions.map((option) => (
+        {visibleTrainingOptions.map((option) => (
           <SelectCard
             key={option.days}
             title={option.title}
@@ -85,7 +109,10 @@ export default function TrainingDaysStep({
             icon={CalendarDays}
             selected={trainingDays === option.days}
             onClick={() =>
-              onChange("trainingDays", option.days)
+              onChange(
+                "trainingDays",
+                option.days
+              )
             }
           />
         ))}
@@ -116,7 +143,8 @@ export default function TrainingDaysStep({
               }
               className="mt-5 rounded-xl bg-black px-5 py-3 text-sm font-medium text-white transition hover:opacity-90"
             >
-              Switch to {guideline.recommendedDays} Days
+              Switch to{" "}
+              {guideline.recommendedDays} Days
             </button>
           )}
         </div>

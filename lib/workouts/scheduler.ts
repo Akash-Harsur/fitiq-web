@@ -6,88 +6,151 @@ import { generateLegWorkout } from "./legs";
 import { generateUpperWorkout } from "./upper";
 import { generateLowerWorkout } from "./lower";
 
+import { generateChestWorkout } from "./chest";
+import { generateBackWorkout } from "./back";
+import { generateShouldersWorkout } from "./shoulder";
+import { generateArmsWorkout } from "./arms";
+import { generateFullBodyWorkout } from "./fullBody";
+
 import { WorkoutDay } from "./types";
 
 export function getTodaysWorkout(
-    selectedProgram: string,
-    dayIndex: number
+  selectedProgram: string,
+  dayIndex: number
 ): WorkoutDay {
 
-    const programMap: Record<string, keyof typeof weekSchedule> = {
-        "ppl": "push-pull-legs",
-        "beginner-ppl": "push-pull-legs",
-        "upper-lower-arms": "upper-lower",
-        "powerbuilding": "upper-lower",
+  const programMap: Record<
+    string,
+    keyof typeof weekSchedule
+  > = {
+    "ppl": "push-pull-legs",
+    "beginner-ppl": "push-pull-legs",
+    "upper-lower-arms": "upper-lower",
+    "powerbuilding": "upper-lower",
+  };
+
+  const normalizedProgram =
+    programMap[selectedProgram] ??
+    (selectedProgram as keyof typeof weekSchedule);
+
+  const schedule =
+    weekSchedule[normalizedProgram] ??
+    weekSchedule["push-pull-legs"];
+
+  if (!schedule) {
+    console.error(
+      "Schedule not found:",
+      selectedProgram
+    );
+
+    return {
+      id: crypto.randomUUID(),
+      name: "Debug Workout",
+      estimatedDuration: 0,
+      exercises: [],
     };
+  }
 
-    const normalizedProgram =
-        programMap[selectedProgram] ??
-        (selectedProgram as keyof typeof weekSchedule);
+  const mondayBasedDayIndex =
+    (dayIndex + 6) % 7;
 
-    const schedule =
-        weekSchedule[normalizedProgram] ??
-        weekSchedule["push-pull-legs"];
+  const today =
+    schedule[mondayBasedDayIndex];
 
-    if (!schedule) {
-        console.error("Schedule not found:", selectedProgram);
+  switch (today) {
+    case "push":
+      return generatePushWorkout();
 
-        return {
-            id: crypto.randomUUID(),
-            name: "Debug Workout",
-            estimatedDuration: 0,
-            exercises: [],
-        };
-    }
+    case "pull":
+      return generatePullWorkout();
 
-    const mondayBasedDayIndex = (dayIndex + 6) % 7;
-    const today = schedule[mondayBasedDayIndex];
+    case "legs":
+      return generateLegWorkout();
 
-    switch (today) {
-        case "push":
-            return generatePushWorkout();
+    case "upper":
+      return generateUpperWorkout();
 
-        case "pull":
-            return generatePullWorkout();
+    case "lower":
+      return generateLowerWorkout();
 
-        case "legs":
-            return generateLegWorkout();
+    case "chest":
+      return generateChestWorkout();
 
-        case "upper":
-            return generateUpperWorkout();
+    case "back":
+      return generateBackWorkout();
 
-        case "lower":
-            return generateLowerWorkout();
+    case "shoulders":
+      return generateShouldersWorkout();
 
-        case "chest":
-            return generatePushWorkout();
+    case "arms":
+      return generateArmsWorkout();
 
-        case "back":
-            return generatePullWorkout();
+    case "chest-back":
+      return generateChestWorkout();
 
-        case "shoulders":
-            return generatePushWorkout();
+    case "shoulders-arms":
+      return generateShouldersWorkout();
 
-        case "arms":
-            return generatePullWorkout();
+    case "full-body":
+      return generateFullBodyWorkout();
 
-        case "chest-back":
-            return generatePushWorkout();
+    case "rest":
+      return {
+        id: crypto.randomUUID(),
+        name: "Rest Day",
+        estimatedDuration: 0,
+        exercises: [],
+      };
 
-        case "shoulders-arms":
-            return generatePullWorkout();
+    default:
+      return generatePushWorkout();
+  }
+}
 
-        case "full-body":
-            return generatePushWorkout();
 
-        case "rest":
-            return {
-                id: crypto.randomUUID(),
-                name: "Rest Day",
-                estimatedDuration: 0,
-                exercises: [],
-            };
+/* =========================================
+   MANUAL WORKOUT SELECTION
+========================================= */
 
-        default:
-            return generatePushWorkout();
-    }
+export function getWorkoutByType(
+  workoutType: string
+): WorkoutDay {
+
+  switch (workoutType) {
+    case "push":
+      return generatePushWorkout();
+
+    case "pull":
+      return generatePullWorkout();
+
+    case "legs":
+      return generateLegWorkout();
+
+    case "upper":
+      return generateUpperWorkout();
+
+    case "lower":
+      return generateLowerWorkout();
+
+    case "chest":
+      return generateChestWorkout();
+
+    case "back":
+      return generateBackWorkout();
+
+    case "shoulders":
+      return generateShouldersWorkout();
+
+    case "arms":
+      return generateArmsWorkout();
+
+    case "full-body":
+      return generateFullBodyWorkout();
+
+    default:
+      return getTodaysWorkout(
+        "push-pull-legs",
+        new Date().getDay()
+      );
+  }
 }

@@ -1,34 +1,49 @@
 export interface WarmupSet {
-    percent: number;
-    reps: number;
+  percent: number;
+  reps: number;
 }
 
 export interface WorkingSet {
-    label: string;
-    reps: number;
+  label: string;
+  reps: number;
 }
 
 export interface BackoffSet {
-    percent: number;
-    reps: number;
+  percent: number;
+  reps: number;
+}
+
+export interface DropSet {
+  percent: number;
+  reps: number;
+}
+
+export interface SupersetExercise {
+  id: string;
+  name: string;
+  reps: number;
 }
 
 export interface WorkoutExercise {
-    id: string;
+  id: string;
 
-    name: string;
+  name: string;
 
-    image: string;
+  image: string;
 
-    warmup?: WarmupSet[];
+  warmup?: WarmupSet[];
 
-    workingSets: WorkingSet[];
+  workingSets: WorkingSet[];
 
-    backoff?: BackoffSet;
+  backoff?: BackoffSet;
 
-    notes?: string;
+  dropSet?: DropSet[];
 
-    rest?: string;
+  superset?: SupersetExercise;
 
-    expanded?: boolean;
+  notes?: string;
+
+  rest?: string;
+
+  expanded?: boolean;
 }

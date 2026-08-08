@@ -17,7 +17,7 @@ export default function WorkoutCard({
   const { startWorkout } = useWorkout();
 
   function handleStartWorkout() {
-    startWorkout(workout.exercises.length);
+    startWorkout(workout);
     router.push("/workout");
   }
 

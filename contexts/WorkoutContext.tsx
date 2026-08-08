@@ -2,6 +2,8 @@
 
 import { createContext, useContext, useState } from "react";
 
+import { WorkoutDay } from "@/lib/workouts/types";
+
 type WorkoutContextType = {
   workoutStarted: boolean;
 
@@ -15,33 +17,47 @@ type WorkoutContextType = {
 
   totalExercises: number;
 
-  startWorkout: (totalExercises: number) => void;
+  currentWorkout: WorkoutDay | null;
+
+  startWorkout: (workout: WorkoutDay) => void;
 
   completeExercise: () => void;
 
   finishWorkout: () => void;
 };
 
-const WorkoutContext = createContext<WorkoutContextType | null>(null);
+const WorkoutContext =
+  createContext<WorkoutContextType | null>(null);
 
 export function WorkoutProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [workoutStarted, setWorkoutStarted] = useState(false);
+  const [workoutStarted, setWorkoutStarted] =
+    useState(false);
 
-  const [workoutFinished, setWorkoutFinished] = useState(false);
+  const [workoutFinished, setWorkoutFinished] =
+    useState(false);
 
-  const [startTime, setStartTime] = useState<number | null>(null);
+  const [startTime, setStartTime] =
+    useState<number | null>(null);
 
-  const [completedExercises, setCompletedExercises] = useState(0);
+  const [completedExercises, setCompletedExercises] =
+    useState(0);
 
-  const [currentExercise, setCurrentExercise] = useState(0);
+  const [currentExercise, setCurrentExercise] =
+    useState(0);
 
-  const [totalExercises, setTotalExercises] = useState(0);
+  const [totalExercises, setTotalExercises] =
+    useState(0);
 
-  function startWorkout(total: number) {
+  const [currentWorkout, setCurrentWorkout] =
+    useState<WorkoutDay | null>(null);
+
+  function startWorkout(workout: WorkoutDay) {
+    setCurrentWorkout(workout);
+
     setWorkoutStarted(true);
 
     setWorkoutFinished(false);
@@ -50,7 +66,7 @@ export function WorkoutProvider({
 
     setCurrentExercise(0);
 
-    setTotalExercises(total);
+    setTotalExercises(workout.exercises.length);
 
     setStartTime(Date.now());
   }
@@ -74,6 +90,7 @@ export function WorkoutProvider({
         completedExercises,
         currentExercise,
         totalExercises,
+        currentWorkout,
         startWorkout,
         completeExercise,
         finishWorkout,
@@ -88,7 +105,9 @@ export function useWorkout() {
   const context = useContext(WorkoutContext);
 
   if (!context) {
-    throw new Error("useWorkout must be used inside WorkoutProvider");
+    throw new Error(
+      "useWorkout must be used inside WorkoutProvider"
+    );
   }
 
   return context;

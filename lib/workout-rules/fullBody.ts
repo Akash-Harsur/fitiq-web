@@ -1,20 +1,9 @@
 import { WorkoutRule } from "./types";
 
 export const fullBodyRule: WorkoutRule = {
-  name: "Full Body",
+  name: "Full Body Workout",
 
   muscles: [
-    {
-      muscle: "legs",
-
-      rules: [
-        {
-          movement: "squat",
-          count: 1,
-        },
-      ],
-    },
-
     {
       muscle: "chest",
 
@@ -34,6 +23,10 @@ export const fullBodyRule: WorkoutRule = {
           movement: "horizontal-row",
           count: 1,
         },
+        {
+          movement: "vertical-pull",
+          count: 1,
+        },
       ],
     },
 
@@ -43,6 +36,43 @@ export const fullBodyRule: WorkoutRule = {
       rules: [
         {
           movement: "shoulder-press",
+          count: 1,
+        },
+      ],
+    },
+
+    {
+      muscle: "legs",
+
+      rules: [
+        {
+          movement: "squat",
+          count: 1,
+        },
+        {
+          movement: "hip-hinge",
+          count: 1,
+        },
+      ],
+    },
+
+    {
+      muscle: "biceps",
+
+      rules: [
+        {
+          movement: "curl",
+          count: 1,
+        },
+      ],
+    },
+
+    {
+      muscle: "triceps",
+
+      rules: [
+        {
+          movement: "pushdown",
           count: 1,
         },
       ],

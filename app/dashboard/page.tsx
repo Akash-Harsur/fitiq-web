@@ -1,87 +1,3 @@
-/*"use client";
-
-import { useEffect, useState } from "react";
-
-import ProtectedRoute from "@/components/auth/ProtectedRoute";
-import OnboardingGuard from "@/components/auth/OnboardingGuard";
-
-import { getTodaysWorkout } from "@/lib/workouts/scheduler";
-
-import { useAuth } from "@/contexts/AuthContext";
-import { useUserProfile } from "@/hooks/useUserProfile";
-
-import Sidebar from "@/components/dashboard/Sidebar";
-import HeroCard from "@/components/dashboard/HeroCard";
-import StatsCards from "@/components/dashboard/StatsCards";
-import ProgressCard from "@/components/dashboard/ProgressCard";
-import WorkoutCard from "@/components/dashboard/WorkoutCard";
-
-import { getGreeting } from "@/lib/greeting";
-
-export default function DashboardPage() {
-  const { user } = useAuth();
-  const { profile, loading } = useUserProfile();
-
-  const [greeting, setGreeting] = useState({
-    title: "Welcome",
-  });
-
-  const workout = getTodaysWorkout(
-    profile?.selectedProgram ?? "push-pull-legs",
-    new Date().getDay()
-  );
-  
-  useEffect(() => {
-    setGreeting(getGreeting());
-  }, [profile, user]);
-
-  if (loading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center text-xl font-semibold">
-        Loading...
-      </div>
-    );
-  }
-
-  return (
-    <ProtectedRoute>
-      <OnboardingGuard>
-
-        <div className="flex min-h-screen bg-zinc-100">
-
-          <Sidebar />
-
-          <main className="flex-1 space-y-4 p-3 md:space-y-6 md:p-6">
-
-            <HeroCard
-              greeting={greeting.title}
-              name={
-                profile?.fullName?.split(" ")[0] ||
-                user?.displayName?.split(" ")[0] ||
-                "Athlete"
-              }
-            />
-
-            <StatsCards
-              goal={profile?.goal ?? "-"}
-              weight={profile?.weight ?? 0}
-              level={profile?.experience ?? "-"}
-              workoutSplit={profile?.selectedProgram ?? "-"}
-            />
-
-            <ProgressCard />
-
-            <WorkoutCard workout={workout} />
-
-          </main>
-
-        </div>
-
-      </OnboardingGuard>
-    </ProtectedRoute>
-  );
-}*/
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -89,7 +5,10 @@ import { useEffect, useState } from "react";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import OnboardingGuard from "@/components/auth/OnboardingGuard";
 
-import { getTodaysWorkout } from "@/lib/workouts/scheduler";
+import {
+  getTodaysWorkout,
+  getWorkoutByType,
+} from "@/lib/workouts/scheduler";
 
 import { useAuth } from "@/contexts/AuthContext";
 import { useUserProfile } from "@/hooks/useUserProfile";
@@ -110,6 +29,9 @@ export default function DashboardPage() {
     title: "Welcome",
   });
 
+  const [manualWorkout, setManualWorkout] =
+    useState<string | null>(null);
+
   useEffect(() => {
     setGreeting(getGreeting());
   }, [profile, user]);
@@ -122,20 +44,29 @@ export default function DashboardPage() {
     );
   }
 
-  const workout = getTodaysWorkout(
+  const scheduledWorkout = getTodaysWorkout(
     profile?.selectedProgram ?? "push-pull-legs",
     new Date().getDay()
   );
 
-  console.log("Selected Program:", profile?.selectedProgram);
+  const workout = manualWorkout
+    ? getWorkoutByType(manualWorkout)
+    : scheduledWorkout;
+
+  console.log(
+    "Selected Program:",
+    profile?.selectedProgram
+  );
 
   return (
     <ProtectedRoute>
       <OnboardingGuard>
         <div className="flex min-h-screen bg-zinc-100">
+
           <Sidebar />
 
           <main className="flex-1 space-y-4 p-3 md:space-y-6 md:p-6">
+
             <HeroCard
               greeting={greeting.title}
               name={
@@ -149,16 +80,90 @@ export default function DashboardPage() {
               goal={profile?.goal ?? "-"}
               weight={profile?.weight ?? 0}
               level={profile?.experience ?? "-"}
-              workoutSplit={profile?.selectedProgram ?? "-"}
+              workoutSplit={
+                profile?.selectedProgram ?? "-"
+              }
             />
 
             <ProgressCard />
 
+            {/* Choose Today's Workout */}
+            <div className="rounded-3xl border border-zinc-200 bg-white p-5 shadow-sm">
+              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+
+                <div>
+                  <p className="text-sm font-semibold text-zinc-900">
+                    Choose Today&apos;s Workout
+                  </p>
+
+                  <p className="mt-1 text-sm text-zinc-500">
+                    Want to do something different today?
+                  </p>
+                </div>
+
+                <select
+                  value={manualWorkout ?? ""}
+                  onChange={(e) =>
+                    setManualWorkout(
+                      e.target.value || null
+                    )
+                  }
+                  className="rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm font-medium text-zinc-900 outline-none focus:border-black"
+                >
+                  <option value="">
+                    Use Scheduled Workout
+                  </option>
+
+                  <option value="push">
+                    Push
+                  </option>
+
+                  <option value="pull">
+                    Pull
+                  </option>
+
+                  <option value="legs">
+                    Legs
+                  </option>
+
+                  <option value="chest">
+                    Chest
+                  </option>
+
+                  <option value="back">
+                    Back
+                  </option>
+
+                  <option value="shoulders">
+                    Shoulders
+                  </option>
+
+                  <option value="arms">
+                    Arms
+                  </option>
+
+                  <option value="upper">
+                    Upper Body
+                  </option>
+
+                  <option value="lower">
+                    Lower Body
+                  </option>
+
+                  <option value="full-body">
+                    Full Body
+                  </option>
+                </select>
+
+              </div>
+            </div>
+
             <WorkoutCard workout={workout} />
+
           </main>
+
         </div>
       </OnboardingGuard>
     </ProtectedRoute>
   );
 }
-
