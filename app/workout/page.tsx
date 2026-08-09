@@ -1,43 +1,66 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 
 import WorkoutExerciseCard from "@/components/workout/WorkoutExerciseCard";
 import { getWorkoutByType } from "@/lib/workouts/scheduler";
+import { WorkoutDay } from "@/lib/workouts/types";
 
 export default function WorkoutPage() {
   const router = useRouter();
 
-  // Temporary: current workout
-  // Next step mein dashboard se selected workout dynamically pass karenge.
-  const workout = getWorkoutByType("upper");
+  const [workout, setWorkout] =
+    useState<WorkoutDay | null>(null);
+
+  useEffect(() => {
+    const generatedWorkout =
+      getWorkoutByType("upper");
+
+    setWorkout(generatedWorkout);
+  }, []);
+
+  // Prevent server/client hydration mismatch
+  if (!workout) {
+    return (
+      <main className="min-h-screen bg-zinc-100 p-4 md:p-6">
+        <div className="mx-auto max-w-7xl">
+          <div className="rounded-3xl bg-white p-8 shadow-sm">
+            <p className="text-zinc-500">
+              Loading workout...
+            </p>
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   return (
-    <main className="min-h-screen bg-zinc-100">
-      <div className="mx-auto max-w-7xl p-6">
+    <main className="min-h-screen bg-zinc-100 p-4 md:p-6">
+      <div className="mx-auto max-w-7xl">
 
         {/* Header */}
-        <div className="mb-8 rounded-3xl bg-white p-8 shadow-sm">
+        <div className="mb-6 rounded-3xl bg-white p-6 shadow-sm">
 
           <button
             onClick={() => router.back()}
-            className="mb-6 flex items-center gap-2 text-sm font-medium text-zinc-500 transition hover:text-black"
+            className="mb-5 flex items-center gap-2 text-sm font-medium text-zinc-500 transition hover:text-black"
           >
             <ArrowLeft size={18} />
             Back
           </button>
 
-          <h1 className="text-4xl font-bold tracking-tight text-zinc-900">
+          <h1 className="text-3xl font-bold tracking-tight text-zinc-900">
             {workout.name}
           </h1>
 
-          <p className="mt-2 text-lg text-zinc-500">
+          <p className="mt-2 text-base text-zinc-500">
             {workout.exercises.length} Exercises •{" "}
             {workout.estimatedDuration} mins
           </p>
 
-          <div className="mt-6 h-2 overflow-hidden rounded-full bg-zinc-200">
+          <div className="mt-5 h-2 overflow-hidden rounded-full bg-zinc-200">
             <div className="h-full w-1/6 rounded-full bg-black" />
           </div>
 
@@ -49,14 +72,12 @@ export default function WorkoutPage() {
 
         {/* Exercises */}
         <div className="space-y-2">
-
           {workout.exercises.map((exercise) => (
             <WorkoutExerciseCard
               key={exercise.id}
               exercise={exercise}
             />
           ))}
-
         </div>
 
       </div>

@@ -1,7 +1,5 @@
-import {
-  generatePushWorkout,
-  generateLegWorkout,
-} from "./ruleGenerator.ts";
+import { generatePushWorkout } from "./push";
+import { generateLegWorkout } from "./legs";
 
 import { WorkoutDay } from "./types";
 

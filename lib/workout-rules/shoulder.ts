@@ -1,4 +1,6 @@
-const shouldersRule = {
+import { WorkoutRule } from "./types";
+
+export const shouldersRule: WorkoutRule = {
   name: "Shoulder Workout",
 
   muscles: [
@@ -18,13 +20,7 @@ const shouldersRule = {
           movement: "rear-delt",
           count: 1,
         },
-        {
-          movement: "front-delt",
-          count: 1,
-        },
       ],
     },
   ],
 };
-
-export { shouldersRule };

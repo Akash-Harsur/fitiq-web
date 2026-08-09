@@ -25,18 +25,17 @@ export default function ExerciseList({
               </h3>
 
               <p className="mt-1 text-sm capitalize text-gray-500">
-                {exercise.muscle} • {exercise.equipment}
+                {exercise.notes}
               </p>
             </div>
 
             <span
-              className={`rounded-full px-3 py-1 text-sm font-medium ${
-                exercise.category === "compound"
+              className={`rounded-full px-3 py-1 text-sm font-medium ${exercise.notes === "compound"
                   ? "bg-green-100 text-green-700"
                   : "bg-blue-100 text-blue-700"
-              }`}
+                }`}
             >
-              {exercise.category}
+              {exercise.notes}
             </span>
           </div>
         ))}
