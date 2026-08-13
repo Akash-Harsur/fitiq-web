@@ -15,17 +15,23 @@ export default function WorkoutPage() {
     useState<WorkoutDay | null>(null);
 
   useEffect(() => {
+    const params = new URLSearchParams(
+      window.location.search
+    );
+
+    const workoutType =
+      params.get("type") || "push";
+
     const generatedWorkout =
-      getWorkoutByType("upper");
+      getWorkoutByType(workoutType);
 
     setWorkout(generatedWorkout);
   }, []);
 
-  // Prevent server/client hydration mismatch
   if (!workout) {
     return (
-      <main className="min-h-screen bg-zinc-100 p-4 md:p-6">
-        <div className="mx-auto max-w-7xl">
+      <main className="min-h-screen bg-zinc-50">
+        <div className="mx-auto max-w-7xl p-6">
           <div className="rounded-3xl bg-white p-8 shadow-sm">
             <p className="text-zinc-500">
               Loading workout...
@@ -37,10 +43,13 @@ export default function WorkoutPage() {
   }
 
   return (
-    <main className="min-h-screen bg-zinc-100 p-4 md:p-6">
-      <div className="mx-auto max-w-7xl">
+    <main className="min-h-screen bg-zinc-50">
+      <div className="mx-auto max-w-7xl p-6">
 
-        {/* Header */}
+        {/* =========================
+            HEADER
+        ========================== */}
+
         <div className="mb-6 rounded-3xl bg-white p-6 shadow-sm">
 
           <button
@@ -61,16 +70,18 @@ export default function WorkoutPage() {
           </p>
 
           <div className="mt-5 h-2 overflow-hidden rounded-full bg-zinc-200">
-            <div className="h-full w-1/6 rounded-full bg-black" />
+            <div className="h-full w-0 rounded-full bg-black" />
           </div>
 
           <p className="mt-2 text-sm text-zinc-500">
             Exercise 1 of {workout.exercises.length}
           </p>
-
         </div>
 
-        {/* Exercises */}
+        {/* =========================
+            EXERCISES
+        ========================== */}
+
         <div className="space-y-2">
           {workout.exercises.map((exercise) => (
             <WorkoutExerciseCard

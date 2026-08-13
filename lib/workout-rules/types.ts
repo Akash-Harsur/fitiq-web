@@ -1,27 +1,42 @@
 import { MovementPattern } from "../exercises/types";
 
-export interface SupersetRule {
-  name: string;
+export interface WarmupRule {
+  percent: number;
+  reps: number;
+}
+
+export interface WorkingSetRule {
+  sets: number;
+  reps: number;
+}
+
+export interface BackoffRule {
+  percent: number;
   reps: number;
 }
 
 export interface Rule {
   movement: MovementPattern;
+
   count: number;
 
-  // Optional: sirf jis exercise ko drop set chahiye
-  dropSet?: boolean;
+  warmup?: WarmupRule[];
 
-  // Optional: sirf jis exercise ko superset chahiye
-  superset?: SupersetRule;
+  workingSets: WorkingSetRule;
+
+  backoff?: BackoffRule;
+
+  rest?: string;
 }
 
 export interface MuscleRule {
   muscle: string;
+
   rules: Rule[];
 }
 
 export interface WorkoutRule {
   name: string;
+
   muscles: MuscleRule[];
 }
