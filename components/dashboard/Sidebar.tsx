@@ -39,7 +39,7 @@ const menuItems = [
   {
     title: "Progress",
     icon: ChartColumn,
-    href: "#",
+    href: "/progress",
   },
   {
     title: "Profile",
@@ -59,15 +59,29 @@ export default function Sidebar() {
 
   const { user } = useAuth();
 
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] =
+    useState(false);
+
+  /*
+   * =========================================
+   * LOAD SIDEBAR STATE
+   * =========================================
+   */
 
   useEffect(() => {
-    const saved = localStorage.getItem("sidebar");
+    const saved =
+      localStorage.getItem("sidebar");
 
     if (saved === "collapsed") {
       setCollapsed(true);
     }
   }, []);
+
+  /*
+   * =========================================
+   * TOGGLE SIDEBAR
+   * =========================================
+   */
 
   const toggleSidebar = () => {
     const next = !collapsed;
@@ -80,15 +94,31 @@ export default function Sidebar() {
     );
   };
 
+  /*
+   * =========================================
+   * LOGOUT
+   * =========================================
+   */
+
   const handleLogout = async () => {
     try {
       await signOut(auth);
 
       router.replace("/auth");
     } catch (error) {
-      console.error("Logout failed:", error);
+      console.error(
+        "Logout failed:",
+        error
+      );
     }
   };
+
+  /*
+   * =========================================
+   * USER INITIALS
+   * =========================================
+   */
+
   const initials =
     user?.displayName
       ?.split(" ")
@@ -100,25 +130,30 @@ export default function Sidebar() {
   return (
     <aside
       className={`sticky top-0 flex h-screen flex-col border-r border-zinc-200 bg-white transition-all duration-300 ease-in-out ${
-  collapsed ? "w-20" : "w-72"
-}`}
+        collapsed
+          ? "w-20"
+          : "w-72"
+      }`}
     >
-
-
-      {/* Header */}
+      {/* =========================================
+          HEADER
+      ========================================== */}
 
       <div className="sticky top-0 z-20 border-b border-zinc-200 bg-white px-5 py-5">
 
         <div
           className={`flex items-center ${
-  collapsed ? "justify-center" : "justify-between"
-}`}
+            collapsed
+              ? "justify-center"
+              : "justify-between"
+          }`}
         >
 
           {/* FitIQ Logo */}
 
           {!collapsed && (
             <Link href="/dashboard">
+
               <Image
                 src="/image/logo.jpeg"
                 alt="FitIQ"
@@ -127,12 +162,14 @@ export default function Sidebar() {
                 className="cursor-pointer"
                 priority
               />
+
             </Link>
           )}
 
           {/* Burger Menu */}
 
           <button
+            type="button"
             onClick={toggleSidebar}
             className="rounded-xl p-2 transition-all duration-300 hover:bg-zinc-100 active:scale-95"
           >
@@ -143,18 +180,18 @@ export default function Sidebar() {
 
       </div>
 
-
-      {/* User */}
+      {/* =========================================
+          USER
+      ========================================== */}
 
       <div className="px-4 py-5">
 
         <div
-          className={`rounded-3xl border border-zinc-200 bg-zinc-50 transition-all duration-300 hover:shadow-lg hover:scale-[1.01]
-${
-  collapsed
-    ? "flex justify-center p-2"
-    : "flex items-center gap-4 p-4"
-}`}
+          className={`rounded-3xl border border-zinc-200 bg-zinc-50 transition-all duration-300 hover:scale-[1.01] hover:shadow-lg ${
+            collapsed
+              ? "flex justify-center p-2"
+              : "flex items-center gap-4 p-4"
+          }`}
         >
 
           {user?.photoURL ? (
@@ -183,7 +220,8 @@ ${
 
               <h3 className="truncate text-lg font-semibold text-zinc-900">
 
-                {user?.displayName || "FitIQ User"}
+                {user?.displayName ||
+                  "FitIQ User"}
 
               </h3>
 
@@ -201,7 +239,9 @@ ${
 
       </div>
 
-      {/* Navigation */}
+      {/* =========================================
+          NAVIGATION
+      ========================================== */}
 
       <nav className="flex-1 overflow-y-auto px-4 py-4">
 
@@ -211,68 +251,102 @@ ${
 
             const Icon = item.icon;
 
-            const active = pathname === item.href;
+            const active =
+              pathname === item.href;
+
+            /*
+             * Disabled menu items
+             */
+
+            const disabled =
+              item.href === "#";
 
             return (
-
               <li key={item.title}>
 
-                <Link
-                  href={item.href}
-                  className={`group flex items-center rounded-xl transition-all duration-300 ease-in-out
-${
-  collapsed
-    ? "mx-auto h-12 w-12 justify-center"
-    : "gap-4 px-4 py-3"
-}
-${
-  active
-    ? "bg-black text-white shadow-lg"
-    : "text-zinc-700 hover:bg-zinc-100 hover:text-black"
-}`}
-                >
+                {disabled ? (
 
-                  <Icon
-                    size={22}
-                    className={`shrink-0 transition-transform duration-300 ${
-  !active ? "group-hover:scale-110" : ""
-}`}
-                  />
+                  <button
+                    type="button"
+                    disabled
+                    className={`group flex w-full cursor-not-allowed items-center rounded-xl text-zinc-400 transition-all duration-300 ease-in-out ${
+                      collapsed
+                        ? "mx-auto h-12 w-12 justify-center"
+                        : "gap-4 px-4 py-3"
+                    }`}
+                  >
 
-                  {!collapsed && (
+                    <Icon
+                      size={22}
+                      className="shrink-0"
+                    />
 
-                    <span className="font-semibold">
+                    {!collapsed && (
+                      <span className="font-semibold">
+                        {item.title}
+                      </span>
+                    )}
 
-                      {item.title}
+                  </button>
 
-                    </span>
+                ) : (
 
-                  )}
+                  <Link
+                    href={item.href}
+                    className={`group flex items-center rounded-xl transition-all duration-300 ease-in-out ${
+                      collapsed
+                        ? "mx-auto h-12 w-12 justify-center"
+                        : "gap-4 px-4 py-3"
+                    } ${
+                      active
+                        ? "bg-black text-white shadow-lg"
+                        : "text-zinc-700 hover:bg-zinc-100 hover:text-black"
+                    }`}
+                  >
 
-                </Link>
+                    <Icon
+                      size={22}
+                      className={`shrink-0 transition-transform duration-300 ${
+                        !active
+                          ? "group-hover:scale-110"
+                          : ""
+                      }`}
+                    />
+
+                    {!collapsed && (
+
+                      <span className="font-semibold">
+                        {item.title}
+                      </span>
+
+                    )}
+
+                  </Link>
+
+                )}
 
               </li>
-
             );
-
           })}
 
         </ul>
 
       </nav>
 
-      {/* Logout */}
+      {/* =========================================
+          LOGOUT
+      ========================================== */}
 
       <div className="border-t border-zinc-200 p-4">
 
         <button
+          type="button"
           onClick={handleLogout}
-          className={`group flex w-full items-center rounded-xl text-red-500 transition-all duration-300 ease-in-out hover:bg-red-50
-${
-  collapsed
-    ? "mx-auto h-12 w-12 justify-center"
-    : "gap-4 px-4 py-3"
-}`}
+          className={`group flex w-full items-center rounded-xl text-red-500 transition-all duration-300 ease-in-out hover:bg-red-50 ${
+            collapsed
+              ? "mx-auto h-12 w-12 justify-center"
+              : "gap-4 px-4 py-3"
+          }`}
         >
 
           <LogOut
@@ -283,9 +357,7 @@ ${
           {!collapsed && (
 
             <span className="font-semibold">
-
               Logout
-
             </span>
 
           )}

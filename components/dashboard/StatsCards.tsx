@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
 import {
   Flame,
   Footprints,
@@ -6,6 +10,9 @@ import {
   Trophy,
   CalendarDays,
 } from "lucide-react";
+
+import { useAuth } from "@/contexts/AuthContext";
+import { getWorkoutStreak } from "@/lib/progress/streak";
 
 interface StatsCardsProps {
   goal: string;
@@ -20,61 +27,142 @@ export default function StatsCards({
   level,
   workoutSplit,
 }: StatsCardsProps) {
+  const { user } = useAuth();
+
+  const [streak, setStreak] = useState(0);
+  const [streakLoading, setStreakLoading] = useState(true);
+
+  /*
+   * =========================================
+   * LOAD REAL STREAK
+   * =========================================
+   */
+
+  useEffect(() => {
+    if (!user) {
+      setStreak(0);
+      setStreakLoading(false);
+      return;
+    }
+
+    let cancelled = false;
+
+    const loadStreak = async () => {
+      try {
+        setStreakLoading(true);
+
+        const value = await getWorkoutStreak(user.uid);
+
+        if (!cancelled) {
+          setStreak(value);
+        }
+      } catch (error) {
+        console.error("Failed to load streak:", error);
+      } finally {
+        if (!cancelled) {
+          setStreakLoading(false);
+        }
+      }
+    };
+
+    loadStreak();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [user]);
+
   return (
-    <div className="overflow-hidden rounded-3xl border border-zinc-200 bg-white shadow-sm">
+    <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+      {/* =================================
+          ROW 1
+          Streak | Steps | Weight
+      ================================= */}
 
-        <StatCard
-          icon={<Flame className="h-5 w-5 text-orange-500" />}
-          iconBg="bg-orange-100"
-          title="Streak"
-          value="12"
-          suffix="Days"
-        />
+      {/* STREAK */}
 
-        <StatCard
-          icon={<Footprints className="h-5 w-5 text-violet-600" />}
-          iconBg="bg-violet-100"
-          title="Steps"
-          value="8,420"
-          suffix="/ 10,000"
-        />
+      <StatCard
+        icon={
+          <Flame className="h-5 w-5 text-orange-500" />
+        }
+        iconBg="bg-orange-100"
+        title="Streak"
+        value={streakLoading ? "—" : String(streak)}
+        suffix="Days"
+      />
 
-        <StatCard
-          icon={<Target className="h-5 w-5 text-green-600" />}
-          iconBg="bg-green-100"
-          title="Goal"
-          value={format(goal)}
-        />
+      {/* STEPS */}
 
-        <StatCard
-          icon={<Weight className="h-5 w-5 text-sky-600" />}
-          iconBg="bg-sky-100"
-          title="Weight"
-          value={`${weight}`}
-          suffix="kg"
-        />
+      <StatCard
+        icon={
+          <Footprints className="h-5 w-5 text-violet-600" />
+        }
+        iconBg="bg-violet-100"
+        title="Steps"
+        value="—"
+        suffix="/ 10,000"
+      />
 
-        <StatCard
-          icon={<Trophy className="h-5 w-5 text-yellow-600" />}
-          iconBg="bg-yellow-100"
-          title="Level"
-          value={format(level)}
-        />
+      {/* WEIGHT */}
 
-        <StatCard
-          icon={<CalendarDays className="h-5 w-5 text-pink-600" />}
-          iconBg="bg-pink-100"
-          title="Workout Split"
-          value={format(workoutSplit)}
-        />
+      <StatCard
+        icon={
+          <Weight className="h-5 w-5 text-sky-600" />
+        }
+        iconBg="bg-sky-100"
+        title="Weight"
+        value={weight > 0 ? String(weight) : "—"}
+        suffix={weight > 0 ? "kg" : undefined}
+      />
 
-      </div>
+      {/* =================================
+          ROW 2
+          Level | Goal | Workout Split
+      ================================= */}
+
+      {/* LEVEL */}
+
+      <StatCard
+        icon={
+          <Trophy className="h-5 w-5 text-yellow-600" />
+        }
+        iconBg="bg-yellow-100"
+        title="Level"
+        value={format(level)}
+      />
+
+      {/* GOAL */}
+
+      <StatCard
+        icon={
+          <Target className="h-5 w-5 text-green-600" />
+        }
+        iconBg="bg-green-100"
+        title="Goal"
+        value={format(goal)}
+      />
+
+      {/* WORKOUT SPLIT */}
+
+      <StatCard
+        icon={
+          <CalendarDays className="h-5 w-5 text-pink-600" />
+        }
+        iconBg="bg-pink-100"
+        title="Workout Split"
+        value={format(workoutSplit)}
+      />
 
     </div>
   );
 }
+
+/*
+ * =========================================
+ * STAT CARD
+ * =========================================
+ */
 
 interface CardProps {
   icon: React.ReactNode;
@@ -92,28 +180,32 @@ function StatCard({
   suffix,
 }: CardProps) {
   return (
-    <div className="flex items-center gap-4 border border-zinc-100 p-6 transition-all duration-300 hover:bg-zinc-50">
+    <div className="flex h-[135px] items-center gap-4 rounded-2xl border border-zinc-200 bg-white px-6 py-5 shadow-sm transition-all duration-300 hover:shadow-md">
+
+      {/* ICON */}
 
       <div
-        className={`flex h-12 w-12 items-center justify-center rounded-full ${iconBg}`}
+        className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full ${iconBg}`}
       >
         {icon}
       </div>
 
-      <div className="min-w-0">
+      {/* CONTENT */}
+
+      <div className="min-w-0 flex-1">
 
         <p className="text-sm font-medium text-zinc-500">
           {title}
         </p>
 
-        <div className="mt-1 flex items-end gap-1">
+        <div className="mt-1 flex min-w-0 items-end gap-1">
 
-          <h3 className="text-2xl font-bold tracking-tight text-zinc-900">
+          <h3 className="truncate text-2xl font-bold tracking-tight text-zinc-900">
             {value}
           </h3>
 
           {suffix && (
-            <span className="pb-1 text-base text-zinc-500">
+            <span className="shrink-0 pb-1 text-base text-zinc-500">
               {suffix}
             </span>
           )}
@@ -126,22 +218,109 @@ function StatCard({
   );
 }
 
+/*
+ * =========================================
+ * FORMAT VALUES
+ * =========================================
+ */
+
 function format(value: string) {
+  if (!value) {
+    return "—";
+  }
+
   const displayMap: Record<string, string> = {
-    "ppl": "Push Pull Legs",
-    "beginner-ppl": "Beginner Push Pull Legs",
-    "upper-lower": "Upper / Lower",
-    "upper-lower-arms": "Upper / Lower + Arms",
-    "bro-split": "Bro Split",
-    "arnold": "Arnold Split",
-    "full-body": "Full Body",
-    "powerbuilding": "Powerbuilding",
+    /*
+     * =====================================
+     * WORKOUT PROGRAMS
+     * =====================================
+     */
+
+    ppl: "Push Pull Legs",
+
+    "push-pull-legs":
+      "Push Pull Legs",
+
+    "beginner-ppl":
+      "Beginner Push Pull Legs",
+
+    "full-body-2":
+      "Full Body 2-Day",
+
+    "full-body":
+      "Full Body",
+
+    "upper-lower":
+      "Upper / Lower",
+
+    "upper-lower-strength":
+      "Upper / Lower Strength",
+
+    "upper-lower-arms":
+      "Upper / Lower + Arms",
+
+    "bro-split":
+      "Bro Split",
+
+    "ppl-upper-lower":
+      "PPL + Upper / Lower",
+
+    "bodybuilding-5":
+      "Bodybuilding 5-Day",
+
+    arnold:
+      "Arnold Split",
+
+    "ppl-arms":
+      "PPL + Arms",
+
+    powerbuilding:
+      "Powerbuilding",
+
+    /*
+     * =====================================
+     * GOALS
+     * =====================================
+     */
+
+    "muscle-gain":
+      "Muscle Gain",
+
+    "fat-loss":
+      "Fat Loss",
+
+    "body-recomposition":
+      "Body Recomposition",
+
+    strength:
+      "Strength",
+
+    "general-fitness":
+      "General Fitness",
+
+    /*
+     * =====================================
+     * EXPERIENCE
+     * =====================================
+     */
+
+    beginner:
+      "Beginner",
+
+    intermediate:
+      "Intermediate",
+
+    advanced:
+      "Advanced",
   };
 
   return (
     displayMap[value] ??
     value
       .replace(/[-_]/g, " ")
-      .replace(/\b\w/g, (c) => c.toUpperCase())
+      .replace(
+        /\b\w/g,
+        (c) => c.toUpperCase()
+      )
   );
 }

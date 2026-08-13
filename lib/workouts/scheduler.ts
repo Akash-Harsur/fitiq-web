@@ -14,9 +14,19 @@ import { generateFullBodyWorkout } from "./fullBody";
 
 import { WorkoutDay } from "./types";
 
-/* =========================================
-   PROGRAM NAME NORMALIZATION
-========================================= */
+/*
+ * =========================================
+ * PROGRAM NAME NORMALIZATION
+ * =========================================
+ *
+ * Only programs that don't have their own
+ * schedule are mapped here.
+ *
+ * IMPORTANT:
+ * upper-lower-arms, powerbuilding,
+ * ppl, beginner-ppl etc. already have
+ * their own schedules in weekSchedule.
+ */
 
 function normalizeProgram(
   selectedProgram: string
@@ -25,10 +35,13 @@ function normalizeProgram(
     string,
     keyof typeof weekSchedule
   > = {
-    ppl: "push-pull-legs",
-    "beginner-ppl": "push-pull-legs",
-    "upper-lower-arms": "upper-lower",
-    powerbuilding: "upper-lower",
+    /*
+     * Old / legacy program name
+     * support.
+     */
+
+    "push-pull-legs":
+      "ppl",
   };
 
   return (
@@ -37,20 +50,41 @@ function normalizeProgram(
   );
 }
 
-/* =========================================
-   GET TODAY'S WORKOUT TYPE
-========================================= */
+/*
+ * =========================================
+ * GET TODAY'S WORKOUT TYPE
+ * =========================================
+ *
+ * JavaScript:
+ *
+ * Sunday    = 0
+ * Monday    = 1
+ * Tuesday   = 2
+ * ...
+ * Saturday  = 6
+ *
+ * Our schedules:
+ *
+ * Monday    = index 0
+ * Tuesday   = index 1
+ * ...
+ * Sunday    = index 6
+ */
 
 export function getTodaysWorkoutType(
   selectedProgram: string,
   dayIndex: number
 ): string {
   const normalizedProgram =
-    normalizeProgram(selectedProgram);
+    normalizeProgram(
+      selectedProgram
+    );
 
   const schedule =
-    weekSchedule[normalizedProgram] ??
-    weekSchedule["push-pull-legs"];
+    weekSchedule[
+      normalizedProgram
+    ] ??
+    weekSchedule["ppl"];
 
   if (!schedule) {
     console.error(
@@ -58,18 +92,34 @@ export function getTodaysWorkoutType(
       selectedProgram
     );
 
-    return "push";
+    return "rest";
   }
+
+  /*
+   * Convert JavaScript day index
+   * to Monday-based index.
+   *
+   * Sunday (0) -> 6
+   * Monday (1) -> 0
+   * Tuesday (2) -> 1
+   * ...
+   */
 
   const mondayBasedDayIndex =
     (dayIndex + 6) % 7;
 
-  return schedule[mondayBasedDayIndex] ?? "rest";
+  return (
+    schedule[
+      mondayBasedDayIndex
+    ] ?? "rest"
+  );
 }
 
-/* =========================================
-   GET TODAY'S WORKOUT
-========================================= */
+/*
+ * =========================================
+ * GET TODAY'S WORKOUT
+ * =========================================
+ */
 
 export function getTodaysWorkout(
   selectedProgram: string,
@@ -81,12 +131,16 @@ export function getTodaysWorkout(
       dayIndex
     );
 
-  return getWorkoutByType(workoutType);
+  return getWorkoutByType(
+    workoutType
+  );
 }
 
-/* =========================================
-   MANUAL WORKOUT SELECTION
-========================================= */
+/*
+ * =========================================
+ * MANUAL WORKOUT SELECTION
+ * =========================================
+ */
 
 export function getWorkoutByType(
   workoutType: string
@@ -142,6 +196,8 @@ export function getWorkoutByType(
         workoutType
       );
 
-      return getWorkoutByType("push");
+      return getWorkoutByType(
+        "push"
+      );
   }
 }
