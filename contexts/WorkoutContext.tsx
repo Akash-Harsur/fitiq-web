@@ -13,6 +13,26 @@ import {
   saveDailyWorkoutProgress,
 } from "@/lib/workouts/dailyWorkout";
 
+/*
+ * =========================================
+ * SET RESULT TYPE
+ * =========================================
+ */
+
+export type SetResult = {
+  exerciseId: string;
+  setIndex: number;
+  weight: number | null;
+  reps: number | null;
+  completed: boolean;
+};
+
+/*
+ * =========================================
+ * WORKOUT CONTEXT TYPE
+ * =========================================
+ */
+
 type WorkoutContextType = {
   workoutStarted: boolean;
 
@@ -30,25 +50,61 @@ type WorkoutContextType = {
 
   completedExerciseIds: string[];
 
+  setResults: SetResult[];
+
   startWorkout: (
     workout: WorkoutDay,
     uid?: string,
     workoutType?: string,
     initialCompletedExerciseIds?: string[],
-    initialWorkoutFinished?: boolean
+    initialWorkoutFinished?: boolean,
+    initialSetResults?: SetResult[]
   ) => void;
 
   completeExercise: (
     exerciseId?: string
   ) => void;
 
+  updateSetResult: (
+    exerciseId: string,
+    setIndex: number,
+    updates: Partial<
+      Pick<
+        SetResult,
+        "weight" | "reps"
+      >
+    >
+  ) => void;
+
+  completeSet: (
+    exerciseId: string,
+    setIndex: number
+  ) => void;
+
+  uncompleteSet: (
+    exerciseId: string,
+    setIndex: number
+  ) => void;
+
   finishWorkout: () => void;
 };
+
+/*
+ * =========================================
+ * CONTEXT
+ * =========================================
+ */
 
 const WorkoutContext =
   createContext<WorkoutContextType | null>(
     null
   );
+
+/*
+ * =========================================
+ * PROVIDER
+ * =========================================
+ */
 
 export function WorkoutProvider({
   children,
@@ -81,7 +137,20 @@ export function WorkoutProvider({
   ] = useState<WorkoutDay | null>(null);
 
   /*
-   * Firebase session information
+   * =========================================
+   * SET RESULTS
+   * =========================================
+   */
+
+  const [
+    setResults,
+    setSetResults,
+  ] = useState<SetResult[]>([]);
+
+  /*
+   * =========================================
+   * FIREBASE SESSION
+   * =========================================
    */
 
   const [activeUid, setActiveUid] =
@@ -104,7 +173,8 @@ export function WorkoutProvider({
       uid?: string,
       workoutType?: string,
       initialCompletedExerciseIds: string[] = [],
-      initialWorkoutFinished = false
+      initialWorkoutFinished = false,
+      initialSetResults: SetResult[] = []
     ) => {
       setCurrentWorkout(workout);
 
@@ -116,6 +186,10 @@ export function WorkoutProvider({
 
       setCompletedExerciseIds(
         initialCompletedExerciseIds
+      );
+
+      setSetResults(
+        initialSetResults
       );
 
       setStartTime(Date.now());
@@ -144,7 +218,7 @@ export function WorkoutProvider({
 
   /*
    * =========================================
-   * COMPLETED COUNT
+   * COMPLETED EXERCISES
    * =========================================
    */
 
@@ -245,10 +319,7 @@ export function WorkoutProvider({
           );
 
           /*
-           * Save to Firebase.
-           *
-           * We intentionally don't block
-           * the UI while Firebase saves.
+           * Save progress to Firebase.
            */
 
           if (
@@ -259,7 +330,6 @@ export function WorkoutProvider({
               activeUid,
               activeWorkoutType,
               nextIds,
-              allCompleted
             ).catch((error) => {
               console.error(
                 "Failed to save workout progress:",
@@ -281,6 +351,167 @@ export function WorkoutProvider({
 
   /*
    * =========================================
+   * UPDATE SET RESULT
+   * =========================================
+   */
+
+  const updateSetResult =
+    useCallback(
+      (
+        exerciseId: string,
+        setIndex: number,
+        updates: Partial<
+          Pick<
+            SetResult,
+            "weight" | "reps"
+          >
+        >
+      ) => {
+        setSetResults(
+          (previous) => {
+            const existingIndex =
+              previous.findIndex(
+                (result) =>
+                  result.exerciseId ===
+                    exerciseId &&
+                  result.setIndex ===
+                    setIndex
+              );
+
+            /*
+             * Existing set
+             * → UPDATE
+             */
+
+            if (existingIndex !== -1) {
+              return previous.map(
+                (result, index) =>
+                  index ===
+                  existingIndex
+                    ? {
+                        ...result,
+                        ...updates,
+                      }
+                    : result
+              );
+            }
+
+            /*
+             * New set
+             * → CREATE
+             */
+
+            return [
+              ...previous,
+              {
+                exerciseId,
+                setIndex,
+                weight:
+                  updates.weight ??
+                  null,
+                reps:
+                  updates.reps ??
+                  null,
+                completed: false,
+              },
+            ];
+          }
+        );
+      },
+      []
+    );
+
+  /*
+   * =========================================
+   * COMPLETE SET
+   * =========================================
+   */
+
+  const completeSet = useCallback(
+    (
+      exerciseId: string,
+      setIndex: number
+    ) => {
+      setSetResults(
+        (previous) => {
+          const existingIndex =
+            previous.findIndex(
+              (result) =>
+                result.exerciseId ===
+                  exerciseId &&
+                result.setIndex ===
+                  setIndex
+            );
+
+          /*
+           * Existing set
+           * → mark completed
+           */
+
+          if (existingIndex !== -1) {
+            return previous.map(
+              (result, index) =>
+                index === existingIndex
+                  ? {
+                      ...result,
+                      completed: true,
+                    }
+                  : result
+            );
+          }
+
+          /*
+           * Set doesn't exist yet.
+           */
+
+          return [
+            ...previous,
+            {
+              exerciseId,
+              setIndex,
+              weight: null,
+              reps: null,
+              completed: true,
+            },
+          ];
+        }
+      );
+    },
+    []
+  );
+
+  /*
+   * =========================================
+   * UNCOMPLETE SET
+   * =========================================
+   */
+
+  const uncompleteSet = useCallback(
+    (
+      exerciseId: string,
+      setIndex: number
+    ) => {
+      setSetResults(
+        (previous) =>
+          previous.map(
+            (result) =>
+              result.exerciseId ===
+                exerciseId &&
+              result.setIndex ===
+                setIndex
+                ? {
+                    ...result,
+                    completed: false,
+                  }
+                : result
+          )
+      );
+    },
+    []
+  );
+
+  /*
+   * =========================================
    * FINISH WORKOUT
    * =========================================
    */
@@ -297,7 +528,6 @@ export function WorkoutProvider({
           activeUid,
           activeWorkoutType,
           completedExerciseIds,
-          true
         ).catch((error) => {
           console.error(
             "Failed to save finished workout:",
@@ -312,6 +542,12 @@ export function WorkoutProvider({
       completedExerciseIds,
     ]
   );
+
+  /*
+   * =========================================
+   * PROVIDER
+   * =========================================
+   */
 
   return (
     <WorkoutContext.Provider
@@ -332,9 +568,17 @@ export function WorkoutProvider({
 
         completedExerciseIds,
 
+        setResults,
+
         startWorkout,
 
         completeExercise,
+
+        updateSetResult,
+
+        completeSet,
+
+        uncompleteSet,
 
         finishWorkout,
       }}
@@ -343,6 +587,12 @@ export function WorkoutProvider({
     </WorkoutContext.Provider>
   );
 }
+
+/*
+ * =========================================
+ * HOOK
+ * =========================================
+ */
 
 export function useWorkout() {
   const context =
