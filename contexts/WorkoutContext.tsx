@@ -11,21 +11,17 @@ import { WorkoutDay } from "@/lib/workouts/types";
 
 import {
   saveDailyWorkoutProgress,
+  saveDailyWorkoutSetResults,
+  DailySetResult,
 } from "@/lib/workouts/dailyWorkout";
 
 /*
  * =========================================
- * SET RESULT TYPE
+ * SET RESULT
  * =========================================
  */
 
-export type SetResult = {
-  exerciseId: string;
-  setIndex: number;
-  weight: number | null;
-  reps: number | null;
-  completed: boolean;
-};
+export type SetResult = DailySetResult;
 
 /*
  * =========================================
@@ -69,10 +65,7 @@ type WorkoutContextType = {
     exerciseId: string,
     setIndex: number,
     updates: Partial<
-      Pick<
-        SetResult,
-        "weight" | "reps"
-      >
+      Pick<SetResult, "weight" | "reps">
     >
   ) => void;
 
@@ -149,7 +142,7 @@ export function WorkoutProvider({
 
   /*
    * =========================================
-   * FIREBASE SESSION
+   * ACTIVE FIREBASE SESSION
    * =========================================
    */
 
@@ -188,6 +181,10 @@ export function WorkoutProvider({
         initialCompletedExerciseIds
       );
 
+      /*
+       * Restore saved set results.
+       */
+
       setSetResults(
         initialSetResults
       );
@@ -195,10 +192,12 @@ export function WorkoutProvider({
       setStartTime(Date.now());
 
       /*
-       * Save Firebase session details
+       * Firebase session details.
        */
 
-      setActiveUid(uid ?? null);
+      setActiveUid(
+        uid ?? null
+      );
 
       setActiveWorkoutType(
         workoutType ?? null
@@ -223,11 +222,12 @@ export function WorkoutProvider({
    */
 
   const completedExercises =
-    completedExerciseIds.filter((id) =>
-      currentWorkout?.exercises.some(
-        (exercise) =>
-          exercise.id === id
-      )
+    completedExerciseIds.filter(
+      (id) =>
+        currentWorkout?.exercises.some(
+          (exercise) =>
+            exercise.id === id
+        )
     ).length;
 
   /*
@@ -259,93 +259,33 @@ export function WorkoutProvider({
 
   /*
    * =========================================
-   * COMPLETE / UNCOMPLETE EXERCISE
+   * SAVE SET RESULTS
    * =========================================
    */
 
-  const completeExercise = useCallback(
-    (exerciseId?: string) => {
-      if (!exerciseId) {
+  const persistSetResults = useCallback(
+    (results: SetResult[]) => {
+      if (
+        !activeUid ||
+        !activeWorkoutType
+      ) {
         return;
       }
 
-      setCompletedExerciseIds(
-        (previous) => {
-          let nextIds: string[];
-
-          /*
-           * Already completed
-           * → UNCOMPLETE
-           */
-
-          if (
-            previous.includes(
-              exerciseId
-            )
-          ) {
-            nextIds = previous.filter(
-              (id) =>
-                id !== exerciseId
-            );
-          } else {
-            /*
-             * Not completed
-             * → COMPLETE
-             */
-
-            nextIds = [
-              ...previous,
-              exerciseId,
-            ];
-          }
-
-          /*
-           * Check whether all exercises
-           * are now complete.
-           */
-
-          const allCompleted =
-            currentWorkout
-              ? currentWorkout.exercises.every(
-                  (exercise) =>
-                    nextIds.includes(
-                      exercise.id
-                    )
-                )
-              : false;
-
-          setWorkoutFinished(
-            allCompleted
-          );
-
-          /*
-           * Save progress to Firebase.
-           */
-
-          if (
-            activeUid &&
-            activeWorkoutType
-          ) {
-            saveDailyWorkoutProgress(
-              activeUid,
-              activeWorkoutType,
-              nextIds,
-            ).catch((error) => {
-              console.error(
-                "Failed to save workout progress:",
-                error
-              );
-            });
-          }
-
-          return nextIds;
-        }
-      );
+      saveDailyWorkoutSetResults(
+        activeUid,
+        activeWorkoutType,
+        results
+      ).catch((error) => {
+        console.error(
+          "Failed to save set results:",
+          error
+        );
+      });
     },
     [
       activeUid,
       activeWorkoutType,
-      currentWorkout,
     ]
   );
 
@@ -369,6 +309,8 @@ export function WorkoutProvider({
       ) => {
         setSetResults(
           (previous) => {
+            let nextResults: SetResult[];
+
             const existingIndex =
               previous.findIndex(
                 (result) =>
@@ -380,45 +322,58 @@ export function WorkoutProvider({
 
             /*
              * Existing set
-             * → UPDATE
+             * → update it
              */
 
-            if (existingIndex !== -1) {
-              return previous.map(
-                (result, index) =>
-                  index ===
-                  existingIndex
-                    ? {
-                        ...result,
-                        ...updates,
-                      }
-                    : result
-              );
+            if (
+              existingIndex !== -1
+            ) {
+              nextResults =
+                previous.map(
+                  (result, index) =>
+                    index ===
+                    existingIndex
+                      ? {
+                          ...result,
+                          ...updates,
+                        }
+                      : result
+                );
+            } else {
+              /*
+               * New set
+               * → create it
+               */
+
+              nextResults = [
+                ...previous,
+                {
+                  exerciseId,
+                  setIndex,
+                  weight:
+                    updates.weight ??
+                    null,
+                  reps:
+                    updates.reps ??
+                    null,
+                  completed: false,
+                },
+              ];
             }
 
             /*
-             * New set
-             * → CREATE
+             * Save immediately to Firebase.
              */
 
-            return [
-              ...previous,
-              {
-                exerciseId,
-                setIndex,
-                weight:
-                  updates.weight ??
-                  null,
-                reps:
-                  updates.reps ??
-                  null,
-                completed: false,
-              },
-            ];
+            persistSetResults(
+              nextResults
+            );
+
+            return nextResults;
           }
         );
       },
-      []
+      [persistSetResults]
     );
 
   /*
@@ -434,6 +389,8 @@ export function WorkoutProvider({
     ) => {
       setSetResults(
         (previous) => {
+          let nextResults: SetResult[];
+
           const existingIndex =
             previous.findIndex(
               (result) =>
@@ -448,36 +405,51 @@ export function WorkoutProvider({
            * → mark completed
            */
 
-          if (existingIndex !== -1) {
-            return previous.map(
-              (result, index) =>
-                index === existingIndex
-                  ? {
-                      ...result,
-                      completed: true,
-                    }
-                  : result
-            );
+          if (
+            existingIndex !== -1
+          ) {
+            nextResults =
+              previous.map(
+                (result, index) =>
+                  index ===
+                  existingIndex
+                    ? {
+                        ...result,
+                        completed: true,
+                      }
+                    : result
+              );
+          } else {
+            /*
+             * Set doesn't exist
+             * → create completed set
+             */
+
+            nextResults = [
+              ...previous,
+              {
+                exerciseId,
+                setIndex,
+                weight: null,
+                reps: null,
+                completed: true,
+              },
+            ];
           }
 
           /*
-           * Set doesn't exist yet.
+           * Save to Firebase.
            */
 
-          return [
-            ...previous,
-            {
-              exerciseId,
-              setIndex,
-              weight: null,
-              reps: null,
-              completed: true,
-            },
-          ];
+          persistSetResults(
+            nextResults
+          );
+
+          return nextResults;
         }
       );
     },
-    []
+    [persistSetResults]
   );
 
   /*
@@ -492,23 +464,132 @@ export function WorkoutProvider({
       setIndex: number
     ) => {
       setSetResults(
-        (previous) =>
-          previous.map(
-            (result) =>
-              result.exerciseId ===
-                exerciseId &&
-              result.setIndex ===
-                setIndex
-                ? {
-                    ...result,
-                    completed: false,
-                  }
-                : result
-          )
+        (previous) => {
+          const nextResults =
+            previous.map(
+              (result) =>
+                result.exerciseId ===
+                  exerciseId &&
+                result.setIndex ===
+                  setIndex
+                  ? {
+                      ...result,
+                      completed: false,
+                    }
+                  : result
+            );
+
+          /*
+           * Save to Firebase.
+           */
+
+          persistSetResults(
+            nextResults
+          );
+
+          return nextResults;
+        }
       );
     },
-    []
+    [persistSetResults]
   );
+
+  /*
+   * =========================================
+   * COMPLETE / UNCOMPLETE EXERCISE
+   * =========================================
+   */
+
+  const completeExercise =
+    useCallback(
+      (exerciseId?: string) => {
+        if (!exerciseId) {
+          return;
+        }
+
+        setCompletedExerciseIds(
+          (previous) => {
+            let nextIds: string[];
+
+            /*
+             * Already completed
+             * → uncomplete
+             */
+
+            if (
+              previous.includes(
+                exerciseId
+              )
+            ) {
+              nextIds =
+                previous.filter(
+                  (id) =>
+                    id !==
+                    exerciseId
+                );
+            } else {
+              /*
+               * Not completed
+               * → complete
+               */
+
+              nextIds = [
+                ...previous,
+                exerciseId,
+              ];
+            }
+
+            /*
+             * Check all exercises.
+             */
+
+            const allCompleted =
+              currentWorkout
+                ? currentWorkout.exercises.every(
+                    (exercise) =>
+                      nextIds.includes(
+                        exercise.id
+                      )
+                  )
+                : false;
+
+            setWorkoutFinished(
+              allCompleted
+            );
+
+            /*
+             * Save exercise progress
+             * + current set results.
+             */
+
+            if (
+              activeUid &&
+              activeWorkoutType
+            ) {
+              saveDailyWorkoutProgress(
+                activeUid,
+                activeWorkoutType,
+                nextIds,
+                setResults
+              ).catch((error) => {
+                console.error(
+                  "Failed to save workout progress:",
+                  error
+                );
+              });
+            }
+
+            return nextIds;
+          }
+        );
+      },
+      [
+        activeUid,
+        activeWorkoutType,
+        currentWorkout,
+        setResults,
+      ]
+    );
 
   /*
    * =========================================
@@ -516,32 +597,35 @@ export function WorkoutProvider({
    * =========================================
    */
 
-  const finishWorkout = useCallback(
-    () => {
-      setWorkoutFinished(true);
+  const finishWorkout =
+    useCallback(
+      () => {
+        setWorkoutFinished(true);
 
-      if (
-        activeUid &&
-        activeWorkoutType
-      ) {
-        saveDailyWorkoutProgress(
-          activeUid,
-          activeWorkoutType,
-          completedExerciseIds,
-        ).catch((error) => {
-          console.error(
-            "Failed to save finished workout:",
-            error
-          );
-        });
-      }
-    },
-    [
-      activeUid,
-      activeWorkoutType,
-      completedExerciseIds,
-    ]
-  );
+        if (
+          activeUid &&
+          activeWorkoutType
+        ) {
+          saveDailyWorkoutProgress(
+            activeUid,
+            activeWorkoutType,
+            completedExerciseIds,
+            setResults
+          ).catch((error) => {
+            console.error(
+              "Failed to save finished workout:",
+              error
+            );
+          });
+        }
+      },
+      [
+        activeUid,
+        activeWorkoutType,
+        completedExerciseIds,
+        setResults,
+      ]
+    );
 
   /*
    * =========================================
@@ -596,7 +680,9 @@ export function WorkoutProvider({
 
 export function useWorkout() {
   const context =
-    useContext(WorkoutContext);
+    useContext(
+      WorkoutContext
+    );
 
   if (!context) {
     throw new Error(

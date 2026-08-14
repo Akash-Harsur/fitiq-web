@@ -113,7 +113,7 @@ export const workoutPrograms: WorkoutProgram[] = [
     badge: "Best for Beginners",
 
     description:
-      "Train the entire body every workout with balanced volume and plenty of recovery.",
+      "Train the entire body three times per week with balanced volume and plenty of recovery.",
   },
 
   {
@@ -138,7 +138,63 @@ export const workoutPrograms: WorkoutProgram[] = [
     badge: "Recommended",
 
     description:
-      "An easy introduction to Push Pull Legs with manageable training volume.",
+      "An easy introduction to Push Pull Legs with recovery days between each workout.",
+  },
+
+  {
+    id: "upper-lower-full-body",
+
+    name: "Upper / Lower / Full Body",
+
+    frequency: [3],
+
+    levels: [
+      "beginner",
+      "intermediate",
+    ],
+
+    goals: [
+      "muscle-gain",
+      "body-recomposition",
+      "general-fitness",
+      "fat-loss",
+    ],
+
+    recovery: "Low",
+
+    duration: "55–70 min",
+
+    badge: "Balanced",
+
+    description:
+      "A balanced three-day program combining Upper Body, Lower Body and Full Body training.",
+  },
+
+  {
+    id: "upper-lower-arms-shoulder",
+
+    name: "Upper / Lower / Arms + Shoulders",
+
+    frequency: [3],
+
+    levels: [
+      "intermediate",
+      "advanced",
+    ],
+
+    goals: [
+      "muscle-gain",
+      "body-recomposition",
+    ],
+
+    recovery: "Moderate",
+
+    duration: "55–70 min",
+
+    badge: "Specialization",
+
+    description:
+      "A three-day split combining Upper Body, Lower Body and a dedicated Arms + Shoulders workout.",
   },
 
   /*
@@ -173,51 +229,19 @@ export const workoutPrograms: WorkoutProgram[] = [
     badge: "Most Popular",
 
     description:
-      "A balanced four-day split with excellent recovery and consistent weekly volume.",
+      "A balanced four-day Upper / Lower split with excellent recovery and consistent weekly volume.",
   },
 
   {
-    id: "upper-lower-strength",
+    id: "ppl-4-arms-shoulder",
 
-    name: "Upper / Lower Strength",
+    name: "Push / Pull / Legs + Arms & Shoulders",
 
     frequency: [4],
 
     levels: [
       "intermediate",
       "advanced",
-    ],
-
-    goals: [
-      "strength",
-      "muscle-gain",
-    ],
-
-    recovery: "Moderate",
-
-    duration: "70–85 min",
-
-    badge: "Strength Focus",
-
-    description:
-      "A strength-focused Upper / Lower program combining heavy compound movements with supporting hypertrophy work.",
-  },
-
-  /*
-   * =========================================
-   * 5 DAYS
-   * =========================================
-   */
-
-  {
-    id: "upper-lower-arms",
-
-    name: "Upper / Lower + Arms",
-
-    frequency: [5],
-
-    levels: [
-      "intermediate",
     ],
 
     goals: [
@@ -229,10 +253,71 @@ export const workoutPrograms: WorkoutProgram[] = [
 
     duration: "60–75 min",
 
-    badge: "Balanced",
+    badge: "Hybrid",
 
     description:
-      "An Upper / Lower split with an additional arm-focused training day.",
+      "A four-day split combining Push, Pull, Legs and a dedicated Arms + Shoulders workout.",
+  },
+
+  /*
+   * =========================================
+   * 5 DAYS
+   * =========================================
+   */
+
+  {
+    id: "ppl-upper-lower",
+
+    name: "Push / Pull / Legs + Upper / Lower",
+
+    frequency: [5],
+
+    levels: [
+      "intermediate",
+      "advanced",
+    ],
+
+    goals: [
+      "muscle-gain",
+      "body-recomposition",
+      "strength",
+    ],
+
+    recovery: "Moderate",
+
+    duration: "65–80 min",
+
+    badge: "Hybrid",
+
+    description:
+      "A five-day hybrid program combining Push Pull Legs with Upper and Lower Body training.",
+  },
+
+  {
+    id: "ppl-full-body-arms-shoulder",
+
+    name: "Push / Pull / Legs + Full Body + Arms & Shoulders",
+
+    frequency: [5],
+
+    levels: [
+      "intermediate",
+      "advanced",
+    ],
+
+    goals: [
+      "muscle-gain",
+      "body-recomposition",
+    ],
+
+    recovery: "High",
+
+    duration: "65–80 min",
+
+    badge: "Specialization",
+
+    description:
+      "A five-day hybrid program combining Push, Pull, Legs, Full Body and Arms + Shoulders training.",
   },
 
   {
@@ -262,34 +347,6 @@ export const workoutPrograms: WorkoutProgram[] = [
   },
 
   {
-    id: "ppl-upper-lower",
-
-    name: "Push / Pull / Legs + Upper / Lower",
-
-    frequency: [5],
-
-    levels: [
-      "intermediate",
-      "advanced",
-    ],
-
-    goals: [
-      "muscle-gain",
-      "body-recomposition",
-      "strength",
-    ],
-
-    recovery: "Moderate",
-
-    duration: "65–80 min",
-
-    badge: "Hybrid",
-
-    description:
-      "A hybrid five-day program combining Push Pull Legs with Upper / Lower training.",
-  },
-
-  {
     id: "bodybuilding-5",
 
     name: "Bodybuilding 5-Day",
@@ -313,7 +370,7 @@ export const workoutPrograms: WorkoutProgram[] = [
     badge: "Hypertrophy",
 
     description:
-      "A five-day bodybuilding program designed around balanced muscle-group volume and hypertrophy.",
+      "A structured five-day bodybuilding program designed around balanced muscle-group volume and hypertrophy.",
   },
 
   /*
@@ -371,7 +428,7 @@ export const workoutPrograms: WorkoutProgram[] = [
     badge: "Advanced",
 
     description:
-      "A high-volume bodybuilding split combining chest/back, shoulders/arms and leg training.",
+      "A high-volume bodybuilding split combining Chest + Back, Shoulders + Arms and Legs.",
   },
 
   {
@@ -395,7 +452,7 @@ export const workoutPrograms: WorkoutProgram[] = [
     badge: "Specialization",
 
     description:
-      "A high-frequency Push Pull Legs program with additional arm specialization.",
+      "A high-frequency Push Pull Legs program with additional Arms specialization on the final training day.",
   },
 
   /*
@@ -409,7 +466,7 @@ export const workoutPrograms: WorkoutProgram[] = [
 
     name: "Powerbuilding",
 
-    frequency: [4, 5],
+    frequency: [4],
 
     levels: [
       "intermediate",
@@ -428,6 +485,6 @@ export const workoutPrograms: WorkoutProgram[] = [
     badge: "Strength + Size",
 
     description:
-      "Combine strength-focused compound lifting with hypertrophy training for size and performance.",
+      "A powerbuilding program combining Squat, Bench Press, Deadlift and Arms + Shoulders training.",
   },
 ];

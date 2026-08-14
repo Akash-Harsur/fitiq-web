@@ -3,9 +3,11 @@
 import { useEffect, useState } from "react";
 
 import {
-  collection,
-  getDocs,
+  doc,
+  getDoc,
 } from "firebase/firestore";
+
+import { Check } from "lucide-react";
 
 import { db } from "@/lib/firebase";
 
@@ -14,10 +16,11 @@ import { useUserProfile } from "@/hooks/useUserProfile";
 
 import { getTodaysWorkoutType } from "@/lib/workouts/scheduler";
 
-type TimelineData = {
+type TimelineState = {
   lastWorkout: string;
   currentWorkout: string;
   nextWorkout: string;
+  currentCompleted: boolean;
 };
 
 export default function ProgressCard() {
@@ -29,10 +32,11 @@ export default function ProgressCard() {
   } = useUserProfile();
 
   const [timeline, setTimeline] =
-    useState<TimelineData>({
+    useState<TimelineState>({
       lastWorkout: "—",
       currentWorkout: "—",
       nextWorkout: "—",
+      currentCompleted: false,
     });
 
   const [loading, setLoading] =
@@ -51,27 +55,28 @@ export default function ProgressCard() {
       return "—";
     }
 
-    const names: Record<
-      string,
-      string
-    > = {
+    const names: Record<string, string> = {
       push: "Push Day",
+
       pull: "Pull Day",
+
       legs: "Leg Day",
 
       upper: "Upper Body",
+
       lower: "Lower Body",
 
       chest: "Chest Day",
+
       back: "Back Day",
-      shoulders: "Shoulders Day",
+
+      shoulders: "Shoulders",
+
       arms: "Arms Day",
 
-      "full-body":
-        "Full Body",
+      "full-body": "Full Body",
 
-      "chest-back":
-        "Chest + Back",
+      "chest-back": "Chest + Back",
 
       "shoulders-arms":
         "Shoulders + Arms",
@@ -89,6 +94,29 @@ export default function ProgressCard() {
             char.toUpperCase()
         )
     );
+  }
+
+  /*
+   * =========================================
+   * GET TODAY DATE KEY
+   * =========================================
+   */
+
+  function getTodayKey() {
+    const now = new Date();
+
+    const year =
+      now.getFullYear();
+
+    const month = String(
+      now.getMonth() + 1
+    ).padStart(2, "0");
+
+    const day = String(
+      now.getDate()
+    ).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
   }
 
   /*
@@ -123,33 +151,63 @@ export default function ProgressCard() {
          * =====================================
          */
 
+        const now = new Date();
+
         const today =
-          new Date().getDay();
+          now.getDay();
+
+        const todayKey =
+          getTodayKey();
+
+        /*
+         * =====================================
+         * PREVIOUS DAY
+         * =====================================
+         *
+         * JavaScript:
+         *
+         * Sunday = 0
+         * Monday = 1
+         * ...
+         * Saturday = 6
+         *
+         * (today + 6) % 7 gives
+         * the previous day.
+         */
+
+        const previousDay =
+          (today + 6) % 7;
+
+        /*
+         * =====================================
+         * NEXT DAY
+         * =====================================
+         */
+
+        const nextDay =
+          (today + 1) % 7;
+
+        /*
+         * =====================================
+         * SCHEDULED WORKOUTS
+         * =====================================
+         *
+         * Timeline is based on the program
+         * schedule — NOT the last completed
+         * Firebase workout.
+         */
+
+        const previousType =
+          getTodaysWorkoutType(
+            selectedProgram,
+            previousDay
+          );
 
         const currentType =
           getTodaysWorkoutType(
             selectedProgram,
             today
           );
-
-        /*
-         * =====================================
-         * NEXT DAY
-         *
-         * IMPORTANT:
-         * Rest Day is NOT skipped.
-         *
-         * Example:
-         *
-         * Friday  → Lower
-         * Saturday → Rest Day
-         * Sunday   → Rest Day
-         * Monday   → Push
-         * =====================================
-         */
-
-        const nextDay =
-          (today + 1) % 7;
 
         const nextType =
           getTodaysWorkoutType(
@@ -159,71 +217,57 @@ export default function ProgressCard() {
 
         /*
          * =====================================
-         * LAST COMPLETED WORKOUT
+         * CHECK TODAY'S COMPLETION
          * =====================================
+         *
+         * We only need today's Firebase
+         * document to know whether the
+         * current workout is completed.
          */
 
-        let lastWorkout =
-          "No workout yet";
+        let currentCompleted =
+          false;
 
-        const workoutsRef =
-          collection(
+        /*
+         * Only check Firebase when
+         * there is an actual workout.
+         *
+         * Rest Day does not need completion.
+         */
+
+        if (
+          currentType !== "rest"
+        ) {
+          const normalizedType =
+            currentType.replace(
+              /[^a-zA-Z0-9-_]/g,
+              "-"
+            );
+
+          const workoutId =
+            `${todayKey}_${normalizedType}`;
+
+          const workoutRef = doc(
             db,
             "users",
             user.uid,
-            "dailyWorkouts"
+            "dailyWorkouts",
+            workoutId
           );
 
-        const snapshot =
-          await getDocs(
-            workoutsRef
-          );
-
-        const completedWorkouts =
-          snapshot.docs
-            .map((docSnap) => {
-              const data =
-                docSnap.data();
-
-              const workout =
-                data.workout;
-
-              return {
-                date:
-                  typeof data.date ===
-                  "string"
-                    ? data.date
-                    : "",
-
-                workoutFinished:
-                  data.workoutFinished ===
-                  true,
-
-                workoutName:
-                  workout?.name ||
-                  data.workoutType ||
-                  "",
-              };
-            })
-            .filter(
-              (item) =>
-                item.workoutFinished &&
-                item.date &&
-                item.workoutName
-            )
-            .sort(
-              (a, b) =>
-                b.date.localeCompare(
-                  a.date
-                )
+          const snapshot =
+            await getDoc(
+              workoutRef
             );
 
-        if (
-          completedWorkouts.length > 0
-        ) {
-          lastWorkout =
-            completedWorkouts[0]
-              .workoutName;
+          if (snapshot.exists()) {
+            const data =
+              snapshot.data();
+
+            currentCompleted =
+              data.workoutFinished ===
+              true;
+          }
         }
 
         /*
@@ -234,15 +278,43 @@ export default function ProgressCard() {
 
         if (!cancelled) {
           setTimeline({
-            lastWorkout,
+            /*
+             * Previous DAY's scheduled
+             * workout.
+             *
+             * Example:
+             * Friday -> Thursday = Rest
+             */
+
+            lastWorkout:
+              formatWorkoutName(
+                previousType
+              ),
+
+            /*
+             * Today's scheduled workout.
+             */
+
             currentWorkout:
               formatWorkoutName(
                 currentType
               ),
+
+            /*
+             * Next DAY's scheduled workout.
+             */
+
             nextWorkout:
               formatWorkoutName(
                 nextType
               ),
+
+            /*
+             * Only today's workout
+             * controls the black card.
+             */
+
+            currentCompleted,
           });
         }
       } catch (error) {
@@ -304,7 +376,9 @@ export default function ProgressCard() {
 
       <div className="mt-6 grid gap-5 md:grid-cols-3">
 
-        {/* LAST WORKOUT */}
+        {/* =================================
+            LAST WORKOUT
+        ================================= */}
 
         <TimelineCard
           title="Last Workout"
@@ -313,16 +387,23 @@ export default function ProgressCard() {
           }
         />
 
-        {/* CURRENT WORKOUT */}
+        {/* =================================
+            CURRENT WORKOUT
+        ================================= */}
 
         <TimelineCard
           title="Current Workout"
           value={
             timeline.currentWorkout
           }
+          completed={
+            timeline.currentCompleted
+          }
         />
 
-        {/* NEXT WORKOUT */}
+        {/* =================================
+            NEXT WORKOUT
+        ================================= */}
 
         <TimelineCard
           title="Next Workout"
@@ -345,19 +426,49 @@ export default function ProgressCard() {
 function TimelineCard({
   title,
   value,
+  completed = false,
 }: {
   title: string;
   value: string;
+  completed?: boolean;
 }) {
   return (
-    <div className="rounded-3xl border border-zinc-200 bg-white p-7 shadow-sm transition-all duration-300 hover:shadow-md">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-zinc-400">
+    <div
+      className={`rounded-3xl border p-7 transition-all ${
+        completed
+          ? "border-black bg-black text-white shadow-lg"
+          : "border-zinc-200 bg-white text-zinc-900 shadow-sm"
+      }`}
+    >
+      <p
+        className={`text-[11px] font-semibold uppercase tracking-[0.24em] ${
+          completed
+            ? "text-zinc-400"
+            : "text-zinc-400"
+        }`}
+      >
         {title}
       </p>
 
-      <h3 className="mt-5 truncate text-2xl font-bold tracking-tight text-zinc-900">
-        {value}
-      </h3>
+      <div className="mt-4 flex items-center gap-3">
+
+        {completed && (
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white text-black">
+            <Check size={18} />
+          </div>
+        )}
+
+        <h3
+          className={`truncate text-2xl font-bold tracking-tight ${
+            completed
+              ? "text-white"
+              : "text-zinc-900"
+          }`}
+        >
+          {value}
+        </h3>
+
+      </div>
     </div>
   );
 }
@@ -370,7 +481,7 @@ function TimelineCard({
 
 function TimelineSkeleton() {
   return (
-    <div className="rounded-3xl border border-zinc-200 bg-white p-7">
+    <div className="rounded-3xl border border-zinc-200 bg-white p-7 shadow-sm">
       <div className="h-3 w-24 animate-pulse rounded bg-zinc-200" />
 
       <div className="mt-5 h-8 w-32 animate-pulse rounded bg-zinc-200" />

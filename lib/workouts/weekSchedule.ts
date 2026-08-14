@@ -33,10 +33,30 @@ export const weekSchedule = {
 
   "beginner-ppl": [
     "push",
+    "rest",
     "pull",
+    "rest",
     "legs",
     "rest",
     "rest",
+  ],
+
+  "upper-lower-full-body": [
+    "upper",
+    "rest",
+    "lower",
+    "rest",
+    "full-body",
+    "rest",
+    "rest",
+  ],
+
+  "upper-lower-arms-shoulder": [
+    "upper",
+    "rest",
+    "lower",
+    "rest",
+    "arms-shoulders",
     "rest",
     "rest",
   ],
@@ -57,13 +77,13 @@ export const weekSchedule = {
     "rest",
   ],
 
-  "upper-lower-strength": [
-    "upper",
-    "lower",
+  "ppl-4-arms-shoulder": [
+    "push",
     "rest",
-    "upper",
-    "lower",
+    "pull",
     "rest",
+    "legs",
+    "arms-shoulders",
     "rest",
   ],
 
@@ -73,13 +93,23 @@ export const weekSchedule = {
    * =========================================
    */
 
-  "upper-lower-arms": [
-    "upper",
-    "lower",
-    "arms",
+  "ppl-upper-lower": [
+    "push",
+    "pull",
+    "legs",
     "rest",
     "upper",
     "lower",
+    "rest",
+  ],
+
+  "ppl-full-body-arms-shoulder": [
+    "push",
+    "pull",
+    "legs",
+    "rest",
+    "full-body",
+    "arms-shoulders",
     "rest",
   ],
 
@@ -89,16 +119,6 @@ export const weekSchedule = {
     "legs",
     "shoulders",
     "arms",
-    "rest",
-    "rest",
-  ],
-
-  "ppl-upper-lower": [
-    "push",
-    "pull",
-    "legs",
-    "upper",
-    "lower",
     "rest",
     "rest",
   ],
@@ -145,7 +165,7 @@ export const weekSchedule = {
     "legs",
     "push",
     "pull",
-    "arms",
+    "legs-arms",
     "rest",
   ],
 
@@ -155,13 +175,13 @@ export const weekSchedule = {
    * =========================================
    */
 
-  "powerbuilding": [
-    "upper",
-    "lower",
+  powerbuilding: [
+    "squat",
     "rest",
-    "upper",
-    "lower",
+    "bench",
     "rest",
+    "deadlift",
+    "arms-shoulders",
     "rest",
   ],
 } as const;

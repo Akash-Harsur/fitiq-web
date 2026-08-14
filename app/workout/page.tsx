@@ -72,18 +72,12 @@ export default function WorkoutPage() {
         const selectedWorkoutType =
           params.get("type") || "push";
 
-        /*
-         * Save workout type locally.
-         */
-
         setWorkoutType(
           selectedWorkoutType
         );
 
         /*
-         * =====================================
-         * GET TODAY'S LOCKED WORKOUT
-         * =====================================
+         * Get today's locked workout.
          */
 
         const savedWorkout =
@@ -97,9 +91,7 @@ export default function WorkoutPage() {
         }
 
         /*
-         * =====================================
-         * GET SAVED PROGRESS
-         * =====================================
+         * Get saved progress.
          */
 
         const progress =
@@ -113,17 +105,13 @@ export default function WorkoutPage() {
         }
 
         /*
-         * =====================================
-         * SET WORKOUT
-         * =====================================
+         * Set workout.
          */
 
         setWorkout(savedWorkout);
 
         /*
-         * =====================================
-         * START WITH EXISTING PROGRESS
-         * =====================================
+         * Restore existing progress.
          */
 
         startWorkout(
@@ -135,8 +123,7 @@ export default function WorkoutPage() {
         );
 
         /*
-         * If Firebase already says the workout
-         * is complete, don't save it again.
+         * Prevent duplicate completion save.
          */
 
         setCompletionSaved(
@@ -184,144 +171,52 @@ export default function WorkoutPage() {
 
   /*
    * =========================================
-   * LOADING
-   * =========================================
-   */
-
-  if (loading || authLoading) {
-    return (
-      <main className="min-h-screen bg-zinc-50 p-4 md:p-6">
-
-        <div className="mx-auto max-w-6xl">
-
-          <div className="rounded-3xl bg-white p-6 shadow-sm">
-
-            <p className="text-sm text-zinc-500">
-              Loading workout...
-            </p>
-
-          </div>
-
-        </div>
-
-      </main>
-    );
-  }
-
-  /*
-   * =========================================
-   * NOT LOGGED IN
-   * =========================================
-   */
-
-  if (!user) {
-    return (
-      <main className="flex min-h-screen items-center justify-center bg-zinc-50 p-6">
-
-        <div className="rounded-3xl bg-white p-8 text-center shadow-sm">
-
-          <h1 className="text-xl font-bold text-zinc-900">
-            Please sign in
-          </h1>
-
-          <button
-            type="button"
-            onClick={() =>
-              router.push("/login")
-            }
-            className="mt-5 rounded-xl bg-black px-6 py-3 text-sm font-semibold text-white"
-          >
-            Go to Login
-          </button>
-
-        </div>
-
-      </main>
-    );
-  }
-
-  /*
-   * =========================================
-   * WORKOUT FAILED
-   * =========================================
-   */
-
-  if (!workout) {
-    return (
-      <main className="min-h-screen bg-zinc-50 p-4 md:p-6">
-
-        <div className="mx-auto max-w-6xl">
-
-          <div className="rounded-3xl border border-red-200 bg-white p-6 shadow-sm">
-
-            <p className="font-semibold text-red-600">
-              Unable to load workout
-            </p>
-
-            <p className="mt-1 text-sm text-zinc-500">
-              Please go back to the dashboard
-              and try again.
-            </p>
-
-            <button
-              type="button"
-              onClick={() =>
-                router.push("/dashboard")
-              }
-              className="mt-5 rounded-xl bg-black px-5 py-3 text-sm font-semibold text-white"
-            >
-              Back to Dashboard
-            </button>
-
-          </div>
-
-        </div>
-
-      </main>
-    );
-  }
-
-  /*
-   * =========================================
    * PROGRESS
+   *
+   * IMPORTANT:
+   * These are calculated BEFORE any
+   * conditional return.
    * =========================================
    */
 
   const totalExercises =
-    workout.exercises.length;
-
-  /*
-   * Only count exercises belonging
-   * to today's workout.
-   */
+    workout?.exercises.length ?? 0;
 
   const completedCount =
     completedExerciseIds.filter(
       (id) =>
-        workout.exercises.some(
+        workout?.exercises.some(
           (exercise) =>
             exercise.id === id
         )
     ).length;
 
-  /*
-   * =========================================
-   * ALL COMPLETED?
-   * =========================================
-   */
-
   const allExercisesCompleted =
     totalExercises > 0 &&
     completedCount >= totalExercises;
 
+  const currentExerciseNumber =
+    Math.min(
+      completedCount + 1,
+      totalExercises
+    );
+
+  const progressPercentage =
+    totalExercises > 0
+      ? Math.round(
+          (completedCount /
+            totalExercises) *
+            100
+        )
+      : 0;
+
   /*
    * =========================================
    * SAVE COMPLETION TO FIREBASE
-   * =========================================
    *
    * IMPORTANT:
-   * This is a hook, so it is BEFORE any
-   * conditional return below.
+   * This hook is BEFORE every return.
+   * =========================================
    */
 
   useEffect(() => {
@@ -373,30 +268,92 @@ export default function WorkoutPage() {
 
   /*
    * =========================================
-   * CURRENT EXERCISE
+   * LOADING
    * =========================================
    */
 
-  const currentExerciseNumber =
-    Math.min(
-      completedCount + 1,
-      totalExercises
+  if (loading || authLoading) {
+    return (
+      <main className="min-h-screen bg-zinc-50 p-4 md:p-6">
+        <div className="mx-auto max-w-6xl">
+          <div className="rounded-3xl bg-white p-6 shadow-sm">
+            <p className="text-sm text-zinc-500">
+              Loading workout...
+            </p>
+          </div>
+        </div>
+      </main>
     );
+  }
 
   /*
    * =========================================
-   * PROGRESS %
+   * NOT LOGGED IN
    * =========================================
    */
 
-  const progressPercentage =
-    totalExercises > 0
-      ? Math.round(
-          (completedCount /
-            totalExercises) *
-            100
-        )
-      : 0;
+  if (!user) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-zinc-50 p-6">
+        <div className="rounded-3xl bg-white p-8 text-center shadow-sm">
+
+          <h1 className="text-xl font-bold text-zinc-900">
+            Please sign in
+          </h1>
+
+          <button
+            type="button"
+            onClick={() =>
+              router.push("/login")
+            }
+            className="mt-5 rounded-xl bg-black px-6 py-3 text-sm font-semibold text-white"
+          >
+            Go to Login
+          </button>
+
+        </div>
+      </main>
+    );
+  }
+
+  /*
+   * =========================================
+   * WORKOUT FAILED
+   * =========================================
+   */
+
+  if (!workout) {
+    return (
+      <main className="min-h-screen bg-zinc-50 p-4 md:p-6">
+        <div className="mx-auto max-w-6xl">
+
+          <div className="rounded-3xl border border-red-200 bg-white p-6 shadow-sm">
+
+            <p className="font-semibold text-red-600">
+              Unable to load workout
+            </p>
+
+            <p className="mt-1 text-sm text-zinc-500">
+              Please go back to the dashboard
+              and try again.
+            </p>
+
+            <button
+              type="button"
+              onClick={() =>
+                router.push("/dashboard")
+              }
+              className="mt-5 rounded-xl bg-black px-5 py-3 text-sm font-semibold text-white"
+            >
+              Back to Dashboard
+            </button>
+
+          </div>
+
+        </div>
+      </main>
+    );
+  }
 
   /*
    * =========================================
@@ -412,12 +369,8 @@ export default function WorkoutPage() {
 
           <div className="w-full rounded-3xl bg-white p-8 text-center shadow-sm md:p-12">
 
-            {/* CHECK */}
-
             <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-black text-white">
-
               <Check size={38} />
-
             </div>
 
             <p className="mt-6 text-xs font-semibold uppercase tracking-[0.28em] text-zinc-400">
@@ -434,8 +387,6 @@ export default function WorkoutPage() {
               in today&apos;s workout.
             </p>
 
-            {/* PROGRESS */}
-
             <div className="mx-auto mt-8 max-w-md">
 
               <div className="flex items-center justify-between text-sm">
@@ -451,14 +402,10 @@ export default function WorkoutPage() {
               </div>
 
               <div className="mt-3 h-3 overflow-hidden rounded-full bg-zinc-200">
-
                 <div className="h-full w-full rounded-full bg-black" />
-
               </div>
 
             </div>
-
-            {/* DASHBOARD */}
 
             <button
               type="button"
@@ -489,13 +436,9 @@ export default function WorkoutPage() {
 
       <div className="mx-auto max-w-6xl">
 
-        {/* =========================
-            STICKY HEADER
-        ========================== */}
+        {/* STICKY HEADER */}
 
         <div className="sticky top-0 z-30 mb-6 rounded-3xl border border-zinc-200 bg-white/95 p-6 shadow-sm backdrop-blur-md">
-
-          {/* BACK */}
 
           <button
             type="button"
@@ -508,13 +451,9 @@ export default function WorkoutPage() {
             Back
           </button>
 
-          {/* WORKOUT NAME */}
-
           <h1 className="text-3xl font-bold tracking-tight text-zinc-900">
             {workout.name}
           </h1>
-
-          {/* INFO */}
 
           <p className="mt-2 text-base text-zinc-500">
             {totalExercises} Exercises •{" "}
@@ -534,8 +473,6 @@ export default function WorkoutPage() {
 
           </div>
 
-          {/* PROGRESS TEXT */}
-
           <div className="mt-2 flex items-center justify-between">
 
             <p className="text-sm text-zinc-500">
@@ -552,9 +489,7 @@ export default function WorkoutPage() {
 
         </div>
 
-        {/* =========================
-            EXERCISES
-        ========================== */}
+        {/* EXERCISES */}
 
         <div className="space-y-2">
 

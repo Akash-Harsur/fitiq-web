@@ -12,6 +12,20 @@ import { WorkoutDay } from "@/lib/workouts/types";
 
 /*
  * =========================================
+ * SET RESULT TYPE
+ * =========================================
+ */
+
+export type DailySetResult = {
+  exerciseId: string;
+  setIndex: number;
+  weight: number | null;
+  reps: number | null;
+  completed: boolean;
+};
+
+/*
+ * =========================================
  * FIREBASE-SAFE OBJECT
  * =========================================
  */
@@ -91,6 +105,36 @@ function normalizeWorkoutType(
 
 /*
  * =========================================
+ * GET WORKOUT DOCUMENT REF
+ * =========================================
+ */
+
+function getDailyWorkoutRef(
+  uid: string,
+  workoutType: string
+) {
+  const dateKey =
+    getTodayKey();
+
+  const normalizedType =
+    normalizeWorkoutType(
+      workoutType
+    );
+
+  const workoutId =
+    `${dateKey}_${normalizedType}`;
+
+  return doc(
+    db,
+    "users",
+    uid,
+    "dailyWorkouts",
+    workoutId
+  );
+}
+
+/*
+ * =========================================
  * GET OR CREATE DAILY WORKOUT
  * =========================================
  */
@@ -110,13 +154,14 @@ export async function getOrCreateDailyWorkout(
   const workoutId =
     `${dateKey}_${normalizedType}`;
 
-  const workoutRef = doc(
-    db,
-    "users",
-    uid,
-    "dailyWorkouts",
-    workoutId
-  );
+  const workoutRef =
+    doc(
+      db,
+      "users",
+      uid,
+      "dailyWorkouts",
+      workoutId
+    );
 
   /*
    * Check Firebase first.
@@ -164,6 +209,12 @@ export async function getOrCreateDailyWorkout(
 
     completedExerciseIds: [],
 
+    /*
+     * Set-level tracking.
+     */
+
+    setResults: [],
+
     createdAt:
       serverTimestamp(),
 
@@ -178,8 +229,6 @@ export async function getOrCreateDailyWorkout(
  * =========================================
  * GET DAILY WORKOUT PROGRESS
  * =========================================
- *
- * Reads today's saved progress from Firebase.
  */
 
 export async function getDailyWorkoutProgress(
@@ -188,25 +237,13 @@ export async function getDailyWorkoutProgress(
 ): Promise<{
   completedExerciseIds: string[];
   workoutFinished: boolean;
+  setResults: DailySetResult[];
 }> {
-  const dateKey =
-    getTodayKey();
-
-  const normalizedType =
-    normalizeWorkoutType(
+  const workoutRef =
+    getDailyWorkoutRef(
+      uid,
       workoutType
     );
-
-  const workoutId =
-    `${dateKey}_${normalizedType}`;
-
-  const workoutRef = doc(
-    db,
-    "users",
-    uid,
-    "dailyWorkouts",
-    workoutId
-  );
 
   const snapshot =
     await getDoc(workoutRef);
@@ -219,6 +256,7 @@ export async function getDailyWorkoutProgress(
     return {
       completedExerciseIds: [],
       workoutFinished: false,
+      setResults: [],
     };
   }
 
@@ -226,7 +264,7 @@ export async function getDailyWorkoutProgress(
     snapshot.data();
 
   /*
-   * Safely read completed IDs.
+   * Completed exercises.
    */
 
   const completedExerciseIds =
@@ -239,10 +277,64 @@ export async function getDailyWorkoutProgress(
         )
       : [];
 
+  /*
+   * Set results.
+   */
+
+  const setResults: DailySetResult[] =
+    Array.isArray(
+      data.setResults
+    )
+      ? data.setResults
+          .filter(
+            (result) =>
+              result &&
+              typeof result ===
+                "object"
+          )
+          .map((result) => ({
+            exerciseId:
+              typeof result.exerciseId ===
+              "string"
+                ? result.exerciseId
+                : "",
+
+            setIndex:
+              typeof result.setIndex ===
+              "number"
+                ? result.setIndex
+                : 0,
+
+            weight:
+              typeof result.weight ===
+              "number"
+                ? result.weight
+                : null,
+
+            reps:
+              typeof result.reps ===
+              "number"
+                ? result.reps
+                : null,
+
+            completed:
+              result.completed ===
+              true,
+          }))
+          .filter(
+            (result) =>
+              result.exerciseId !== ""
+          )
+      : [];
+
   return {
     completedExerciseIds,
+
     workoutFinished:
-      data.workoutFinished === true,
+      data.workoutFinished ===
+      true,
+
+    setResults,
   };
 }
 
@@ -250,39 +342,72 @@ export async function getDailyWorkoutProgress(
  * =========================================
  * SAVE EXERCISE PROGRESS
  * =========================================
- *
- * Called whenever an exercise is completed
- * or uncompleted.
  */
 
 export async function saveDailyWorkoutProgress(
   uid: string,
   workoutType: string,
-  completedExerciseIds: string[]
+  completedExerciseIds: string[],
+  setResults?: DailySetResult[]
 ) {
-  const dateKey =
-    getTodayKey();
-
-  const normalizedType =
-    normalizeWorkoutType(
+  const workoutRef =
+    getDailyWorkoutRef(
+      uid,
       workoutType
     );
-
-  const workoutId =
-    `${dateKey}_${normalizedType}`;
-
-  const workoutRef = doc(
-    db,
-    "users",
-    uid,
-    "dailyWorkouts",
-    workoutId
-  );
 
   await updateDoc(
     workoutRef,
     {
       completedExerciseIds,
+
+      /*
+       * Save set results when supplied.
+       */
+
+      ...(setResults
+        ? {
+            setResults:
+              removeUndefined(
+                setResults
+              ),
+          }
+        : {}),
+
+      updatedAt:
+        serverTimestamp(),
+    }
+  );
+}
+
+/*
+ * =========================================
+ * SAVE SET RESULTS
+ * =========================================
+ *
+ * Called whenever weight/reps/set
+ * completion changes.
+ */
+
+export async function saveDailyWorkoutSetResults(
+  uid: string,
+  workoutType: string,
+  setResults: DailySetResult[]
+) {
+  const workoutRef =
+    getDailyWorkoutRef(
+      uid,
+      workoutType
+    );
+
+  await updateDoc(
+    workoutRef,
+    {
+      setResults:
+        removeUndefined(
+          setResults
+        ),
+
       updatedAt:
         serverTimestamp(),
     }
@@ -293,32 +418,17 @@ export async function saveDailyWorkoutProgress(
  * =========================================
  * COMPLETE DAILY WORKOUT
  * =========================================
- *
- * Called when every exercise is completed.
  */
 
 export async function completeDailyWorkout(
   uid: string,
   workoutType: string
 ) {
-  const dateKey =
-    getTodayKey();
-
-  const normalizedType =
-    normalizeWorkoutType(
+  const workoutRef =
+    getDailyWorkoutRef(
+      uid,
       workoutType
     );
-
-  const workoutId =
-    `${dateKey}_${normalizedType}`;
-
-  const workoutRef = doc(
-    db,
-    "users",
-    uid,
-    "dailyWorkouts",
-    workoutId
-  );
 
   await updateDoc(
     workoutRef,

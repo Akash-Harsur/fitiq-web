@@ -12,6 +12,12 @@ import { generateShouldersWorkout } from "./shoulder";
 import { generateArmsWorkout } from "./arms";
 import { generateFullBodyWorkout } from "./fullBody";
 
+import { generateArmsShouldersWorkout } from "./armsShoulders";
+import { generateLegsArmsWorkout } from "./legsArms";
+import { generateSquatWorkout } from "./squat";
+import { generateBenchWorkout } from "./bench";
+import { generateDeadliftWorkout } from "./deadlift";
+
 import { WorkoutDay } from "./types";
 
 /*
@@ -19,13 +25,11 @@ import { WorkoutDay } from "./types";
  * PROGRAM NAME NORMALIZATION
  * =========================================
  *
- * Only programs that don't have their own
- * schedule are mapped here.
+ * Only legacy / old program names
+ * are mapped here.
  *
- * IMPORTANT:
- * upper-lower-arms, powerbuilding,
- * ppl, beginner-ppl etc. already have
- * their own schedules in weekSchedule.
+ * Programs that already exist inside
+ * weekSchedule use their own schedule.
  */
 
 function normalizeProgram(
@@ -36,12 +40,10 @@ function normalizeProgram(
     keyof typeof weekSchedule
   > = {
     /*
-     * Old / legacy program name
-     * support.
+     * Legacy program support
      */
 
-    "push-pull-legs":
-      "ppl",
+    "push-pull-legs": "ppl",
   };
 
   return (
@@ -55,19 +57,24 @@ function normalizeProgram(
  * GET TODAY'S WORKOUT TYPE
  * =========================================
  *
- * JavaScript:
+ * JavaScript day indexes:
  *
  * Sunday    = 0
  * Monday    = 1
  * Tuesday   = 2
- * ...
+ * Wednesday = 3
+ * Thursday  = 4
+ * Friday    = 5
  * Saturday  = 6
  *
- * Our schedules:
+ * Our weekSchedule uses:
  *
  * Monday    = index 0
  * Tuesday   = index 1
- * ...
+ * Wednesday = index 2
+ * Thursday  = index 3
+ * Friday    = index 4
+ * Saturday  = index 5
  * Sunday    = index 6
  */
 
@@ -76,14 +83,10 @@ export function getTodaysWorkoutType(
   dayIndex: number
 ): string {
   const normalizedProgram =
-    normalizeProgram(
-      selectedProgram
-    );
+    normalizeProgram(selectedProgram);
 
   const schedule =
-    weekSchedule[
-      normalizedProgram
-    ] ??
+    weekSchedule[normalizedProgram] ??
     weekSchedule["ppl"];
 
   if (!schedule) {
@@ -96,22 +99,24 @@ export function getTodaysWorkoutType(
   }
 
   /*
-   * Convert JavaScript day index
-   * to Monday-based index.
+   * Convert JavaScript Sunday-based
+   * index into our Monday-based index.
    *
-   * Sunday (0) -> 6
-   * Monday (1) -> 0
-   * Tuesday (2) -> 1
-   * ...
+   * Sunday (0)    -> 6
+   * Monday (1)    -> 0
+   * Tuesday (2)   -> 1
+   * Wednesday (3) -> 2
+   * Thursday (4)  -> 3
+   * Friday (5)    -> 4
+   * Saturday (6)  -> 5
    */
 
   const mondayBasedDayIndex =
     (dayIndex + 6) % 7;
 
   return (
-    schedule[
-      mondayBasedDayIndex
-    ] ?? "rest"
+    schedule[mondayBasedDayIndex] ??
+    "rest"
   );
 }
 
@@ -172,6 +177,21 @@ export function getWorkoutByType(
 
     case "arms":
       return generateArmsWorkout();
+
+    case "arms-shoulders":
+      return generateArmsShouldersWorkout();
+
+    case "legs-arms":
+      return generateLegsArmsWorkout();
+
+    case "squat":
+      return generateSquatWorkout();
+
+    case "bench":
+      return generateBenchWorkout();
+
+    case "deadlift":
+      return generateDeadliftWorkout();
 
     case "full-body":
       return generateFullBodyWorkout();
