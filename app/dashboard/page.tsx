@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 
+import RestDayCard from "@/components/dashboard/RestDayCard";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import OnboardingGuard from "@/components/auth/OnboardingGuard";
 
@@ -310,6 +311,10 @@ export default function DashboardPage() {
                 </p>
 
               </div>
+
+            ) : dailyWorkoutType === "rest" ? (
+
+              <RestDayCard />
 
             ) : dailyWorkout ? (
 

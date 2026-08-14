@@ -44,7 +44,7 @@ const menuItems = [
   {
     title: "Profile",
     icon: User,
-    href: "#",
+    href: "/profile",
   },
   {
     title: "Settings",
