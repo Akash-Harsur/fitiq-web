@@ -252,6 +252,18 @@ export default function DashboardPage() {
                     Push
                   </option>
 
+                  <option value="squat">
+                    Squat
+                  </option>
+
+                  <option value="bench">
+                    Bench Press
+                  </option>
+
+                  <option value="deadlift">
+                    Deadlift
+                  </option>
+
                   <option value="pull">
                     Pull
                   </option>

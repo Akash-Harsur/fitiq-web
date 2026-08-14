@@ -2,8 +2,27 @@ import { WorkoutDay } from "./types";
 
 /*
  * =========================================
- * POWERBUILDING — SQUAT DAY
+ * SQUAT WORKOUT
  * =========================================
+ *
+ * Powerbuilding / Strength focused Squat day.
+ *
+ * Structure:
+ *
+ * Warm-up:
+ * 40% × 8
+ * 60% × 5
+ * 70% × 3
+ *
+ * Working:
+ * 3 × 5
+ *
+ * Back-off:
+ * 70% × 8
+ *
+ * The percentages are intended to be
+ * calculated from the user's Training Max
+ * when weight calculation is added later.
  */
 
 export function generateSquatWorkout(): WorkoutDay {
@@ -12,167 +31,55 @@ export function generateSquatWorkout(): WorkoutDay {
 
     name: "Squat Day",
 
-    estimatedDuration: 75,
+    estimatedDuration: 60,
 
     exercises: [
       {
         id: crypto.randomUUID(),
 
-        name: "Back Squat",
+        name: "Barbell Back Squat",
 
         image: "",
 
         warmup: [
           {
             percent: 40,
-            reps: 10,
+            reps: 8,
           },
           {
             percent: 60,
-            reps: 6,
+            reps: 5,
+          },
+          {
+            percent: 70,
+            reps: 3,
           },
         ],
 
         workingSets: [
           {
-            label: "Set 1",
-            reps: 6,
+            label: "Working Set 1",
+            reps: 5,
           },
           {
-            label: "Set 2",
-            reps: 6,
+            label: "Working Set 2",
+            reps: 5,
           },
           {
-            label: "Set 3",
-            reps: 6,
-          },
-          {
-            label: "Set 4",
+            label: "Working Set 3",
             reps: 5,
           },
         ],
 
         backoff: {
-          percent: 85,
+          percent: 70,
           reps: 8,
         },
 
-        rest: "180 sec",
-
         notes:
-          "Focus on strength, depth and consistent technique.",
-      },
+          "Controlled reps. Keep your core braced and maintain consistent depth.",
 
-      {
-        id: crypto.randomUUID(),
-
-        name: "Leg Press",
-
-        image: "",
-
-        workingSets: [
-          {
-            label: "Set 1",
-            reps: 10,
-          },
-          {
-            label: "Set 2",
-            reps: 10,
-          },
-          {
-            label: "Set 3",
-            reps: 8,
-          },
-        ],
-
-        rest: "120 sec",
-
-        notes:
-          "Controlled reps with full range of motion.",
-      },
-
-      {
-        id: crypto.randomUUID(),
-
-        name: "Romanian Deadlift",
-
-        image: "",
-
-        workingSets: [
-          {
-            label: "Set 1",
-            reps: 10,
-          },
-          {
-            label: "Set 2",
-            reps: 8,
-          },
-          {
-            label: "Set 3",
-            reps: 8,
-          },
-        ],
-
-        rest: "120 sec",
-
-        notes:
-          "Focus on hamstring tension and controlled eccentric.",
-      },
-
-      {
-        id: crypto.randomUUID(),
-
-        name: "Leg Extension",
-
-        image: "",
-
-        workingSets: [
-          {
-            label: "Set 1",
-            reps: 15,
-          },
-          {
-            label: "Set 2",
-            reps: 12,
-          },
-          {
-            label: "Set 3",
-            reps: 12,
-          },
-        ],
-
-        rest: "60 sec",
-
-        notes:
-          "Controlled movement with a strong quad squeeze.",
-      },
-
-      {
-        id: crypto.randomUUID(),
-
-        name: "Standing Calf Raise",
-
-        image: "",
-
-        workingSets: [
-          {
-            label: "Set 1",
-            reps: 15,
-          },
-          {
-            label: "Set 2",
-            reps: 15,
-          },
-          {
-            label: "Set 3",
-            reps: 12,
-          },
-        ],
-
-        rest: "60 sec",
-
-        notes:
-          "Pause briefly at the top and stretch at the bottom.",
+        rest: "2–4 min",
       },
     ],
   };

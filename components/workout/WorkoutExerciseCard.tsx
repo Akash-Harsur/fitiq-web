@@ -5,6 +5,7 @@ import {
   ChevronDown,
   ChevronUp,
   Check,
+  Dumbbell,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -30,6 +31,21 @@ export default function WorkoutExerciseCard({
   const isCompleted =
     completedExerciseIds.includes(exercise.id);
 
+  /*
+   * =========================================
+   * EXERCISE IMAGE CHECK
+   * =========================================
+   *
+   * Some exercises such as Squat, Bench and
+   * Deadlift currently don't have an image.
+   *
+   * Never pass an empty string to Next/Image.
+   */
+
+  const hasExerciseImage =
+    typeof exercise.image === "string" &&
+    exercise.image.trim() !== "";
+
   return (
     <div className="overflow-hidden rounded-xl border border-zinc-300 bg-white">
 
@@ -37,7 +53,9 @@ export default function WorkoutExerciseCard({
 
       <button
         type="button"
-        onClick={() => setExpanded((prev) => !prev)}
+        onClick={() =>
+          setExpanded((prev) => !prev)
+        }
         className="flex w-full items-start justify-between px-5 py-4 text-left transition hover:bg-zinc-50 md:px-6"
       >
         <div className="min-w-0">
@@ -107,36 +125,58 @@ export default function WorkoutExerciseCard({
       {expanded && (
         <div className="border-t border-zinc-200">
 
-          {/* IMAGE */}
+          {/* =========================================
+              MOBILE IMAGE
+          ========================================= */}
 
           <div className="flex justify-center border-b border-zinc-200 p-5 lg:hidden">
 
             <div className="relative aspect-square w-56">
 
-              <Image
-                src={exercise.image}
-                alt={exercise.name}
-                fill
-                className="object-contain"
-              />
-
-            </div>
-          </div>
-
-          <div className="lg:grid lg:grid-cols-[260px_1fr]">
-
-            {/* DESKTOP IMAGE */}
-
-            <div className="hidden items-center justify-center border-r border-zinc-200 p-6 lg:flex">
-
-              <div className="relative aspect-square w-48">
-
+              {hasExerciseImage ? (
                 <Image
                   src={exercise.image}
                   alt={exercise.name}
                   fill
                   className="object-contain"
                 />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center rounded-2xl bg-zinc-100">
+                  <Dumbbell
+                    size={64}
+                    className="text-zinc-300"
+                  />
+                </div>
+              )}
+
+            </div>
+          </div>
+
+          <div className="lg:grid lg:grid-cols-[260px_1fr]">
+
+            {/* =========================================
+                DESKTOP IMAGE
+            ========================================= */}
+
+            <div className="hidden items-center justify-center border-r border-zinc-200 p-6 lg:flex">
+
+              <div className="relative aspect-square w-48">
+
+                {hasExerciseImage ? (
+                  <Image
+                    src={exercise.image}
+                    alt={exercise.name}
+                    fill
+                    className="object-contain"
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center rounded-2xl bg-zinc-100">
+                    <Dumbbell
+                      size={56}
+                      className="text-zinc-300"
+                    />
+                  </div>
+                )}
 
               </div>
 

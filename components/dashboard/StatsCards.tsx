@@ -13,6 +13,7 @@ import {
 
 import { useAuth } from "@/contexts/AuthContext";
 import { getWorkoutStreak } from "@/lib/progress/streak";
+import { workoutPrograms } from "@/lib/workoutData";
 
 interface StatsCardsProps {
   goal: string;
@@ -71,6 +72,30 @@ export default function StatsCards({
       cancelled = true;
     };
   }, [user]);
+
+  /*
+   * =========================================
+   * WORKOUT PROGRAM DISPLAY NAME
+   * =========================================
+   *
+   * Find the selected program from workoutData.ts.
+   *
+   * Example:
+   *
+   * "ppl-4-arms-shoulder"
+   *
+   * becomes:
+   *
+   * "Push / Pull / Legs + Arms & Shoulders"
+   */
+
+  const selectedProgram = workoutPrograms.find(
+    (program) => program.id === workoutSplit
+  );
+
+  const workoutSplitName =
+    selectedProgram?.name ??
+    format(workoutSplit);
 
   return (
     <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
@@ -151,7 +176,7 @@ export default function StatsCards({
         }
         iconBg="bg-pink-100"
         title="Workout Split"
-        value={format(workoutSplit)}
+        value={workoutSplitName}
       />
 
     </div>
@@ -222,6 +247,11 @@ function StatCard({
  * =========================================
  * FORMAT VALUES
  * =========================================
+ *
+ * Used for goals and experience.
+ *
+ * Workout program names are NOT hardcoded here.
+ * They come directly from workoutData.ts.
  */
 
 function format(value: string) {
@@ -230,52 +260,6 @@ function format(value: string) {
   }
 
   const displayMap: Record<string, string> = {
-    /*
-     * =====================================
-     * WORKOUT PROGRAMS
-     * =====================================
-     */
-
-    ppl: "Push Pull Legs",
-
-    "push-pull-legs":
-      "Push Pull Legs",
-
-    "beginner-ppl":
-      "Beginner Push Pull Legs",
-
-    "full-body-2":
-      "Full Body 2-Day",
-
-    "full-body":
-      "Full Body",
-
-    "upper-lower":
-      "Upper / Lower",
-
-    "upper-lower-strength":
-      "Upper / Lower Strength",
-
-    "upper-lower-arms":
-      "Upper / Lower + Arms",
-
-    "bro-split":
-      "Bro Split",
-
-    "ppl-upper-lower":
-      "PPL + Upper / Lower",
-
-    "bodybuilding-5":
-      "Bodybuilding 5-Day",
-
-    arnold:
-      "Arnold Split",
-
-    "ppl-arms":
-      "PPL + Arms",
-
-    powerbuilding:
-      "Powerbuilding",
 
     /*
      * =====================================
