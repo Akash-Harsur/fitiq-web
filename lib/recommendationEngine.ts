@@ -15,9 +15,6 @@ type RecommendationInput = {
  * =========================================
  * EXPERIENCE RANK
  * =========================================
- *
- * Used to prefer programs that match the
- * user's training level exactly.
  */
 
 const experienceRank: Record<
@@ -34,8 +31,8 @@ const experienceRank: Record<
  * GOAL PRIORITY
  * =========================================
  *
- * Some programs are especially suitable
- * for certain goals.
+ * Programs are ordered from higher priority
+ * to lower priority for each goal.
  */
 
 const goalPriority: Record<
@@ -46,14 +43,15 @@ const goalPriority: Record<
     "full-body-2",
     "full-body",
     "upper-lower",
-    "upper-lower-arms",
+    "upper-lower-arms-shoulder",
+    "ppl-upper-lower",
     "ppl",
   ],
 
   "muscle-gain": [
     "full-body",
     "upper-lower",
-    "upper-lower-arms",
+    "upper-lower-arms-shoulder",
     "ppl-upper-lower",
     "bodybuilding-5",
     "ppl",
@@ -64,14 +62,24 @@ const goalPriority: Record<
   "body-recomposition": [
     "full-body",
     "upper-lower",
-    "upper-lower-arms",
+    "upper-lower-arms-shoulder",
     "ppl-upper-lower",
     "bodybuilding-5",
     "ppl",
+    "ppl-arms",
   ],
 
   strength: [
-    "upper-lower-strength",
+    /*
+     * Powerlifting gets highest priority
+     * for a strength goal.
+     *
+     * Training-day matching will determine
+     * whether 3-Day or 6-Day wins.
+     */
+    "powerlifting-3",
+    "powerlifting-6",
+
     "powerbuilding",
     "upper-lower",
     "ppl",
@@ -110,23 +118,17 @@ export function getRecommendedPrograms({
        * TRAINING DAYS
        * =====================================
        *
-       * Exact frequency is the most important
-       * factor.
+       * Exact frequency is extremely important.
        */
 
-      if (
+      const exactFrequency =
         program.frequency.includes(
           trainingDays
-        )
-      ) {
+        );
+
+      if (exactFrequency) {
         score += 50;
       } else {
-        /*
-         * Give a small score to programs
-         * that are close to the requested
-         * number of days.
-         */
-
         const closestDifference =
           Math.min(
             ...program.frequency.map(
@@ -153,18 +155,14 @@ export function getRecommendedPrograms({
        * =====================================
        */
 
-      if (
+      const levelMatch =
         program.levels.includes(
           experience
-        )
-      ) {
+        );
+
+      if (levelMatch) {
         score += 30;
       } else {
-        /*
-         * Avoid recommending programs
-         * that are far above the user's level.
-         */
-
         const userLevel =
           experienceRank[experience];
 
@@ -198,9 +196,10 @@ export function getRecommendedPrograms({
        * =====================================
        */
 
-      if (
-        program.goals.includes(goal)
-      ) {
+      const goalMatch =
+        program.goals.includes(goal);
+
+      if (goalMatch) {
         score += 15;
       }
 
@@ -219,11 +218,6 @@ export function getRecommendedPrograms({
         );
 
       if (priorityIndex !== -1) {
-        /*
-         * Higher priority programs
-         * receive more points.
-         */
-
         score += Math.max(
           10 - priorityIndex,
           2
@@ -232,11 +226,47 @@ export function getRecommendedPrograms({
 
       /*
        * =====================================
+       * POWERLIFTING SPECIAL PRIORITY
+       * =====================================
+       *
+       * For Strength:
+       *
+       * 3 days -> Powerlifting 3-Day
+       * 6 days -> Powerlifting 6-Day
+       *
+       * Exact training frequency and
+       * experience match are required.
+       */
+
+      if (
+        goal === "strength" &&
+        levelMatch &&
+        exactFrequency
+      ) {
+        if (
+          trainingDays === 3 &&
+          program.id ===
+            "powerlifting-3"
+        ) {
+          score += 25;
+        }
+
+        if (
+          trainingDays === 6 &&
+          program.id ===
+            "powerlifting-6"
+        ) {
+          score += 25;
+        }
+      }
+
+      /*
+       * =====================================
        * RECOVERY
        * =====================================
        *
-       * Beginners get preference for
-       * lower recovery demand.
+       * Beginners prefer lower recovery
+       * demands.
        */
 
       if (
@@ -263,7 +293,9 @@ export function getRecommendedPrograms({
       }
 
       /*
-       * Intermediate users
+       * =====================================
+       * INTERMEDIATE RECOVERY
+       * =====================================
        */
 
       if (
@@ -284,7 +316,9 @@ export function getRecommendedPrograms({
       }
 
       /*
-       * Advanced users
+       * =====================================
+       * ADVANCED RECOVERY
+       * =====================================
        */
 
       if (
@@ -325,8 +359,8 @@ export function getRecommendedPrograms({
    * REMOVE UNSUITABLE PROGRAMS
    * =========================================
    *
-   * Do not recommend programs that are
-   * completely mismatched to experience.
+   * We prefer exact experience +
+   * exact training frequency.
    */
 
   const suitablePrograms =
@@ -343,8 +377,8 @@ export function getRecommendedPrograms({
           );
 
         /*
-         * Exact experience match + exact
-         * training frequency is always safe.
+         * Exact experience + exact
+         * training frequency.
          */
 
         if (
@@ -355,8 +389,7 @@ export function getRecommendedPrograms({
         }
 
         /*
-         * Allow a close frequency fallback
-         * when an exact program doesn't exist.
+         * Close frequency fallback.
          */
 
         if (
@@ -372,10 +405,8 @@ export function getRecommendedPrograms({
 
   /*
    * =========================================
-   * RETURN TOP RECOMMENDATIONS
+   * RETURN TOP 3
    * =========================================
-   *
-   * Maximum 3 programs.
    */
 
   return suitablePrograms

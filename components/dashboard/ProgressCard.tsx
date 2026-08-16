@@ -46,6 +46,9 @@ export default function ProgressCard() {
    * =========================================
    * FORMAT WORKOUT NAME
    * =========================================
+   *
+   * Internal scheduler names are converted
+   * into user-friendly workout names.
    */
 
   function formatWorkoutName(
@@ -56,6 +59,12 @@ export default function ProgressCard() {
     }
 
     const names: Record<string, string> = {
+      /*
+       * =====================================
+       * STANDARD WORKOUTS
+       * =====================================
+       */
+
       push: "Push Day",
 
       pull: "Pull Day",
@@ -74,12 +83,89 @@ export default function ProgressCard() {
 
       arms: "Arms Day",
 
-      "full-body": "Full Body",
+      "arms-shoulders":
+        "Arms + Shoulders",
 
-      "chest-back": "Chest + Back",
+      "legs-arms":
+        "Legs + Arms",
+
+      "full-body":
+        "Full Body",
+
+      "chest-back":
+        "Chest + Back",
 
       "shoulders-arms":
         "Shoulders + Arms",
+
+      /*
+       * =====================================
+       * POWERBUILDING
+       * =====================================
+       */
+
+      squat:
+        "Squat Day",
+
+      bench:
+        "Bench Press Day",
+
+      deadlift:
+        "Deadlift Day",
+
+      /*
+       * =====================================
+       * POWERLIFTING — 3 DAY
+       * =====================================
+       *
+       * Monday:
+       * Squat + Bench
+       *
+       * Wednesday:
+       * Bench + Deadlift
+       *
+       * Friday:
+       * Squat + Deadlift
+       */
+
+      "powerlifting-3-mon":
+        "Squat + Bench Press",
+
+      "powerlifting-3-wed":
+        "Bench Press + Deadlift",
+
+      "powerlifting-3-fri":
+        "Squat + Deadlift",
+
+      /*
+       * =====================================
+       * POWERLIFTING — 6 DAY
+       * =====================================
+       */
+
+      "powerlifting-6-mon":
+        "Squat + Bench Press",
+
+      "powerlifting-6-tue":
+        "Bench Press + Deadlift",
+
+      "powerlifting-6-wed":
+        "Squat",
+
+      "powerlifting-6-thu":
+        "Bench Press",
+
+      "powerlifting-6-fri":
+        "Deadlift + Bench Press",
+
+      "powerlifting-6-sat":
+        "Squat + Deadlift",
+
+      /*
+       * =====================================
+       * REST
+       * =====================================
+       */
 
       rest: "Rest Day",
     };
@@ -163,16 +249,6 @@ export default function ProgressCard() {
          * =====================================
          * PREVIOUS DAY
          * =====================================
-         *
-         * JavaScript:
-         *
-         * Sunday = 0
-         * Monday = 1
-         * ...
-         * Saturday = 6
-         *
-         * (today + 6) % 7 gives
-         * the previous day.
          */
 
         const previousDay =
@@ -191,10 +267,6 @@ export default function ProgressCard() {
          * =====================================
          * SCHEDULED WORKOUTS
          * =====================================
-         *
-         * Timeline is based on the program
-         * schedule — NOT the last completed
-         * Firebase workout.
          */
 
         const previousType =
@@ -219,21 +291,10 @@ export default function ProgressCard() {
          * =====================================
          * CHECK TODAY'S COMPLETION
          * =====================================
-         *
-         * We only need today's Firebase
-         * document to know whether the
-         * current workout is completed.
          */
 
         let currentCompleted =
           false;
-
-        /*
-         * Only check Firebase when
-         * there is an actual workout.
-         *
-         * Rest Day does not need completion.
-         */
 
         if (
           currentType !== "rest"
@@ -278,41 +339,20 @@ export default function ProgressCard() {
 
         if (!cancelled) {
           setTimeline({
-            /*
-             * Previous DAY's scheduled
-             * workout.
-             *
-             * Example:
-             * Friday -> Thursday = Rest
-             */
-
             lastWorkout:
               formatWorkoutName(
                 previousType
               ),
-
-            /*
-             * Today's scheduled workout.
-             */
 
             currentWorkout:
               formatWorkoutName(
                 currentType
               ),
 
-            /*
-             * Next DAY's scheduled workout.
-             */
-
             nextWorkout:
               formatWorkoutName(
                 nextType
               ),
-
-            /*
-             * Only today's workout
-             * controls the black card.
-             */
 
             currentCompleted,
           });
@@ -376,9 +416,7 @@ export default function ProgressCard() {
 
       <div className="mt-6 grid gap-5 md:grid-cols-3">
 
-        {/* =================================
-            LAST WORKOUT
-        ================================= */}
+        {/* LAST WORKOUT */}
 
         <TimelineCard
           title="Last Workout"
@@ -387,9 +425,7 @@ export default function ProgressCard() {
           }
         />
 
-        {/* =================================
-            CURRENT WORKOUT
-        ================================= */}
+        {/* CURRENT WORKOUT */}
 
         <TimelineCard
           title="Current Workout"
@@ -401,9 +437,7 @@ export default function ProgressCard() {
           }
         />
 
-        {/* =================================
-            NEXT WORKOUT
-        ================================= */}
+        {/* NEXT WORKOUT */}
 
         <TimelineCard
           title="Next Workout"

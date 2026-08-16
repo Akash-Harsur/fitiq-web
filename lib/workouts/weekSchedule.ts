@@ -175,13 +175,45 @@ export const weekSchedule = {
    * =========================================
    */
 
-  powerbuilding: [
+  "powerbuilding": [
     "squat",
     "rest",
     "bench",
     "rest",
     "deadlift",
+    "rest",
     "arms-shoulders",
+  ],
+
+  /*
+   * =========================================
+   * POWERLIFTING — 3 DAYS
+   * =========================================
+   */
+
+  "powerlifting-3": [
+    "powerlifting-3-mon",
+    "rest",
+    "powerlifting-3-wed",
+    "rest",
+    "powerlifting-3-fri",
+    "rest",
+    "rest",
+  ],
+
+  /*
+   * =========================================
+   * POWERLIFTING — 6 DAYS
+   * =========================================
+   */
+
+  "powerlifting-6": [
+    "powerlifting-6-mon",
+    "powerlifting-6-tue",
+    "powerlifting-6-wed",
+    "powerlifting-6-thu",
+    "powerlifting-6-fri",
+    "powerlifting-6-sat",
     "rest",
   ],
 } as const;

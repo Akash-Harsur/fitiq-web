@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import {
   Check,
   Dumbbell,
@@ -9,6 +10,7 @@ import {
   Trophy,
   ArrowLeft,
 } from "lucide-react";
+
 import { useRouter } from "next/navigation";
 
 import {
@@ -19,9 +21,16 @@ import {
 } from "firebase/firestore";
 
 import { db } from "@/lib/firebase";
+
 import { useAuth } from "@/contexts/AuthContext";
 
 import Sidebar from "@/components/dashboard/Sidebar";
+
+/*
+ * =========================================
+ * WORKOUT HISTORY TYPE
+ * =========================================
+ */
 
 type WorkoutHistory = {
   id: string;
@@ -33,11 +42,19 @@ type WorkoutHistory = {
   totalExercises: number;
 };
 
+/*
+ * =========================================
+ * PAGE
+ * =========================================
+ */
+
 export default function ProgressPage() {
   const router = useRouter();
 
-  const { user, loading: authLoading } =
-    useAuth();
+  const {
+    user,
+    loading: authLoading,
+  } = useAuth();
 
   const [workouts, setWorkouts] =
     useState<WorkoutHistory[]>([]);
@@ -65,69 +82,80 @@ export default function ProgressPage() {
       try {
         setLoading(true);
 
-        const workoutsRef = collection(
-          db,
-          "users",
-          user.uid,
-          "dailyWorkouts"
-        );
+        const workoutsRef =
+          collection(
+            db,
+            "users",
+            user.uid,
+            "dailyWorkouts"
+          );
 
-        const workoutsQuery = query(
-          workoutsRef,
-          orderBy("date", "desc")
-        );
+        const workoutsQuery =
+          query(
+            workoutsRef,
+            orderBy("date", "desc")
+          );
 
         const snapshot =
-          await getDocs(workoutsQuery);
+          await getDocs(
+            workoutsQuery
+          );
 
-        const results: WorkoutHistory[] =
-          [];
+        const results:
+          WorkoutHistory[] = [];
 
-        snapshot.forEach((docSnap) => {
-          const data =
-            docSnap.data();
+        snapshot.forEach(
+          (docSnap) => {
+            const data =
+              docSnap.data();
 
-          const workout =
-            data.workout;
+            const workout =
+              data.workout;
 
-          if (!workout) {
-            return;
-          }
+            if (!workout) {
+              return;
+            }
 
-          const completedExerciseIds =
-            Array.isArray(
-              data.completedExerciseIds
-            )
-              ? data.completedExerciseIds
-              : [];
-
-          results.push({
-            id: docSnap.id,
-
-            date:
-              data.date || "",
-
-            workoutType:
-              data.workoutType || "",
-
-            workoutName:
-              workout.name || "Workout",
-
-            completedExerciseIds,
-
-            workoutFinished:
-              data.workoutFinished === true,
-
-            totalExercises:
+            const completedExerciseIds =
               Array.isArray(
-                workout.exercises
+                data.completedExerciseIds
               )
-                ? workout.exercises.length
-                : 0,
-          });
-        });
+                ? data.completedExerciseIds
+                : [];
 
-        setWorkouts(results);
+            results.push({
+              id: docSnap.id,
+
+              date:
+                data.date || "",
+
+              workoutType:
+                data.workoutType || "",
+
+              workoutName:
+                workout.name ||
+                "Workout",
+
+              completedExerciseIds,
+
+              workoutFinished:
+                data.workoutFinished ===
+                true,
+
+              totalExercises:
+                Array.isArray(
+                  workout.exercises
+                )
+                  ? workout.exercises.length
+                  : 0,
+            });
+          }
+        );
+
+        setWorkouts(
+          results
+        );
+
       } catch (error) {
         console.error(
           "Failed to load progress:",
@@ -139,7 +167,11 @@ export default function ProgressPage() {
     };
 
     loadProgress();
-  }, [user, authLoading]);
+
+  }, [
+    user,
+    authLoading,
+  ]);
 
   /*
    * =========================================
@@ -147,7 +179,10 @@ export default function ProgressPage() {
    * =========================================
    */
 
-  if (loading || authLoading) {
+  if (
+    loading ||
+    authLoading
+  ) {
     return (
       <main className="min-h-screen bg-zinc-50 p-4 md:p-6">
 
@@ -183,10 +218,13 @@ export default function ProgressPage() {
     completedWorkouts.length;
 
   /*
-   * Workouts from the current week.
+   * =========================================
+   * THIS WEEK
+   * =========================================
    */
 
-  const now = new Date();
+  const now =
+    new Date();
 
   const startOfWeek =
     new Date(now);
@@ -195,7 +233,9 @@ export default function ProgressPage() {
     startOfWeek.getDay();
 
   const mondayOffset =
-    day === 0 ? 6 : day - 1;
+    day === 0
+      ? 6
+      : day - 1;
 
   startOfWeek.setDate(
     startOfWeek.getDate() -
@@ -224,7 +264,9 @@ export default function ProgressPage() {
     ).length;
 
   /*
-   * Completion rate.
+   * =========================================
+   * COMPLETION RATE
+   * =========================================
    */
 
   const completionRate =
@@ -263,8 +305,8 @@ export default function ProgressPage() {
   );
 
   /*
-   * If today's workout isn't complete,
-   * check from yesterday.
+   * If today's workout isn't
+   * complete, check from yesterday.
    */
 
   const todayKey =
@@ -274,7 +316,11 @@ export default function ProgressPage() {
       streakDate.getDate()
     ).padStart(2, "0")}`;
 
-  if (!completedDates.has(todayKey)) {
+  if (
+    !completedDates.has(
+      todayKey
+    )
+  ) {
     streakDate.setDate(
       streakDate.getDate() - 1
     );
@@ -288,7 +334,11 @@ export default function ProgressPage() {
         streakDate.getDate()
       ).padStart(2, "0")}`;
 
-    if (!completedDates.has(key)) {
+    if (
+      !completedDates.has(
+        key
+      )
+    ) {
       break;
     }
 
@@ -374,26 +424,35 @@ export default function ProgressPage() {
             <button
               type="button"
               onClick={() =>
-                router.push("/dashboard")
+                router.push(
+                  "/dashboard"
+                )
               }
               className="mb-5 flex items-center gap-2 text-sm font-medium text-zinc-500 transition hover:text-black"
             >
-              <ArrowLeft size={18} />
+              <ArrowLeft
+                size={18}
+              />
+
               Dashboard
             </button>
 
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-zinc-400">
-              YOUR JOURNEY
-            </p>
+            <div>
 
-            <h1 className="mt-3 text-4xl font-bold tracking-tight text-zinc-900">
-              Progress
-            </h1>
+              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-zinc-400">
+                YOUR JOURNEY
+              </p>
 
-            <p className="mt-2 text-base text-zinc-500">
-              Track your consistency and
-              completed workouts.
-            </p>
+              <h1 className="mt-2 text-4xl font-bold tracking-tight text-zinc-900">
+                Progress
+              </h1>
+
+              <p className="mt-2 text-base text-zinc-500">
+                Track your consistency
+                and workout progress.
+              </p>
+
+            </div>
 
           </div>
 
@@ -411,7 +470,9 @@ export default function ProgressPage() {
 
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-50 text-orange-500">
 
-                  <Flame size={24} />
+                  <Flame
+                    size={24}
+                  />
 
                 </div>
 
@@ -433,7 +494,7 @@ export default function ProgressPage() {
 
             </div>
 
-            {/* TOTAL WORKOUTS */}
+            {/* WORKOUTS */}
 
             <div className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm">
 
@@ -441,7 +502,9 @@ export default function ProgressPage() {
 
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-500">
 
-                  <Dumbbell size={24} />
+                  <Dumbbell
+                    size={24}
+                  />
 
                 </div>
 
@@ -469,7 +532,9 @@ export default function ProgressPage() {
 
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-50 text-purple-500">
 
-                  <CalendarDays size={24} />
+                  <CalendarDays
+                    size={24}
+                  />
 
                 </div>
 
@@ -497,7 +562,9 @@ export default function ProgressPage() {
 
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-green-50 text-green-600">
 
-                  <Trophy size={24} />
+                  <Trophy
+                    size={24}
+                  />
 
                 </div>
 
@@ -520,7 +587,7 @@ export default function ProgressPage() {
           </div>
 
           {/* =================================
-              HISTORY
+              WORKOUT HISTORY
           ================================= */}
 
           <div className="mt-6 rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm md:p-8">
@@ -537,7 +604,8 @@ export default function ProgressPage() {
 
             </div>
 
-            {workouts.length === 0 ? (
+            {workouts.length ===
+            0 ? (
 
               <div className="rounded-2xl border border-dashed border-zinc-300 bg-zinc-50 p-10 text-center">
 
@@ -551,8 +619,9 @@ export default function ProgressPage() {
                 </p>
 
                 <p className="mt-1 text-sm text-zinc-500">
-                  Complete your first workout
-                  to see your progress here.
+                  Complete your first
+                  workout to see your
+                  progress here.
                 </p>
 
                 <button
@@ -575,96 +644,125 @@ export default function ProgressPage() {
 
                 {workouts
                   .slice(0, 20)
-                  .map((workout) => {
+                  .map(
+                    (workout) => {
 
-                    const completed =
-                      workout.workoutFinished;
+                      const completed =
+                        workout.workoutFinished;
 
-                    const completedSets =
-                      workout
-                        .completedExerciseIds
-                        .length;
+                      const completedSets =
+                        workout
+                          .completedExerciseIds
+                          .length;
 
-                    return (
-                      <div
-                        key={workout.id}
-                        className="flex flex-col gap-4 rounded-2xl border border-zinc-200 p-4 transition hover:shadow-sm md:flex-row md:items-center md:justify-between"
-                      >
+                      return (
+                        <div
+                          key={
+                            workout.id
+                          }
+                          className="flex flex-col gap-4 rounded-2xl border border-zinc-200 p-4 transition hover:shadow-sm md:flex-row md:items-center md:justify-between"
+                        >
 
-                        <div className="flex items-center gap-4">
+                          {/* LEFT */}
 
-                          <div
-                            className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${
-                              completed
-                                ? "bg-black text-white"
-                                : "bg-zinc-100 text-zinc-500"
-                            }`}
-                          >
+                          <div className="flex items-center gap-4">
 
-                            {completed ? (
-                              <Check
-                                size={22}
-                              />
-                            ) : (
-                              <Dumbbell
-                                size={22}
-                              />
-                            )}
+                            <div
+                              className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${
+                                completed
+                                  ? "bg-black text-white"
+                                  : "bg-zinc-100 text-zinc-500"
+                              }`}
+                            >
 
-                          </div>
-
-                          <div>
-
-                            <h3 className="font-semibold text-zinc-900">
-                              {workout.workoutName}
-                            </h3>
-
-                            <p className="mt-1 text-sm text-zinc-500">
-                              {formatDate(
-                                workout.date
-                              )}{" "}
-                              •{" "}
-                              {formatWorkoutType(
-                                workout.workoutType
+                              {completed ? (
+                                <Check
+                                  size={
+                                    22
+                                  }
+                                />
+                              ) : (
+                                <Dumbbell
+                                  size={
+                                    22
+                                  }
+                                />
                               )}
-                            </p>
+
+                            </div>
+
+                            <div>
+
+                              <h3 className="font-semibold text-zinc-900">
+                                {
+                                  workout.workoutName
+                                }
+                              </h3>
+
+                              <p className="mt-1 text-sm text-zinc-500">
+
+                                {formatDate(
+                                  workout.date
+                                )}
+
+                                {" • "}
+
+                                {formatWorkoutType(
+                                  workout.workoutType
+                                )}
+
+                              </p>
+
+                            </div>
+
+                          </div>
+
+                          {/* RIGHT */}
+
+                          <div className="flex items-center justify-between gap-6 md:justify-end">
+
+                            <div className="text-right">
+
+                              <p className="text-sm font-semibold text-zinc-900">
+
+                                {
+                                  completedSets
+                                }
+
+                                {" / "}
+
+                                {
+                                  workout.totalExercises
+                                }
+
+                              </p>
+
+                              <p className="text-xs text-zinc-500">
+                                Exercises
+                              </p>
+
+                            </div>
+
+                            <div
+                              className={`rounded-full px-3 py-1.5 text-xs font-semibold ${
+                                completed
+                                  ? "bg-black text-white"
+                                  : "bg-zinc-100 text-zinc-600"
+                              }`}
+                            >
+
+                              {completed
+                                ? "Completed"
+                                : "In Progress"}
+
+                            </div>
 
                           </div>
 
                         </div>
-
-                        <div className="flex items-center justify-between gap-6 md:justify-end">
-
-                          <div className="text-right">
-
-                            <p className="text-sm font-semibold text-zinc-900">
-                              {completedSets} /{" "}
-                              {workout.totalExercises}
-                            </p>
-
-                            <p className="text-xs text-zinc-500">
-                              Exercises
-                            </p>
-
-                          </div>
-
-                          <div
-                            className={`rounded-full px-3 py-1.5 text-xs font-semibold ${
-                              completed
-                                ? "bg-black text-white"
-                                : "bg-zinc-100 text-zinc-600"
-                            }`}
-                          >
-                            {completed
-                              ? "Completed"
-                              : "In Progress"}
-                          </div>
-
-                        </div>
-
-                      </div>
-                    );
-                  })}
+                      );
+                    }
+                  )}
 
               </div>
 

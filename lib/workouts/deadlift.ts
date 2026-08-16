@@ -10,7 +10,7 @@ export function generateDeadliftWorkout(): WorkoutDay {
   return {
     id: crypto.randomUUID(),
 
-    name: "Deadlift Day",
+    name: "Deadlift + Posterior Chain",
 
     estimatedDuration: 75,
 
@@ -31,19 +31,23 @@ export function generateDeadliftWorkout(): WorkoutDay {
             percent: 60,
             reps: 5,
           },
+          {
+            percent: 70,
+            reps: 3,
+          },
         ],
 
         workingSets: [
           {
-            label: "Set 1",
+            label: "Working Set 1",
             reps: 5,
           },
           {
-            label: "Set 2",
+            label: "Working Set 2",
             reps: 5,
           },
           {
-            label: "Set 3",
+            label: "Working Set 3",
             reps: 4,
           },
         ],
@@ -84,7 +88,7 @@ export function generateDeadliftWorkout(): WorkoutDay {
         rest: "120 sec",
 
         notes:
-          "Controlled descent with strong quad drive.",
+          "Use a controlled descent with strong quad drive.",
       },
 
       {

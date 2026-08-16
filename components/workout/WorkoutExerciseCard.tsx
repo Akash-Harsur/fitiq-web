@@ -33,6 +33,55 @@ export default function WorkoutExerciseCard({
 
   /*
    * =========================================
+   * COMPLETE EXERCISE
+   * =========================================
+   *
+   * When the user completes an exercise:
+   *
+   * 1. Save the completion
+   * 2. Collapse the current exercise
+   * 3. Scroll to the next exercise
+   */
+
+  const handleCompleteExercise = () => {
+    completeExercise(exercise.id);
+
+    // Collapse current exercise
+    setExpanded(false);
+
+    /*
+     * Give React a moment to update the UI
+     * before scrolling to the next exercise.
+     */
+
+    setTimeout(() => {
+      const exercises = Array.from(
+        document.querySelectorAll(
+          "[data-workout-exercise]"
+        )
+      );
+
+      const currentIndex = exercises.findIndex(
+        (element) =>
+          element.getAttribute(
+            "data-workout-exercise"
+          ) === exercise.id
+      );
+
+      const nextExercise =
+        exercises[currentIndex + 1];
+
+      if (nextExercise) {
+        nextExercise.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
+    }, 150);
+  };
+
+  /*
+   * =========================================
    * EXERCISE IMAGE CHECK
    * =========================================
    *
@@ -47,9 +96,14 @@ export default function WorkoutExerciseCard({
     exercise.image.trim() !== "";
 
   return (
-    <div className="overflow-hidden rounded-xl border border-zinc-300 bg-white">
+    <div
+      data-workout-exercise={exercise.id}
+      className="overflow-hidden rounded-xl border border-zinc-300 bg-white"
+    >
 
-      {/* HEADER */}
+      {/* =========================================
+          HEADER
+      ========================================= */}
 
       <button
         type="button"
@@ -72,9 +126,13 @@ export default function WorkoutExerciseCard({
 
           <div className="mt-2 flex flex-wrap gap-2">
 
+            {/* WORKING SET COUNT */}
+
             <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-medium text-zinc-600">
               {exercise.workingSets.length} Sets
             </span>
+
+            {/* WARM-UP */}
 
             {exercise.warmup &&
               exercise.warmup.length > 0 && (
@@ -83,11 +141,15 @@ export default function WorkoutExerciseCard({
                 </span>
               )}
 
+            {/* BACK-OFF */}
+
             {exercise.backoff && (
               <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-medium text-zinc-600">
                 Back-off
               </span>
             )}
+
+            {/* DROP SET */}
 
             {exercise.dropSet &&
               exercise.dropSet.length > 0 && (
@@ -96,11 +158,15 @@ export default function WorkoutExerciseCard({
                 </span>
               )}
 
+            {/* SUPERSET */}
+
             {exercise.superset && (
               <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-medium text-zinc-600">
                 Superset
               </span>
             )}
+
+            {/* REST */}
 
             {exercise.rest && (
               <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-medium text-zinc-600">
@@ -111,6 +177,8 @@ export default function WorkoutExerciseCard({
           </div>
         </div>
 
+        {/* EXPAND ICON */}
+
         <span className="ml-4 shrink-0">
           {expanded ? (
             <ChevronUp size={22} />
@@ -120,7 +188,9 @@ export default function WorkoutExerciseCard({
         </span>
       </button>
 
-      {/* EXPANDED CONTENT */}
+      {/* =========================================
+          EXPANDED CONTENT
+      ========================================= */}
 
       {expanded && (
         <div className="border-t border-zinc-200">
@@ -182,11 +252,15 @@ export default function WorkoutExerciseCard({
 
             </div>
 
-            {/* DETAILS */}
+            {/* =========================================
+                DETAILS
+            ========================================= */}
 
             <div>
 
-              {/* WARM-UP */}
+              {/* =========================================
+                  WARM-UP
+              ========================================= */}
 
               {exercise.warmup &&
                 exercise.warmup.length > 0 && (
@@ -225,7 +299,9 @@ export default function WorkoutExerciseCard({
                   </div>
                 )}
 
-              {/* WORKING SETS */}
+              {/* =========================================
+                  WORKING SETS
+              ========================================= */}
 
               <div className="border-b border-zinc-200 p-5 md:p-6">
 
@@ -257,7 +333,9 @@ export default function WorkoutExerciseCard({
                 </div>
               </div>
 
-              {/* BACK-OFF */}
+              {/* =========================================
+                  BACK-OFF
+              ========================================= */}
 
               {exercise.backoff && (
                 <div className="border-b border-zinc-200 p-5 md:p-6">
@@ -285,7 +363,9 @@ export default function WorkoutExerciseCard({
                 </div>
               )}
 
-              {/* DROP SET */}
+              {/* =========================================
+                  DROP SET
+              ========================================= */}
 
               {exercise.dropSet &&
                 exercise.dropSet.length > 0 && (
@@ -324,7 +404,9 @@ export default function WorkoutExerciseCard({
                   </div>
                 )}
 
-              {/* SUPERSET */}
+              {/* =========================================
+                  SUPERSET
+              ========================================= */}
 
               {exercise.superset && (
                 <div className="border-b border-zinc-200 p-5 md:p-6">
@@ -347,7 +429,9 @@ export default function WorkoutExerciseCard({
                 </div>
               )}
 
-              {/* NOTES */}
+              {/* =========================================
+                  NOTES
+              ========================================= */}
 
               {exercise.notes && (
                 <div className="border-b border-zinc-200 p-5 md:p-6">
@@ -363,7 +447,9 @@ export default function WorkoutExerciseCard({
                 </div>
               )}
 
-              {/* REST */}
+              {/* =========================================
+                  REST
+              ========================================= */}
 
               {exercise.rest && (
                 <div className="border-b border-zinc-200 p-5 md:p-6">
@@ -375,15 +461,15 @@ export default function WorkoutExerciseCard({
                 </div>
               )}
 
-              {/* COMPLETE BUTTON */}
+              {/* =========================================
+                  COMPLETE BUTTON
+              ========================================= */}
 
               <div className="p-5 md:p-6">
 
                 <button
                   type="button"
-                  onClick={() =>
-                    completeExercise(exercise.id)
-                  }
+                  onClick={handleCompleteExercise}
                   className={`flex w-full items-center justify-center gap-2 rounded-2xl border px-5 py-4 text-sm font-semibold transition-all md:text-base ${
                     isCompleted
                       ? "border-black bg-black text-white hover:bg-zinc-800"

@@ -199,6 +199,39 @@ export const workoutPrograms: WorkoutProgram[] = [
 
   /*
    * =========================================
+   * POWERLIFTING — 3 DAYS
+   * =========================================
+   */
+
+  {
+    id: "powerlifting-3",
+
+    name: "Powerlifting 3-Day",
+
+    frequency: [3],
+
+    levels: [
+      "beginner",
+      "intermediate",
+      "advanced",
+    ],
+
+    goals: [
+      "strength",
+    ],
+
+    recovery: "Moderate",
+
+    duration: "75–95 min",
+
+    badge: "Strength Focus",
+
+    description:
+      "A three-day powerlifting program focused on Squat, Bench Press and Deadlift with dedicated recovery between sessions.",
+  },
+
+  /*
+   * =========================================
    * 4 DAYS
    * =========================================
    */
@@ -453,6 +486,39 @@ export const workoutPrograms: WorkoutProgram[] = [
 
     description:
       "A high-frequency Push Pull Legs program with additional Arms specialization on the final training day.",
+  },
+
+  /*
+   * =========================================
+   * POWERLIFTING — 6 DAYS
+   * =========================================
+   */
+
+  {
+    id: "powerlifting-6",
+
+    name: "Powerlifting 6-Day",
+
+    frequency: [6],
+
+    levels: [
+      "beginner",
+      "intermediate",
+      "advanced",
+    ],
+
+    goals: [
+      "strength",
+    ],
+
+    recovery: "High",
+
+    duration: "60–90 min",
+
+    badge: "High Frequency",
+
+    description:
+      "A high-frequency powerlifting program with multiple weekly exposures to Squat, Bench Press and Deadlift.",
   },
 
   /*

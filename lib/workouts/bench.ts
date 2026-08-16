@@ -10,7 +10,7 @@ export function generateBenchWorkout(): WorkoutDay {
   return {
     id: crypto.randomUUID(),
 
-    name: "Bench Press Day",
+    name: "Bench + Upper Body",
 
     estimatedDuration: 75,
 
@@ -31,23 +31,27 @@ export function generateBenchWorkout(): WorkoutDay {
             percent: 60,
             reps: 6,
           },
+          {
+            percent: 70,
+            reps: 3,
+          },
         ],
 
         workingSets: [
           {
-            label: "Set 1",
+            label: "Working Set 1",
             reps: 6,
           },
           {
-            label: "Set 2",
+            label: "Working Set 2",
             reps: 6,
           },
           {
-            label: "Set 3",
+            label: "Working Set 3",
             reps: 5,
           },
           {
-            label: "Set 4",
+            label: "Working Set 4",
             reps: 5,
           },
         ],
@@ -60,7 +64,7 @@ export function generateBenchWorkout(): WorkoutDay {
         rest: "180 sec",
 
         notes:
-          "Focus on controlled descent, stable setup and strong press.",
+          "Use a controlled descent, stable setup and strong press.",
       },
 
       {
@@ -145,6 +149,34 @@ export function generateBenchWorkout(): WorkoutDay {
 
         notes:
           "Pull toward the upper chest and control the return.",
+      },
+
+      {
+        id: crypto.randomUUID(),
+
+        name: "Lateral Raise",
+
+        image: "",
+
+        workingSets: [
+          {
+            label: "Set 1",
+            reps: 15,
+          },
+          {
+            label: "Set 2",
+            reps: 15,
+          },
+          {
+            label: "Set 3",
+            reps: 12,
+          },
+        ],
+
+        rest: "60 sec",
+
+        notes:
+          "Use controlled reps and avoid excessive momentum.",
       },
 
       {

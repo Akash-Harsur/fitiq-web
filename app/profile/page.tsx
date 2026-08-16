@@ -27,6 +27,8 @@ import {
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/contexts/AuthContext";
 
+import WorkoutProgramGuide from "@/components/profile/WorkoutProgramGuide";
+
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import Sidebar from "@/components/dashboard/Sidebar";
 
@@ -1355,6 +1357,12 @@ export default function ProfilePage() {
               )}
 
             </section>
+
+            {/* =================================
+                WORKOUT PROGRAM GUIDE
+            ================================= */}
+
+            <WorkoutProgramGuide />
 
             {/* =================================
                 EDIT NOTE

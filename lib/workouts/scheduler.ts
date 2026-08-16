@@ -18,6 +18,14 @@ import { generateSquatWorkout } from "./squat";
 import { generateBenchWorkout } from "./bench";
 import { generateDeadliftWorkout } from "./deadlift";
 
+import {
+  generatePowerlifting3Workout,
+} from "./powerlifting3";
+
+import {
+  generatePowerlifting6Workout,
+} from "./powerlifting6";
+
 import { WorkoutDay } from "./types";
 
 /*
@@ -153,6 +161,33 @@ export function getWorkoutByType(
   switch (workoutType) {
     case "push":
       return generatePushWorkout();
+
+    case "powerlifting-3-mon":
+      return generatePowerlifting3Workout(0);
+
+    case "powerlifting-3-wed":
+      return generatePowerlifting3Workout(1);
+
+    case "powerlifting-3-fri":
+      return generatePowerlifting3Workout(2);
+
+    case "powerlifting-6-mon":
+      return generatePowerlifting6Workout(0);
+
+    case "powerlifting-6-tue":
+      return generatePowerlifting6Workout(1);
+
+    case "powerlifting-6-wed":
+      return generatePowerlifting6Workout(2);
+
+    case "powerlifting-6-thu":
+      return generatePowerlifting6Workout(3);
+
+    case "powerlifting-6-fri":
+      return generatePowerlifting6Workout(4);
+
+    case "powerlifting-6-sat":
+      return generatePowerlifting6Workout(5);
 
     case "pull":
       return generatePullWorkout();

@@ -2,7 +2,7 @@ import { WorkoutDay } from "./types";
 
 /*
  * =========================================
- * ARMS + SHOULDERS WORKOUT
+ * POWERBUILDING — ARMS + SHOULDERS
  * =========================================
  */
 
@@ -40,7 +40,7 @@ export function generateArmsShouldersWorkout(): WorkoutDay {
         rest: "90 sec",
 
         notes:
-          "Controlled reps. Focus on shoulder stability.",
+          "Use controlled reps and focus on shoulder stability.",
       },
 
       {

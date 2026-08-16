@@ -2,36 +2,17 @@ import { WorkoutDay } from "./types";
 
 /*
  * =========================================
- * SQUAT WORKOUT
+ * POWERBUILDING — SQUAT DAY
  * =========================================
- *
- * Powerbuilding / Strength focused Squat day.
- *
- * Structure:
- *
- * Warm-up:
- * 40% × 8
- * 60% × 5
- * 70% × 3
- *
- * Working:
- * 3 × 5
- *
- * Back-off:
- * 70% × 8
- *
- * The percentages are intended to be
- * calculated from the user's Training Max
- * when weight calculation is added later.
  */
 
 export function generateSquatWorkout(): WorkoutDay {
   return {
     id: crypto.randomUUID(),
 
-    name: "Squat Day",
+    name: "Squat + Lower Body",
 
-    estimatedDuration: 60,
+    estimatedDuration: 75,
 
     exercises: [
       {
@@ -69,6 +50,10 @@ export function generateSquatWorkout(): WorkoutDay {
             label: "Working Set 3",
             reps: 5,
           },
+          {
+            label: "Working Set 4",
+            reps: 5,
+          },
         ],
 
         backoff: {
@@ -76,10 +61,122 @@ export function generateSquatWorkout(): WorkoutDay {
           reps: 8,
         },
 
-        notes:
-          "Controlled reps. Keep your core braced and maintain consistent depth.",
-
         rest: "2–4 min",
+
+        notes:
+          "Control the descent, brace your core and maintain consistent depth.",
+      },
+
+      {
+        id: crypto.randomUUID(),
+
+        name: "Hack Squat",
+
+        image: "",
+
+        workingSets: [
+          {
+            label: "Set 1",
+            reps: 10,
+          },
+          {
+            label: "Set 2",
+            reps: 10,
+          },
+          {
+            label: "Set 3",
+            reps: 8,
+          },
+        ],
+
+        rest: "120 sec",
+
+        notes:
+          "Use a controlled descent and drive through the mid-foot.",
+      },
+
+      {
+        id: crypto.randomUUID(),
+
+        name: "Romanian Deadlift",
+
+        image: "",
+
+        workingSets: [
+          {
+            label: "Set 1",
+            reps: 10,
+          },
+          {
+            label: "Set 2",
+            reps: 10,
+          },
+          {
+            label: "Set 3",
+            reps: 8,
+          },
+        ],
+
+        rest: "120 sec",
+
+        notes:
+          "Keep the bar close and maintain tension through the hamstrings.",
+      },
+
+      {
+        id: crypto.randomUUID(),
+
+        name: "Leg Extension",
+
+        image: "",
+
+        workingSets: [
+          {
+            label: "Set 1",
+            reps: 15,
+          },
+          {
+            label: "Set 2",
+            reps: 12,
+          },
+          {
+            label: "Set 3",
+            reps: 12,
+          },
+        ],
+
+        rest: "75 sec",
+
+        notes:
+          "Control both the lifting and lowering phases.",
+      },
+
+      {
+        id: crypto.randomUUID(),
+
+        name: "Standing Calf Raise",
+
+        image: "",
+
+        workingSets: [
+          {
+            label: "Set 1",
+            reps: 15,
+          },
+          {
+            label: "Set 2",
+            reps: 15,
+          },
+          {
+            label: "Set 3",
+            reps: 12,
+          },
+        ],
+
+        rest: "60 sec",
+
+        notes:
+          "Use a full stretch and controlled contraction.",
       },
     ],
   };
