@@ -10,6 +10,7 @@ import {
   signOut,
 } from "firebase/auth";
 
+import PhoneLoginForm from "./PhoneLoginForm";
 import { auth, googleProvider, db } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 
@@ -20,19 +21,28 @@ export default function LoginForm() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [phoneLogin, setPhoneLogin] = useState(false);
 
   const router = useRouter();
 
   const redirectAfterLogin = async (uid: string) => {
-    const userDoc = await getDoc(doc(db, "users", uid));
+    try {
+      const userDoc = await getDoc(doc(db, "users", uid));
 
-    if (
-      !userDoc.exists() ||
-      !userDoc.data().onboardingCompleted
-    ) {
-      router.push("/onboarding");
-    } else {
-      router.push("/dashboard");
+      if (
+        !userDoc.exists() ||
+        !userDoc.data()?.onboardingCompleted
+      ) {
+        router.push("/onboarding");
+      } else {
+        router.push("/dashboard");
+      }
+    } catch (error) {
+      console.error("Firestore redirect error:", error);
+
+      setError(
+        "Login successful, but we couldn't load your profile. Please try again."
+      );
     }
   };
 
@@ -42,7 +52,9 @@ export default function LoginForm() {
     e.preventDefault();
     setError("");
 
-    if (!email || !password) {
+    const cleanEmail = email.trim();
+
+    if (!cleanEmail || !password) {
       setError("Please enter email and password.");
       return;
     }
@@ -53,7 +65,7 @@ export default function LoginForm() {
       const userCredential =
         await signInWithEmailAndPassword(
           auth,
-          email,
+          cleanEmail,
           password
         );
 
@@ -70,13 +82,14 @@ export default function LoginForm() {
       setEmail("");
       setPassword("");
 
-      await redirectAfterLogin(userCredential.user.uid);
+      await redirectAfterLogin(
+        userCredential.user.uid
+      );
     } catch (error: any) {
-      switch (error.code) {
-        case "auth/user-not-found":
-          setError("No account found with this email.");
-          break;
+      console.error("EMAIL LOGIN ERROR:", error);
 
+      switch (error?.code) {
+        case "auth/user-not-found":
         case "auth/wrong-password":
         case "auth/invalid-credential":
           setError("Invalid email or password.");
@@ -86,8 +99,27 @@ export default function LoginForm() {
           setError("Please enter a valid email address.");
           break;
 
+        case "auth/user-disabled":
+          setError("This account has been disabled.");
+          break;
+
+        case "auth/too-many-requests":
+          setError(
+            "Too many failed attempts. Please try again later."
+          );
+          break;
+
+        case "auth/network-request-failed":
+          setError(
+            "Network error. Please check your internet connection."
+          );
+          break;
+
         default:
-          setError("Something went wrong. Please try again.");
+          setError(
+            error?.message ||
+              "Something went wrong. Please try again."
+          );
       }
     } finally {
       setLoading(false);
@@ -97,30 +129,57 @@ export default function LoginForm() {
   const handleForgotPassword = async () => {
     setError("");
 
-    if (!email) {
+    const cleanEmail = email.trim();
+
+    if (!cleanEmail) {
       setError("Please enter your email address.");
       return;
     }
 
     try {
-      await sendPasswordResetEmail(auth, email);
+      setLoading(true);
+
+      await sendPasswordResetEmail(
+        auth,
+        cleanEmail
+      );
 
       setError(
-        "If an account exists for this email, we've sent a password reset link. Please check your Inbox and Spam/Junk folder if you don't see it within a few minutes."
+        "Password reset email sent. Please check your Inbox and Spam/Junk folder."
       );
     } catch (error: any) {
-      switch (error.code) {
+      console.error(
+        "PASSWORD RESET ERROR:",
+        error
+      );
+
+      switch (error?.code) {
         case "auth/user-not-found":
-          setError("No account found with this email.");
+          setError(
+            "No account found with this email."
+          );
           break;
 
         case "auth/invalid-email":
-          setError("Please enter a valid email address.");
+          setError(
+            "Please enter a valid email address."
+          );
+          break;
+
+        case "auth/network-request-failed":
+          setError(
+            "Network error. Please check your internet connection."
+          );
           break;
 
         default:
-          setError("Failed to send reset email.");
+          setError(
+            error?.message ||
+              "Failed to send reset email."
+          );
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -135,17 +194,72 @@ export default function LoginForm() {
         googleProvider
       );
 
-      await redirectAfterLogin(result.user.uid);
+      await redirectAfterLogin(
+        result.user.uid
+      );
     } catch (error: any) {
-      setError("Google Sign-In failed.");
+      console.error(
+        "GOOGLE LOGIN ERROR:",
+        error
+      );
+
+      switch (error?.code) {
+        case "auth/popup-closed-by-user":
+        case "auth/cancelled-popup-request":
+          setError(
+            "Google sign-in was cancelled."
+          );
+          break;
+
+        case "auth/popup-blocked":
+          setError(
+            "Your browser blocked the Google sign-in popup. Please allow popups for FitIQ."
+          );
+          break;
+
+        case "auth/account-exists-with-different-credential":
+          setError(
+            "An account already exists with this email using another sign-in method."
+          );
+          break;
+
+        case "auth/network-request-failed":
+          setError(
+            "Network error. Please check your internet connection."
+          );
+          break;
+
+        default:
+          setError(
+            error?.message ||
+              "Google Sign-In failed."
+          );
+      }
     } finally {
       setLoading(false);
     }
   };
 
+  /*
+   * PHONE OTP SCREEN
+   */
+  if (phoneLogin) {
+    return (
+      <PhoneLoginForm
+        onBack={() => {
+          setPhoneLogin(false);
+          setError("");
+        }}
+      />
+    );
+  }
+
   return (
-    <form onSubmit={handleLogin} className="mt-8">
-      {/* Email */}
+    <form
+      onSubmit={handleLogin}
+      className="mt-8"
+    >
+      {/* EMAIL */}
 
       <div className="mb-4">
         <label className="mb-2 block text-sm font-medium text-gray-700">
@@ -156,12 +270,15 @@ export default function LoginForm() {
           type="email"
           placeholder="Enter your email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) =>
+            setEmail(e.target.value)
+          }
+          autoComplete="email"
           className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none transition focus:border-black"
         />
       </div>
 
-      {/* Password */}
+      {/* PASSWORD */}
 
       <div>
         <label className="mb-2 block text-sm font-medium text-gray-700">
@@ -170,19 +287,33 @@ export default function LoginForm() {
 
         <div className="relative">
           <input
-            type={showPassword ? "text" : "password"}
+            type={
+              showPassword
+                ? "text"
+                : "password"
+            }
             placeholder="Enter your password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) =>
+              setPassword(e.target.value)
+            }
+            autoComplete="current-password"
             className="w-full rounded-xl border border-gray-300 px-4 py-3 pr-12 outline-none transition focus:border-black"
           />
 
           <button
             type="button"
             onClick={() =>
-              setShowPassword(!showPassword)
+              setShowPassword(
+                !showPassword
+              )
             }
             className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500"
+            aria-label={
+              showPassword
+                ? "Hide password"
+                : "Show password"
+            }
           >
             {showPassword ? (
               <EyeOff size={20} />
@@ -193,7 +324,7 @@ export default function LoginForm() {
         </div>
       </div>
 
-      {/* Error / Success Message */}
+      {/* ERROR */}
 
       {error && (
         <p className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-600">
@@ -201,7 +332,7 @@ export default function LoginForm() {
         </p>
       )}
 
-      {/* Forgot Password */}
+      {/* FORGOT PASSWORD */}
 
       <div className="mt-3 flex justify-end">
         <button
@@ -214,63 +345,51 @@ export default function LoginForm() {
         </button>
       </div>
 
-      {/* Sign In */}
+      {/* SIGN IN */}
 
       <button
         type="submit"
         disabled={loading}
         className="mt-6 flex w-full items-center justify-center rounded-xl bg-black py-3 font-semibold text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-70"
       >
-        {loading ? (
-          <>
-            <svg
-              className="mr-2 h-5 w-5 animate-spin"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              />
-
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M12 2a10 10 0 00-10 10h4a6 6 0 016-6V2z"
-              />
-            </svg>
-
-            Signing In...
-          </>
-        ) : (
-          "Sign In"
-        )}
+        {loading
+          ? "Signing In..."
+          : "Sign In"}
       </button>
 
-      {/* Divider */}
+      {/* DIVIDER */}
 
       <div className="my-6 flex items-center">
-        <div className="h-px flex-1 bg-gray-300"></div>
+        <div className="h-px flex-1 bg-gray-300" />
 
         <span className="px-4 text-sm text-gray-500">
           OR
         </span>
 
-        <div className="h-px flex-1 bg-gray-300"></div>
+        <div className="h-px flex-1 bg-gray-300" />
       </div>
 
-      {/* Google */}
+      {/* PHONE OTP */}
+
+      <button
+        type="button"
+        disabled={loading}
+        onClick={() => {
+          setError("");
+          setPhoneLogin(true);
+        }}
+        className="flex w-full items-center justify-center rounded-xl border border-gray-300 py-3 font-semibold transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-70"
+      >
+        Continue with Phone OTP
+      </button>
+
+      {/* GOOGLE */}
 
       <button
         type="button"
         disabled={loading}
         onClick={handleGoogleLogin}
-        className="flex w-full items-center justify-center gap-3 rounded-xl border border-gray-300 py-3 font-semibold transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-70"
+        className="mt-3 flex w-full items-center justify-center gap-3 rounded-xl border border-gray-300 py-3 font-semibold transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-70"
       >
         <img
           src="https://www.svgrepo.com/show/475656/google-color.svg"

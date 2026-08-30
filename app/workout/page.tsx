@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Check } from "lucide-react";
 
+import Sidebar from "@/components/dashboard/Sidebar";
 import WorkoutExerciseCard from "@/components/workout/WorkoutExerciseCard";
 
 import {
@@ -162,20 +163,12 @@ export default function WorkoutPage() {
       cancelled = true;
     };
 
-    /*
-     * startWorkout intentionally excluded.
-     */
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, authLoading]);
 
   /*
    * =========================================
    * PROGRESS
-   *
-   * IMPORTANT:
-   * These are calculated BEFORE any
-   * conditional return.
    * =========================================
    */
 
@@ -213,9 +206,6 @@ export default function WorkoutPage() {
   /*
    * =========================================
    * SAVE COMPLETION TO FIREBASE
-   *
-   * IMPORTANT:
-   * This hook is BEFORE every return.
    * =========================================
    */
 
@@ -274,15 +264,21 @@ export default function WorkoutPage() {
 
   if (loading || authLoading) {
     return (
-      <main className="min-h-screen bg-zinc-50 p-4 md:p-6">
-        <div className="mx-auto max-w-6xl">
-          <div className="rounded-3xl bg-white p-6 shadow-sm">
-            <p className="text-sm text-zinc-500">
-              Loading workout...
-            </p>
+      <div className="flex min-h-screen bg-zinc-50">
+
+        <Sidebar />
+
+        <main className="min-w-0 flex-1 p-4 md:p-6">
+          <div className="mx-auto max-w-6xl">
+            <div className="rounded-3xl bg-white p-6 shadow-sm">
+              <p className="text-sm text-zinc-500">
+                Loading workout...
+              </p>
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
+
+      </div>
     );
   }
 
@@ -294,25 +290,33 @@ export default function WorkoutPage() {
 
   if (!user) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-zinc-50 p-6">
-        <div className="rounded-3xl bg-white p-8 text-center shadow-sm">
+      <div className="flex min-h-screen bg-zinc-50">
 
-          <h1 className="text-xl font-bold text-zinc-900">
-            Please sign in
-          </h1>
+        <Sidebar />
 
-          <button
-            type="button"
-            onClick={() =>
-              router.push("/login")
-            }
-            className="mt-5 rounded-xl bg-black px-6 py-3 text-sm font-semibold text-white"
-          >
-            Go to Login
-          </button>
+        <main className="flex min-w-0 flex-1 items-center justify-center p-6">
 
-        </div>
-      </main>
+          <div className="rounded-3xl bg-white p-8 text-center shadow-sm">
+
+            <h1 className="text-xl font-bold text-zinc-900">
+              Please sign in
+            </h1>
+
+            <button
+              type="button"
+              onClick={() =>
+                router.push("/login")
+              }
+              className="mt-5 rounded-xl bg-black px-6 py-3 text-sm font-semibold text-white"
+            >
+              Go to Login
+            </button>
+
+          </div>
+
+        </main>
+
+      </div>
     );
   }
 
@@ -324,34 +328,42 @@ export default function WorkoutPage() {
 
   if (!workout) {
     return (
-      <main className="min-h-screen bg-zinc-50 p-4 md:p-6">
-        <div className="mx-auto max-w-6xl">
+      <div className="flex min-h-screen bg-zinc-50">
 
-          <div className="rounded-3xl border border-red-200 bg-white p-6 shadow-sm">
+        <Sidebar />
 
-            <p className="font-semibold text-red-600">
-              Unable to load workout
-            </p>
+        <main className="min-w-0 flex-1 p-4 md:p-6">
 
-            <p className="mt-1 text-sm text-zinc-500">
-              Please go back to the dashboard
-              and try again.
-            </p>
+          <div className="mx-auto max-w-6xl">
 
-            <button
-              type="button"
-              onClick={() =>
-                router.push("/dashboard")
-              }
-              className="mt-5 rounded-xl bg-black px-5 py-3 text-sm font-semibold text-white"
-            >
-              Back to Dashboard
-            </button>
+            <div className="rounded-3xl border border-red-200 bg-white p-6 shadow-sm">
+
+              <p className="font-semibold text-red-600">
+                Unable to load workout
+              </p>
+
+              <p className="mt-1 text-sm text-zinc-500">
+                Please go back to the dashboard
+                and try again.
+              </p>
+
+              <button
+                type="button"
+                onClick={() =>
+                  router.push("/dashboard")
+                }
+                className="mt-5 rounded-xl bg-black px-5 py-3 text-sm font-semibold text-white"
+              >
+                Back to Dashboard
+              </button>
+
+            </div>
 
           </div>
 
-        </div>
-      </main>
+        </main>
+
+      </div>
     );
   }
 
@@ -363,65 +375,71 @@ export default function WorkoutPage() {
 
   if (allExercisesCompleted) {
     return (
-      <main className="min-h-screen bg-zinc-50 p-4 md:p-6">
+      <div className="flex min-h-screen bg-zinc-50">
 
-        <div className="mx-auto flex min-h-[80vh] max-w-4xl items-center justify-center">
+        <Sidebar />
 
-          <div className="w-full rounded-3xl bg-white p-8 text-center shadow-sm md:p-12">
+        <main className="min-w-0 flex-1 p-4 md:p-6">
 
-            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-black text-white">
-              <Check size={38} />
-            </div>
+          <div className="mx-auto flex min-h-[80vh] max-w-4xl items-center justify-center">
 
-            <p className="mt-6 text-xs font-semibold uppercase tracking-[0.28em] text-zinc-400">
-              WORKOUT COMPLETE
-            </p>
+            <div className="w-full rounded-3xl bg-white p-8 text-center shadow-sm md:p-12">
 
-            <h1 className="mt-3 text-4xl font-bold tracking-tight text-zinc-900 md:text-5xl">
-              Great Work! 💪
-            </h1>
+              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-black text-white">
+                <Check size={38} />
+              </div>
 
-            <p className="mx-auto mt-4 max-w-md text-base leading-7 text-zinc-500">
-              You completed all{" "}
-              {totalExercises} exercises
-              in today&apos;s workout.
-            </p>
+              <p className="mt-6 text-xs font-semibold uppercase tracking-[0.28em] text-zinc-400">
+                WORKOUT COMPLETE
+              </p>
 
-            <div className="mx-auto mt-8 max-w-md">
+              <h1 className="mt-3 text-4xl font-bold tracking-tight text-zinc-900 md:text-5xl">
+                Great Work! 💪
+              </h1>
 
-              <div className="flex items-center justify-between text-sm">
+              <p className="mx-auto mt-4 max-w-md text-base leading-7 text-zinc-500">
+                You completed all{" "}
+                {totalExercises} exercises
+                in today&apos;s workout.
+              </p>
 
-                <span className="font-medium text-zinc-600">
-                  Workout Progress
-                </span>
+              <div className="mx-auto mt-8 max-w-md">
 
-                <span className="font-bold text-zinc-900">
-                  100%
-                </span>
+                <div className="flex items-center justify-between text-sm">
+
+                  <span className="font-medium text-zinc-600">
+                    Workout Progress
+                  </span>
+
+                  <span className="font-bold text-zinc-900">
+                    100%
+                  </span>
+
+                </div>
+
+                <div className="mt-3 h-3 overflow-hidden rounded-full bg-zinc-200">
+                  <div className="h-full w-full rounded-full bg-black" />
+                </div>
 
               </div>
 
-              <div className="mt-3 h-3 overflow-hidden rounded-full bg-zinc-200">
-                <div className="h-full w-full rounded-full bg-black" />
-              </div>
+              <button
+                type="button"
+                onClick={() =>
+                  router.push("/dashboard")
+                }
+                className="mt-8 rounded-2xl bg-black px-8 py-4 text-sm font-semibold text-white transition hover:bg-zinc-800"
+              >
+                Back to Dashboard
+              </button>
 
             </div>
-
-            <button
-              type="button"
-              onClick={() =>
-                router.push("/dashboard")
-              }
-              className="mt-8 rounded-2xl bg-black px-8 py-4 text-sm font-semibold text-white transition hover:bg-zinc-800"
-            >
-              Back to Dashboard
-            </button>
 
           </div>
 
-        </div>
+        </main>
 
-      </main>
+      </div>
     );
   }
 
@@ -432,80 +450,94 @@ export default function WorkoutPage() {
    */
 
   return (
-    <main className="min-h-screen bg-zinc-50 p-4 md:p-6">
+    <div className="flex min-h-screen bg-zinc-50">
 
-      <div className="mx-auto max-w-6xl">
+      {/* =========================================
+          DASHBOARD SIDEBAR
+      ========================================== */}
 
-        {/* STICKY HEADER */}
+      <Sidebar />
 
-        <div className="sticky top-0 z-30 mb-6 rounded-3xl border border-zinc-200 bg-white/95 p-6 shadow-sm backdrop-blur-md">
+      {/* =========================================
+          WORKOUT CONTENT
+      ========================================== */}
 
-          <button
-            type="button"
-            onClick={() =>
-              router.back()
-            }
-            className="mb-5 flex items-center gap-2 text-sm font-medium text-zinc-500 transition hover:text-black"
-          >
-            <ArrowLeft size={18} />
-            Back
-          </button>
+      <main className="min-w-0 flex-1 overflow-x-hidden p-4 md:p-6">
 
-          <h1 className="text-3xl font-bold tracking-tight text-zinc-900">
-            {workout.name}
-          </h1>
+        <div className="mx-auto max-w-6xl">
 
-          <p className="mt-2 text-base text-zinc-500">
-            {totalExercises} Exercises •{" "}
-            {workout.estimatedDuration} mins
-          </p>
+          {/* STICKY HEADER */}
 
-          {/* PROGRESS BAR */}
+          <div className="sticky top-0 z-30 mb-6 rounded-3xl border border-zinc-200 bg-white/95 p-6 shadow-sm backdrop-blur-md">
 
-          <div className="mt-5 h-2 overflow-hidden rounded-full bg-zinc-200">
+            <button
+              type="button"
+              onClick={() =>
+                router.back()
+              }
+              className="mb-5 flex items-center gap-2 text-sm font-medium text-zinc-500 transition hover:text-black"
+            >
+              <ArrowLeft size={18} />
+              Back
+            </button>
 
-            <div
-              className="h-full rounded-full bg-black transition-all duration-500"
-              style={{
-                width: `${progressPercentage}%`,
-              }}
-            />
+            <h1 className="text-3xl font-bold tracking-tight text-zinc-900">
+              {workout.name}
+            </h1>
 
-          </div>
-
-          <div className="mt-2 flex items-center justify-between">
-
-            <p className="text-sm text-zinc-500">
-              Exercise{" "}
-              {currentExerciseNumber} of{" "}
-              {totalExercises}
+            <p className="mt-2 text-base text-zinc-500">
+              {totalExercises} Exercises •{" "}
+              {workout.estimatedDuration} mins
             </p>
 
-            <p className="text-sm font-semibold text-zinc-900">
-              {progressPercentage}%
-            </p>
+            {/* PROGRESS BAR */}
 
-          </div>
+            <div className="mt-5 h-2 overflow-hidden rounded-full bg-zinc-200">
 
-        </div>
-
-        {/* EXERCISES */}
-
-        <div className="space-y-2">
-
-          {workout.exercises.map(
-            (exercise) => (
-              <WorkoutExerciseCard
-                key={exercise.id}
-                exercise={exercise}
+              <div
+                className="h-full rounded-full bg-black transition-all duration-500"
+                style={{
+                  width: `${progressPercentage}%`,
+                }}
               />
-            )
-          )}
+
+            </div>
+
+            <div className="mt-2 flex items-center justify-between">
+
+              <p className="text-sm text-zinc-500">
+                Exercise{" "}
+                {currentExerciseNumber} of{" "}
+                {totalExercises}
+              </p>
+
+              <p className="text-sm font-semibold text-zinc-900">
+                {progressPercentage}%
+              </p>
+
+            </div>
+
+          </div>
+
+          {/* EXERCISES */}
+
+          <div className="space-y-2">
+
+            {workout.exercises.map(
+              (exercise) => (
+                <WorkoutExerciseCard
+                  key={exercise.id}
+                  exercise={exercise}
+                />
+              )
+            )}
+
+          </div>
 
         </div>
 
-      </div>
+      </main>
 
-    </main>
+    </div>
   );
 }

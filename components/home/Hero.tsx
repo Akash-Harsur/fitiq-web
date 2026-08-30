@@ -35,7 +35,7 @@ export default function Hero() {
           {/* Description */}
           <p className="mt-6 max-w-2xl text-lg leading-8 text-gray-600">
             Personalized workout programs, smart nutrition guidance and
-            progress tracking—all in one platform to help you achieve your
+            progress tracking all in one platform to help you achieve your
             fitness goals.
           </p>
 

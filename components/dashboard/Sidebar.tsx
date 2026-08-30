@@ -27,9 +27,9 @@ const menuItems = [
     href: "/dashboard",
   },
   {
-    title: "Workouts",
+    title: "Exercise Library",
     icon: Dumbbell,
-    href: "#",
+    href: "/dashboard/exercises",
   },
   {
     title: "Nutrition",
