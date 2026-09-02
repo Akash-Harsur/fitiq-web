@@ -18,7 +18,7 @@ export default function StepHeader({
           width={140}
           height={45}
           priority
-          className="rounded-xl"
+          className="fitiq-logo rounded-xl"
         />
       </div>
 

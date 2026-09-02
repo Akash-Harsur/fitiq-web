@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { WorkoutProvider } from "@/contexts/WorkoutContext";
 
+import { WorkoutProvider } from "@/contexts/WorkoutContext";
 import { AuthProvider } from "@/contexts/AuthContext";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,7 +21,6 @@ export const metadata: Metadata = {
   description: "Your Personal Fitness Companion",
 };
 
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -34,7 +34,9 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <AuthProvider>
           <WorkoutProvider>
+
             {children}
+
           </WorkoutProvider>
         </AuthProvider>
       </body>

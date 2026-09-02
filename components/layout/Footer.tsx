@@ -25,7 +25,7 @@ export default function Footer() {
               alt="FitIQ Logo"
               width={180}
               height={50}
-              className="h-auto w-auto"
+              className="fitiq-logo h-auto w-auto"
             />
 
             <p className="mt-5 max-w-xs text-gray-600 leading-7">

@@ -39,7 +39,7 @@ export default function ContactPage() {
                         <img
                             src="/image/logo.jpeg"
                             alt="FitIQ"
-                            className="block h-auto w-[185px] object-contain"
+                            className="fitiq-logo block h-auto w-[185px] object-contain"
                         />
                     </Link>
 

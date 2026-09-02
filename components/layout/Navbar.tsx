@@ -28,7 +28,7 @@ export default function Navbar() {
             width={185}
             height={56}
             priority
-            className="block h-auto w-[185px] object-contain"
+            className="fitiq-logo block h-auto w-[185px] object-contain"
           />
         </Link>
 

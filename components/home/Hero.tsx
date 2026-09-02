@@ -17,7 +17,7 @@ export default function Hero() {
             width={480}
             height={110}
             priority
-            className="h-auto w-auto"
+            className="fitiq-logo h-auto w-auto"
           />
 
           {/* Badge */}

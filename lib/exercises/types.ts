@@ -79,4 +79,5 @@ export interface Exercise {
   difficulty: Difficulty;
 
   priority: Priority;
+
 }

@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { Search, Dumbbell } from "lucide-react";
 
 import { exerciseDatabase } from "@/lib/exercises";
+import { exerciseDescriptions } from "@/lib/exercises/descriptions";
 
 type MuscleGroup = keyof typeof exerciseDatabase;
 
@@ -87,8 +88,8 @@ export default function ExerciseLibrary() {
                                     setSearch("");
                                 }}
                                 className={`shrink-0 rounded-full px-5 py-2.5 text-sm font-semibold transition ${active
-                                        ? "bg-black text-white"
-                                        : "border border-zinc-200 bg-white text-zinc-600 hover:border-zinc-400 hover:text-black"
+                                    ? "bg-black text-white"
+                                    : "border border-zinc-200 bg-white text-zinc-600 hover:border-zinc-400 hover:text-black"
                                     }`}
                             >
                                 {muscle.label}
@@ -151,6 +152,12 @@ export default function ExerciseLibrary() {
                                     <h3 className="mt-5 text-lg font-bold leading-6 text-zinc-900">
                                         {exercise.name}
                                     </h3>
+
+                                    {/* Description */}
+                                    <p className="mt-3 text-sm leading-6 text-zinc-500">
+                                        {exerciseDescriptions[exercise.name] ||
+                                            "Exercise description coming soon."}
+                                    </p>
 
                                     {/* Details */}
                                     <div className="mt-4 flex flex-wrap gap-2">

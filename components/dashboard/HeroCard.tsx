@@ -25,7 +25,7 @@ export default function HeroCard({
             width={220}
             height={80}
             priority
-            className="h-auto w-40 object-contain"
+            className="fitiq-logo h-auto w-40 object-contain"
           />
         </div>
 
@@ -60,7 +60,7 @@ export default function HeroCard({
             width={320}
             height={100}
             priority
-            className="h-auto w-72 object-contain"
+            className="fitiq-logo h-auto w-72 object-contain"
           />
 
         </div>

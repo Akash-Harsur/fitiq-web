@@ -20,7 +20,7 @@ export default function AuthCard() {
           width={230}
           height={65}
           priority
-          className="h-auto w-auto"
+          className="fitiq-logo h-auto w-auto"
         />
       </div>
 

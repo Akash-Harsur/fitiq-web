@@ -49,7 +49,7 @@ const menuItems = [
   {
     title: "Settings",
     icon: Settings,
-    href: "#",
+    href: "/dashboard/settings",
   },
 ];
 
@@ -59,8 +59,7 @@ export default function Sidebar() {
 
   const { user } = useAuth();
 
-  const [collapsed, setCollapsed] =
-    useState(false);
+  const [collapsed, setCollapsed] = useState(false);
 
   /*
    * =========================================
@@ -69,8 +68,7 @@ export default function Sidebar() {
    */
 
   useEffect(() => {
-    const saved =
-      localStorage.getItem("sidebar");
+    const saved = localStorage.getItem("sidebar");
 
     if (saved === "collapsed") {
       setCollapsed(true);
@@ -105,11 +103,8 @@ export default function Sidebar() {
       await signOut(auth);
 
       router.replace("/auth");
-    } catch (error) {
-      console.error(
-        "Logout failed:",
-        error
-      );
+    } catch {
+      // Keep UI clean without console errors
     }
   };
 
@@ -130,9 +125,7 @@ export default function Sidebar() {
   return (
     <aside
       className={`sticky top-0 flex h-screen flex-col border-r border-zinc-200 bg-white transition-all duration-300 ease-in-out ${
-        collapsed
-          ? "w-20"
-          : "w-72"
+        collapsed ? "w-20" : "w-72"
       }`}
     >
       {/* =========================================
@@ -140,29 +133,23 @@ export default function Sidebar() {
       ========================================== */}
 
       <div className="sticky top-0 z-20 border-b border-zinc-200 bg-white px-5 py-5">
-
         <div
           className={`flex items-center ${
-            collapsed
-              ? "justify-center"
-              : "justify-between"
+            collapsed ? "justify-center" : "justify-between"
           }`}
         >
-
           {/* FitIQ Logo */}
 
           {!collapsed && (
             <Link href="/dashboard">
-
               <Image
                 src="/image/logo.jpeg"
                 alt="FitIQ"
                 width={150}
                 height={42}
-                className="cursor-pointer"
+                className="fitiq-logo cursor-pointer"
                 priority
               />
-
             </Link>
           )}
 
@@ -175,9 +162,7 @@ export default function Sidebar() {
           >
             <Menu size={24} />
           </button>
-
         </div>
-
       </div>
 
       {/* =========================================
@@ -185,7 +170,6 @@ export default function Sidebar() {
       ========================================== */}
 
       <div className="px-4 py-5">
-
         <div
           className={`rounded-3xl border border-zinc-200 bg-zinc-50 transition-all duration-300 hover:scale-[1.01] hover:shadow-lg ${
             collapsed
@@ -193,9 +177,7 @@ export default function Sidebar() {
               : "flex items-center gap-4 p-4"
           }`}
         >
-
           {user?.photoURL ? (
-
             <Image
               src={user.photoURL}
               alt="Profile"
@@ -203,40 +185,24 @@ export default function Sidebar() {
               height={56}
               className="rounded-full ring-2 ring-zinc-200"
             />
-
           ) : (
-
             <div className="flex h-14 w-14 items-center justify-center rounded-full bg-black text-base font-bold tracking-wide text-white ring-2 ring-zinc-200">
-
               {initials}
-
             </div>
-
           )}
 
           {!collapsed && (
-
             <div className="min-w-0 flex-1">
-
               <h3 className="truncate text-lg font-semibold text-zinc-900">
-
-                {user?.displayName ||
-                  "FitIQ User"}
-
+                {user?.displayName || "FitIQ User"}
               </h3>
 
               <p className="truncate text-sm text-zinc-500">
-
                 {user?.email}
-
               </p>
-
             </div>
-
           )}
-
         </div>
-
       </div>
 
       {/* =========================================
@@ -244,28 +210,17 @@ export default function Sidebar() {
       ========================================== */}
 
       <nav className="flex-1 overflow-y-auto px-4 py-4">
-
         <ul className="space-y-2">
-
           {menuItems.map((item) => {
-
             const Icon = item.icon;
 
-            const active =
-              pathname === item.href;
+            const active = pathname === item.href;
 
-            /*
-             * Disabled menu items
-             */
-
-            const disabled =
-              item.href === "#";
+            const disabled = item.href === "#";
 
             return (
               <li key={item.title}>
-
                 {disabled ? (
-
                   <button
                     type="button"
                     disabled
@@ -275,7 +230,6 @@ export default function Sidebar() {
                         : "gap-4 px-4 py-3"
                     }`}
                   >
-
                     <Icon
                       size={22}
                       className="shrink-0"
@@ -286,11 +240,8 @@ export default function Sidebar() {
                         {item.title}
                       </span>
                     )}
-
                   </button>
-
                 ) : (
-
                   <Link
                     href={item.href}
                     className={`group flex items-center rounded-xl transition-all duration-300 ease-in-out ${
@@ -303,7 +254,6 @@ export default function Sidebar() {
                         : "text-zinc-700 hover:bg-zinc-100 hover:text-black"
                     }`}
                   >
-
                     <Icon
                       size={22}
                       className={`shrink-0 transition-transform duration-300 ${
@@ -314,23 +264,16 @@ export default function Sidebar() {
                     />
 
                     {!collapsed && (
-
                       <span className="font-semibold">
                         {item.title}
                       </span>
-
                     )}
-
                   </Link>
-
                 )}
-
               </li>
             );
           })}
-
         </ul>
-
       </nav>
 
       {/* =========================================
@@ -338,7 +281,6 @@ export default function Sidebar() {
       ========================================== */}
 
       <div className="border-t border-zinc-200 p-4">
-
         <button
           type="button"
           onClick={handleLogout}
@@ -348,24 +290,18 @@ export default function Sidebar() {
               : "gap-4 px-4 py-3"
           }`}
         >
-
           <LogOut
             size={22}
             className="transition-transform duration-300 group-hover:scale-110"
           />
 
           {!collapsed && (
-
             <span className="font-semibold">
               Logout
             </span>
-
           )}
-
         </button>
-
       </div>
-
     </aside>
   );
 }
