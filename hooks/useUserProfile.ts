@@ -24,12 +24,14 @@ export type UserProfile = {
 };
 
 export function useUserProfile() {
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading } =
+    useAuth();
 
   const [profile, setProfile] =
     useState<UserProfile | null>(null);
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] =
+    useState(true);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -41,14 +43,29 @@ export function useUserProfile() {
       }
 
       try {
-        const docRef = doc(db, "users", user.uid);
-        const docSnap = await getDoc(docRef);
+        const docRef = doc(
+          db,
+          "users",
+          user.uid
+        );
+
+        const docSnap =
+          await getDoc(docRef);
 
         if (docSnap.exists()) {
-          setProfile(docSnap.data() as UserProfile);
+          setProfile(
+            docSnap.data() as UserProfile
+          );
+        } else {
+          setProfile(null);
         }
       } catch (error) {
-        console.error("Failed to fetch profile:", error);
+        console.error(
+          "Failed to fetch profile:",
+          error
+        );
+
+        setProfile(null);
       } finally {
         setLoading(false);
       }
@@ -60,5 +77,6 @@ export function useUserProfile() {
   return {
     profile,
     loading,
+    setProfile,
   };
 }
