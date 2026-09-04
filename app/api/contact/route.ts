@@ -24,10 +24,16 @@ export async function POST(request: Request) {
       );
     }
 
-    // Check environment variables
+    // Environment variables
     const titanEmail = process.env.TITAN_EMAIL;
     const titanPassword = process.env.TITAN_PASSWORD;
     const contactReceiver = process.env.CONTACT_RECEIVER;
+
+    console.log("SMTP CONFIG CHECK:", {
+      titanEmail,
+      contactReceiver,
+      hasPassword: !!titanPassword,
+    });
 
     if (!titanEmail || !titanPassword || !contactReceiver) {
       console.error("Missing email environment variables");
@@ -41,7 +47,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // Titan SMTP configuration
+    // Titan SMTP
     const transporter = nodemailer.createTransport({
       host: "smtp.titan.email",
       port: 465,
@@ -52,19 +58,23 @@ export async function POST(request: Request) {
       },
     });
 
-    // Verify SMTP connection first
-    await transporter.verify();
+    // Test SMTP connection
+    try {
+      await transporter.verify();
+      console.log("SMTP connection verified successfully");
+    } catch (smtpError) {
+      console.error("SMTP_VERIFY_ERROR:", smtpError);
+      throw smtpError;
+    }
 
     // Send email
     await transporter.sendMail({
       from: titanEmail,
       to: contactReceiver,
       replyTo: email,
-
       subject: subject
         ? `FitIQ Contact: ${subject}`
         : `New Contact Message from ${firstName}`,
-
       text: `
 New message received from FitIQ website.
 
@@ -75,7 +85,6 @@ Subject: ${subject || "Not specified"}
 Message:
 ${message}
       `,
-
       html: `
         <div style="font-family: Arial, sans-serif; line-height: 1.6;">
           <h2>New FitIQ Contact Message</h2>
@@ -106,7 +115,7 @@ ${message}
       `,
     });
 
-    console.log("Contact email sent successfully");
+    console.log("CONTACT_EMAIL_SENT_SUCCESSFULLY");
 
     return NextResponse.json(
       {
@@ -116,7 +125,7 @@ ${message}
       { status: 200 }
     );
   } catch (error) {
-    console.error("Contact form error:", error);
+    console.error("CONTACT_FORM_ERROR:", error);
 
     return NextResponse.json(
       {
