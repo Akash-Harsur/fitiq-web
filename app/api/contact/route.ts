@@ -29,6 +29,7 @@ export async function POST(request: Request) {
     const titanPassword = process.env.TITAN_PASSWORD;
     const contactReceiver = process.env.CONTACT_RECEIVER;
 
+    // Safe debug information - password is never logged
     console.log("SMTP CONFIG CHECK:", {
       titanEmail,
       contactReceiver,
@@ -47,7 +48,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // Titan SMTP
+    // Titan SMTP configuration
     const transporter = nodemailer.createTransport({
       host: "smtp.titan.email",
       port: 465,
@@ -58,7 +59,7 @@ export async function POST(request: Request) {
       },
     });
 
-    // Test SMTP connection
+    // Verify SMTP connection
     try {
       await transporter.verify();
       console.log("SMTP connection verified successfully");
@@ -72,9 +73,11 @@ export async function POST(request: Request) {
       from: titanEmail,
       to: contactReceiver,
       replyTo: email,
+
       subject: subject
         ? `FitIQ Contact: ${subject}`
         : `New Contact Message from ${firstName}`,
+
       text: `
 New message received from FitIQ website.
 
@@ -85,6 +88,7 @@ Subject: ${subject || "Not specified"}
 Message:
 ${message}
       `,
+
       html: `
         <div style="font-family: Arial, sans-serif; line-height: 1.6;">
           <h2>New FitIQ Contact Message</h2>
