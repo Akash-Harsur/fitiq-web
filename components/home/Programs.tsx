@@ -51,7 +51,7 @@ export default function Programs() {
             </p>
 
             <Link
-              href="/auth"
+              href="/#pricing"
               className="mt-auto pt-4 font-semibold text-black transition hover:translate-x-1"
             >
               Get Started →
@@ -77,7 +77,7 @@ export default function Programs() {
             </p>
 
             <Link
-              href="/auth"
+              href="/#pricing"
               className="mt-auto pt-4 font-semibold text-black transition hover:translate-x-1"
             >
               Get Started →
@@ -103,7 +103,7 @@ export default function Programs() {
             </p>
 
             <Link
-              href="/auth"
+              href="/#pricing"
               className="mt-auto pt-4 font-semibold text-black transition hover:translate-x-1"
             >
               Get Started →
@@ -129,7 +129,7 @@ export default function Programs() {
             </p>
 
             <Link
-              href="/auth"
+              href="/#pricing"
               className="mt-auto pt-4 font-semibold text-black transition hover:translate-x-1"
             >
               Get Started →

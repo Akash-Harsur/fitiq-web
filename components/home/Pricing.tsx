@@ -9,7 +9,6 @@ import {
   Target,
   Headphones,
   Star,
-  Sparkles,
   Apple,
   Wrench,
   Rocket,
@@ -68,7 +67,6 @@ const premiumFeatures = [
     title: "Everything in Pro",
     description: "All Pro features are included.",
   },
-
   {
     icon: Dumbbell,
     title: "Fully Personalized Workout Plans",
@@ -113,76 +111,108 @@ const premiumFeatures = [
 
 export default function Pricing() {
   return (
-    <section id="pricing" className="bg-gray-50 py-24">
+    <section id="pricing" className="bg-white py-16 md:py-20">
       <div className="mx-auto max-w-6xl px-6 md:px-8">
 
-        {/* Heading */}
+        {/* ================= HEADING ================= */}
 
         <div className="text-center">
-          <h2 className="text-4xl font-black tracking-tight md:text-5xl">
-            Choose Your Plan
+          <span className="inline-flex rounded-full border border-gray-200 bg-white px-5 py-2 text-xs font-semibold tracking-[0.25em] text-gray-600">
+            SIMPLE PRICING
+          </span>
+
+          <h2 className="mt-5 text-4xl font-black tracking-tight text-black md:text-5xl">
+            Start Your Transformation
           </h2>
 
-          <p className="mt-4 text-lg text-gray-600">
-            Start your fitness journey with a 7-Day Free Trial.
+          <p className="mx-auto mt-3 max-w-3xl text-base leading-7 text-gray-600 md:text-lg">
+            Get complete access to personalized training, nutrition guidance
+            and progress tracking.
           </p>
         </div>
 
-        {/* Pricing Cards */}
+        {/* ================= PRICING CARDS ================= */}
 
-        <div className="mt-14 grid grid-cols-1 gap-8 lg:grid-cols-2">
+        <div className="mx-auto mt-10 grid max-w-5xl grid-cols-1 gap-7 lg:grid-cols-2">
 
           {/* ================= PRO ================= */}
 
-          <div className="relative flex flex-col overflow-visible rounded-3xl bg-black p-8 text-white shadow-2xl transition-all duration-300 hover:-translate-y-2">
+          <div className="relative flex flex-col rounded-[28px] bg-black p-7 text-white shadow-xl md:p-8">
 
-            {/* Popular Badge */}
+            {/* MOST POPULAR */}
 
-            <div className="absolute -top-4 left-1/2 flex -translate-x-1/2 items-center gap-2 whitespace-nowrap rounded-full bg-white px-5 py-2 text-xs font-bold tracking-wider text-black shadow-md">
-              <Star size={14} fill="currentColor" />
-              MOST POPULAR
-            </div>
-
-            <div className="mb-2">
-              <span className="inline-flex rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-gray-300">
-                Best Value
+            <div className="absolute -top-4 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-white px-6 py-2.5 text-xs font-bold tracking-[0.12em] text-black shadow-md">
+              <span className="flex items-center gap-2">
+                <Star size={13} fill="currentColor" />
+                MOST POPULAR
               </span>
             </div>
 
-            <h3 className="mt-3 text-3xl font-bold">
+            {/* BEST VALUE */}
+
+            <div>
+              <span className="inline-flex rounded-full bg-white/10 px-3.5 py-2 text-xs font-semibold uppercase tracking-widest text-gray-300">
+                BEST VALUE
+              </span>
+            </div>
+
+            {/* TITLE */}
+
+            <h3 className="mt-5 text-3xl font-bold">
               Pro
             </h3>
 
-            <p className="mt-2 text-gray-400">
+            <p className="mt-1.5 text-base text-gray-400">
               For serious, consistent progress.
             </p>
 
-            {/* Price */}
+            {/* ================= PRICE ================= */}
 
-            <div className="mt-7 flex items-end">
-              <span className="text-5xl font-black tracking-tight">
+            <div className="mt-7 flex items-center gap-4">
+
+              {/* OLD PRICE */}
+
+              <span className="text-xl font-bold text-gray-400 line-through">
                 ₹1,499
               </span>
 
-              <span className="mb-1 ml-2 text-gray-400">
+              {/* NEW PRICE */}
+
+              <span className="text-5xl font-black tracking-tight text-white">
+                ₹1,111
+              </span>
+
+              {/* DISCOUNT */}
+
+              <span className="rounded-xl bg-yellow-400 px-4 py-2.5 text-sm font-black text-black">
+                20% OFF
+              </span>
+
+              {/* MONTH */}
+
+              <span className="text-base text-gray-400">
                 /month
               </span>
+
             </div>
 
             {/* CTA */}
 
             <Link
               href="/auth"
-              className="mt-7 flex w-full items-center justify-center rounded-full bg-white py-3.5 font-semibold text-black transition hover:bg-gray-200"
+              className="mt-7 flex w-full items-center justify-center rounded-full bg-white py-4 text-base font-semibold text-black transition hover:bg-gray-200"
             >
-              Start Free Trial
+              Get Started →
             </Link>
+
+            {/* DIVIDER */}
 
             <div className="my-7 border-t border-gray-800" />
 
-            {/* Features */}
+            {/* FEATURES */}
 
-            <ul className="flex-1 space-y-5">
+            <ul className="space-y-4">
+
               {proFeatures.map((feature) => {
                 const Icon = feature.icon;
 
@@ -191,12 +221,13 @@ export default function Pricing() {
                     key={feature.title}
                     className="flex items-start gap-4"
                   >
+
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10">
-                      <Icon size={19} strokeWidth={2} />
+                      <Icon size={18} />
                     </div>
 
-                    <div>
-                      <p className="text-sm font-semibold text-white">
+                    <div className="pt-0.5">
+                      <p className="text-sm font-semibold leading-5 text-white">
                         {feature.title}
                       </p>
 
@@ -204,60 +235,64 @@ export default function Pricing() {
                         {feature.description}
                       </p>
                     </div>
+
                   </li>
                 );
               })}
+
             </ul>
           </div>
 
           {/* ================= PREMIUM ================= */}
 
-          <div className="flex flex-col rounded-3xl border border-gray-200 bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:border-black hover:shadow-xl">
+          <div className="relative flex flex-col rounded-[28px] border border-gray-200 bg-white p-7 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-black hover:shadow-xl md:p-8">
 
-            <div className="mb-2">
-              <span className="inline-flex rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-indigo-600">
-                Ultimate Experience
-              </span>
-            </div>
+            <span className="inline-flex w-fit rounded-full bg-gray-100 px-3.5 py-2 text-xs font-semibold uppercase tracking-widest text-gray-700">
+              ULTIMATE EXPERIENCE
+            </span>
 
-            <h3 className="mt-3 text-3xl font-bold">
+            <h3 className="mt-5 text-3xl font-bold text-black">
               Premium
             </h3>
 
-            <p className="mt-2 text-gray-500">
+            <p className="mt-1.5 text-base text-gray-500">
               For complete personalized transformation.
             </p>
 
-            {/* Price */}
+            {/* PRICE */}
 
-            <div className="mt-7 flex items-end">
-              <span className="text-5xl font-black tracking-tight">
+            <div className="mt-7 flex items-end gap-2">
+
+              <span className="text-5xl font-black tracking-tight text-black">
                 ₹4,999
               </span>
 
-              <span className="mb-1 ml-2 text-gray-500">
+              <span className="mb-1 text-base text-gray-500">
                 /month
               </span>
+
             </div>
 
             {/* CTA */}
 
             <Link
               href="/auth"
-              className="group mt-7 flex w-full items-center justify-center gap-3 rounded-full border border-black py-3.5 font-semibold text-black transition hover:bg-black hover:text-white"
+              className="group mt-7 flex w-full items-center justify-center rounded-full border border-black py-4 text-base font-semibold text-black transition hover:bg-black hover:text-white"
             >
-              Start Free Trial
-
-              <span className="transition-transform group-hover:translate-x-1">
+              Get Started
+              <span className="ml-2 transition-transform group-hover:translate-x-1">
                 →
               </span>
             </Link>
 
+            {/* DIVIDER */}
+
             <div className="my-7 border-t border-gray-200" />
 
-            {/* Features */}
+            {/* FEATURES */}
 
-            <ul className="flex-1 space-y-5">
+            <ul className="space-y-4">
+
               {premiumFeatures.map((feature) => {
                 const Icon = feature.icon;
 
@@ -266,12 +301,13 @@ export default function Pricing() {
                     key={feature.title}
                     className="flex items-start gap-4"
                   >
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
-                      <Icon size={19} strokeWidth={2} />
+
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gray-100 text-black">
+                      <Icon size={18} />
                     </div>
 
-                    <div>
-                      <p className="text-sm font-semibold text-gray-900">
+                    <div className="pt-0.5">
+                      <p className="text-sm font-semibold leading-5 text-gray-900">
                         {feature.title}
                       </p>
 
@@ -279,27 +315,27 @@ export default function Pricing() {
                         {feature.description}
                       </p>
                     </div>
+
                   </li>
                 );
               })}
+
             </ul>
           </div>
         </div>
 
         {/* ================= TRUST BAR ================= */}
 
-        <div className="mt-12 grid grid-cols-2 overflow-hidden rounded-2xl border border-gray-200 bg-white md:grid-cols-4">
+        <div className="mx-auto mt-9 grid max-w-5xl grid-cols-2 overflow-hidden rounded-2xl border border-gray-200 bg-white md:grid-cols-4">
 
           <div className="flex items-center gap-3 border-b border-gray-200 p-5 md:border-b-0 md:border-r">
-            <CalendarDays
-              size={22}
-              className="shrink-0"
-            />
+            <CalendarDays size={21} className="shrink-0" />
 
             <div>
               <p className="text-sm font-semibold">
-                7-Day Free Trial
+                3-Day Free Trial
               </p>
+
               <p className="text-xs text-gray-500">
                 No credit card required
               </p>
@@ -307,15 +343,13 @@ export default function Pricing() {
           </div>
 
           <div className="flex items-center gap-3 border-b border-gray-200 p-5 md:border-b-0 md:border-r">
-            <RotateCcw
-              size={22}
-              className="shrink-0"
-            />
+            <RotateCcw size={21} className="shrink-0" />
 
             <div>
               <p className="text-sm font-semibold">
                 Cancel Anytime
               </p>
+
               <p className="text-xs text-gray-500">
                 Hassle-free cancellation
               </p>
@@ -323,15 +357,13 @@ export default function Pricing() {
           </div>
 
           <div className="flex items-center gap-3 border-b border-gray-200 p-5 md:border-b-0 md:border-r">
-            <ShieldCheck
-              size={22}
-              className="shrink-0"
-            />
+            <ShieldCheck size={21} className="shrink-0" />
 
             <div>
               <p className="text-sm font-semibold">
                 Secure Payments
               </p>
+
               <p className="text-xs text-gray-500">
                 100% safe & secure
               </p>
@@ -339,15 +371,13 @@ export default function Pricing() {
           </div>
 
           <div className="flex items-center gap-3 p-5">
-            <Tag
-              size={22}
-              className="shrink-0"
-            />
+            <Tag size={21} className="shrink-0" />
 
             <div>
               <p className="text-sm font-semibold">
                 No Hidden Charges
               </p>
+
               <p className="text-xs text-gray-500">
                 Transparent pricing
               </p>
@@ -355,6 +385,7 @@ export default function Pricing() {
           </div>
 
         </div>
+
       </div>
     </section>
   );

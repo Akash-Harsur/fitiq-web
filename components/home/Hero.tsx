@@ -43,10 +43,10 @@ export default function Hero() {
           <div className="mt-10 flex flex-col gap-4 sm:flex-row">
 
             <Link
-              href="/auth"
+              href="/#pricing"
               className="rounded-full bg-black px-8 py-3 font-semibold text-white transition duration-300 hover:bg-gray-800"
             >
-              Start 7-Day Free Trial
+              Start 3-Day Free Trial
             </Link>
 
             <Link

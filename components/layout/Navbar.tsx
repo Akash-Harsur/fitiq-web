@@ -79,7 +79,7 @@ export default function Navbar() {
 
         {/* Desktop Get Started */}
         <Link
-          href="/auth"
+          href="/#pricing"
           className="hidden shrink-0 rounded-full bg-black px-[30px] py-[16px] text-[16px] font-medium leading-none text-white transition-colors duration-200 hover:bg-gray-800 md:block"
         >
           Get Started
@@ -174,7 +174,7 @@ export default function Navbar() {
 
             {/* Mobile Get Started */}
             <Link
-              href="/auth"
+              href="/#pricing"
               onClick={closeMenu}
               className="mt-5 flex w-full items-center justify-center rounded-full bg-black py-3.5 text-[17px] font-medium text-white transition hover:bg-gray-800"
             >
