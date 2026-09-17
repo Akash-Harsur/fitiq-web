@@ -29,13 +29,7 @@ export async function POST(request: Request) {
     const titanPassword = process.env.TITAN_PASSWORD;
     const contactReceiver = process.env.CONTACT_RECEIVER;
 
-    // Safe debug information - password is never logged
-    console.log("SMTP CONFIG CHECK:", {
-      titanEmail,
-      contactReceiver,
-      hasPassword: !!titanPassword,
-    });
-
+    // Check environment variables
     if (!titanEmail || !titanPassword || !contactReceiver) {
       console.error("Missing email environment variables");
 
@@ -48,15 +42,16 @@ export async function POST(request: Request) {
       );
     }
 
-    // Titan SMTP configuration
+    // SMTP configuration
     const transporter = nodemailer.createTransport({
-      host: "smtp.titan.email",
+      host: "smtpout.secureserver.net",
       port: 465,
       secure: true,
       auth: {
         user: titanEmail,
         pass: titanPassword,
       },
+      authMethod: "LOGIN",
     });
 
     // Verify SMTP connection
